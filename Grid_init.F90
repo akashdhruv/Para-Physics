@@ -32,7 +32,9 @@ subroutine Grid_init()
      enddo
 
      do i=1,Nxb+1
-        gr_y(i,:)=D_ymin+(myid/nblocky)*gr_Ly+gr_dy*(/(I,I=0,Nyb)/)
+        gr_y(i,:)=D_ymin+(myid/nblockx)*gr_Ly+gr_dy*(/(I,I=0,Nyb)/)
     enddo
+
+    print *,"myid = ",myid,"Y = ",gr_y
 
 end subroutine Grid_init

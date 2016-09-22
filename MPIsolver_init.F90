@@ -26,7 +26,7 @@ subroutine MPIsolver_init()
     end if
  
     call MPI_COMM_SPLIT(solver_comm,myid/nblockx,myid,x_comm,ierr)
-    call MPI_COMM_SPLIT(solver_comm,mod(myid,nblocky),myid,y_comm,ierr)
+    call MPI_COMM_SPLIT(solver_comm,mod(myid,nblockx),myid,y_comm,ierr)
 
     call MPI_COMM_RANK(x_comm,x_id,ierr)
     call MPI_COMM_SIZE(x_comm,x_procs,ierr)

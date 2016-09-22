@@ -51,8 +51,8 @@ Defining Simulation Parameters - Block Size, Domain Length, etc
 
 #define TIME_END 200.0
 
-#define nblockx 2
-#define nblocky 1 
+#define nblockx 3
+#define nblocky 2
 
 #define MaxIt 1500
 
