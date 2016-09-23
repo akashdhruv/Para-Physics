@@ -1,6 +1,6 @@
 ## Fortran based Hybrid MPI-OpenMP AMR based Computational Physics Solver 
 
-# The solver is still in debug mode, AMR implementations are not working properly
+# The solver is still in debug mode, AMR implementations are not working properly. Please look at other ParaSolve repositories for previous version
 
 Execution instructions
 
