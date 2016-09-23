@@ -1,4 +1,6 @@
-## Fortran based Hybrid MPI-OpenMP Computational Physics Solver 
+## Fortran based Hybrid MPI-OpenMP AMR based Computational Physics Solver 
+
+# The solver is still in debug mode, AMR implementations are not working properly
 
 Execution instructions
 
