@@ -1,5 +1,7 @@
 module MPI_data
 
+#include "Solver.h"
+
       implicit none
 
 

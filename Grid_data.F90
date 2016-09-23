@@ -16,6 +16,4 @@ module Grid_data
        real, save, allocatable, dimension(:,:) :: gr_x
        real, save, allocatable, dimension(:,:) :: gr_y
 
-       integer, save :: blockCount,blockID
-
 end module Grid_data 

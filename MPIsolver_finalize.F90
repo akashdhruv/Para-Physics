@@ -2,6 +2,7 @@ subroutine MPIsolver_finalize()
 
       !$ use omp_lib
       use MPI_data
+      use physicaldata, only:  blockID
 
       implicit none
 
@@ -10,6 +11,8 @@ subroutine MPIsolver_finalize()
       call MPI_COMM_FREE(x_comm,ierr)
       call MPI_COMM_FREE(y_comm,ierr)
 
+
+      deallocate(blockID)
    
       !call cpu_time(finish)
       finish = omp_get_wtime()

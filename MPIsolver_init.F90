@@ -3,10 +3,13 @@ subroutine MPIsolver_init()
 #include "Solver.h"
 
     !$ use omp_lib
+
     use MPI_data
-    use Grid_data, only: blockCount,blockID
+    use physicaldata, only: blockCount,blockID
+
     implicit none
 
+    integer :: checkSumMPI
     integer :: status = 0
 
     include "mpif.h"
@@ -17,14 +20,23 @@ subroutine MPIsolver_init()
     call MPI_COMM_RANK(solver_comm, myid, ierr)
     call MPI_COMM_SIZE(solver_comm, procs, ierr)    
 
-    if (nblockx*nblocky /= procs) then
+    blockCount = ((nblockx*nblocky)/procs)
+    checkSumMPI = blockCount*procs
+
+    if (checkSumMPI /= procs) then
        
         call MPI_FINALIZE(ierr)
-        if (myid == 0) print *,"RUNTIME ERROR: The number of MPI processes must be equal to total number of blocks."
+
+        if (myid == 0) then 
+        print *,"RUNTIME ERROR: The number blocks should be greater than and exaclty divisible by total number of MPI processes."
+        end if
+
         call exit(status)
 
     end if
- 
+
+    allocate(blockID(blockCount))
+     
     call MPI_COMM_SPLIT(solver_comm,myid/nblockx,myid,x_comm,ierr)
     call MPI_COMM_SPLIT(solver_comm,mod(myid,nblockx),myid,y_comm,ierr)
 
