@@ -1,18 +1,18 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-k=3
-d=2
+k=4
+d=6
 
-M=20+1
-N=20+1
+M=40+1
+N=40+1
 
-X=np.zeros((N*k,M*k),dtype=float)
-Y=np.zeros((N*k,M*k),dtype=float)
-U=np.zeros((N*k,M*k),dtype=float)
-V=np.zeros((N*k,M*k),dtype=float)
-P=np.zeros((N*k,M*k),dtype=float)
-T=np.zeros((N*k,M*k),dtype=float)
+X=np.zeros((N*d,M*k),dtype=float)
+Y=np.zeros((N*d,M*k),dtype=float)
+U=np.zeros((N*d,M*k),dtype=float)
+V=np.zeros((N*d,M*k),dtype=float)
+P=np.zeros((N*d,M*k),dtype=float)
+T=np.zeros((N*d,M*k),dtype=float)
 
 for i in range(0,k*d):
 	
@@ -37,7 +37,7 @@ for i in range(0,k*d):
 	v=np.reshape(v,[N,M])
         p=np.reshape(p,[N,M])
         t=np.reshape(t,[N,M])
-		
+
 	X[(i/k)*N:(i/k)*N+N,(i%k)*M:(i%k)*M+M]=x
 	Y[(i/k)*N:(i/k)*N+N,(i%k)*M:(i%k)*M+M]=y
 	U[(i/k)*N:(i/k)*N+N,(i%k)*M:(i%k)*M+M]=u

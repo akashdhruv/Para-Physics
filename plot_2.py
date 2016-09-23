@@ -1,18 +1,18 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-k=2
-d=2
+k=4
+d=6
 
-M=10+1
-N=10+1
+M=40+1
+N=40+1
 
-X=np.zeros((N*k,M*k),dtype=float)
-Y=np.zeros((N*k,M*k),dtype=float)
-U=np.zeros((N*k,M*k),dtype=float)
-V=np.zeros((N*k,M*k),dtype=float)
-P=np.zeros((N*k,M*k),dtype=float)
-T=np.zeros((N*k,M*k),dtype=float)
+X=np.zeros((N*d,M*k),dtype=float)
+Y=np.zeros((N*d,M*k),dtype=float)
+U=np.zeros((N*d,M*k),dtype=float)
+V=np.zeros((N*d,M*k),dtype=float)
+P=np.zeros((N*d,M*k),dtype=float)
+T=np.zeros((N*d,M*k),dtype=float)
 
 for i in range(0,k*d):
 	
