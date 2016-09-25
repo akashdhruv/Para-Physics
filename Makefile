@@ -25,9 +25,9 @@ EXE = Solver
 
 
 Modules += Grid_interface.mod Grid_data.mod IO_interface.mod IncompNS_interface.mod IncompNS_data.mod Poisson_interface.mod MPI_interface.mod MPI_data.mod Solver_interface.mod Driver_interface.mod physicaldata.mod \
-	   Driver_data.mod HeatAD_interface.mod HeatAD_data.mod Multiphase_interface.mod Multiphase_data.mod
+	   Driver_data.mod HeatAD_interface.mod HeatAD_data.mod Multiphase_interface.mod Multiphase_data.mod morton_interface.mod
 
-Objects += physicaldata.o Grid_data.o Grid_init.o IncompNS_init.o IncompNS_data.o Driver_init.o Driver_data.o IncompNS_solver.o Poisson_solver.o IO_write.o IO_display.o IO_display_v2.o \
+Objects += physicaldata.o Grid_data.o Grid_init.o IncompNS_init.o IncompNS_data.o Driver_init.o Driver_data.o IncompNS_solver.o Poisson_solver.o IO_write.o IO_display.o IO_display_v2.o morton_sort.o\
           MPIsolver_init.o MPIsolver_finalize.o MPI_periodicBC.o\
           MPI_data.o MPI_applyBC.o MPI_physicalBC_vel.o MPI_physicalBC_pres.o MPI_physicalBC_temp.o MPI_CollectResiduals.o Solver_init.o Solver_evolve.o Solver_finalize.o Grid_finalize.o Multiphase_data.o \
           Multiphase_init.o Multiphase_evolve.o Multiphase_solver.o HeatAD_data.o \

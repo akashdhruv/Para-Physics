@@ -5,7 +5,8 @@ subroutine MPIsolver_init()
     !$ use omp_lib
 
     use MPI_data
-    use physicaldata, only: blockCount,blockID
+    use physicaldata, only: blockCount,blockID,blockLC
+    use morton_interface, only: morton_sort
 
     implicit none
 
@@ -23,7 +24,7 @@ subroutine MPIsolver_init()
     blockCount = ((nblockx*nblocky)/procs)
     checkSumMPI = blockCount*procs
 
-    if (checkSumMPI /= procs) then
+    if (checkSumMPI /= nblockx*nblocky) then
        
         call MPI_FINALIZE(ierr)
 
@@ -36,7 +37,10 @@ subroutine MPIsolver_init()
     end if
 
     allocate(blockID(blockCount))
-     
+    allocate(blockLC(nblockx*nblocky,2))
+
+    call morton_sort(blockID,blockCount,myid,procs,blockLC)
+
     call MPI_COMM_SPLIT(solver_comm,myid/nblockx,myid,x_comm,ierr)
     call MPI_COMM_SPLIT(solver_comm,mod(myid,nblockx),myid,y_comm,ierr)
 
