@@ -12,6 +12,7 @@ subroutine MPIsolver_init()
 
     integer :: checkSumMPI
     integer :: status = 0
+    integer :: i
 
     include "mpif.h"
 
@@ -39,7 +40,9 @@ subroutine MPIsolver_init()
     allocate(blockID(blockCount))
     allocate(blockLC(nblockx*nblocky,2))
 
-    call morton_sort(blockID,blockCount,myid,procs,blockLC)
+    blockID = (/(I,I=1,blockCount)/)
+ 
+    call morton_sort(blockCount,myid,procs,blockLC)
 
     call MPI_COMM_SPLIT(solver_comm,myid/nblockx,myid,x_comm,ierr)
     call MPI_COMM_SPLIT(solver_comm,mod(myid,nblockx),myid,y_comm,ierr)
