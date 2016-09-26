@@ -74,9 +74,9 @@ subroutine morton_sort(blockCount,myid,procs,blockLC)
 
    blockLC(:,1) = morton_blks
 
-   do i=1,procs
+   do i=0,procs-1
 
-      blockLC((i-1)*blockCount+1:(i-1)*blockCount+1+blockCount,2) = i-1
+      blockLC((i)*blockCount+1:(i)*blockCount+1+blockCount,2) = i
 
    end do
 

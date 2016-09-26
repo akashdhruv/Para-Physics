@@ -48,6 +48,9 @@ for i in range(0,k*d):
 	Y[(i/k)*N:(i/k)*N+N,(i%k)*M:(i%k)*M+M]=y
 
         if(i == 13 or i==17 or i==21 or i==18 or i==22 or i==26):
+
+                #if(i%2 == 1):
+		#X[(i/k)*N:(i/k)*N+N,(i%k)*M:(i%k)*M+M]=X[(i/k)*N:(i/k)*N+N,(i%k)*M:(i%k)*M+M]+0.1
         	#X[(i/k)*N:(i/k)*N+N,(i%k)*M:(i%k)*M+M]=x
         	#Y[(i/k)*N:(i/k)*N+N,(i%k)*M:(i%k)*M+M]=y
 		U[(i/k)*N:(i/k)*N+N,(i%k)*M:(i%k)*M+M]=u
@@ -119,7 +122,7 @@ plt.axis('equal')
 
 plt.figure()
 plt.title('Temperature')
-plt.contourf(X,Y,T,density=5)
+plt.contourf(X,Y,T,density=50)
 #plt.streamplot(X,Y,U,V,density=4,color='k')
 plt.plot(X[:,0],Y[:,0],'k')
 plt.plot(X[:,-1],Y[:,-1],'k')

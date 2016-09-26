@@ -121,7 +121,7 @@ subroutine Poisson_solver(ps_RHS,ps,ps_res,ps_counter,ps_quant)
 
      ps_res = ps_res + sum(sum((ps-ps_old)**2,1))
 
-     call MPI_CollectResiduals(ps_res,ps_res1)
+     call MPI_CollectResiduals(ps_res,ps_res1,1)
 
      ps_res = sqrt(ps_res1/((Nxb+2)*(Nyb+2)*(nblockx*nblocky)))
 

@@ -12,4 +12,7 @@ module MPI_data
 
       double precision, save :: start, finish, exec_time
 
+      integer,save :: blockID(MAX_BLOCKS),blockLC(nblockx*nblocky,2)
+      integer,save :: blockCount
+
 end module MPI_data

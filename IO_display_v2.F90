@@ -14,7 +14,7 @@ subroutine IO_display_v2(simTime,solnX,T_res)
 
          print *,"**************PARAMETER DISPLAY***************"
          print *,"Simulation Time         : ",simtime
-         print *,"Interface Location      : ",solnX
+         !print *,"Interface Location      : ",solnX
          print *,"Temperature Residual    : ",T_res
          !print *,"DFUN1,DFUN2,DFUN3       : ",df(5,Nxb+2),df(5,Nxb+1),df(5,Nxb)       
 

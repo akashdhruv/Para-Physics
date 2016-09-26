@@ -23,9 +23,10 @@ module MPI_interface
     end interface
 
     interface 
-       subroutine MPI_CollectResiduals(res,res1)
+       subroutine MPI_CollectResiduals(res,res1,collect_type)
        implicit none
        real, intent(inout) :: res,res1
+       integer,intent(in) :: collect_type
        end subroutine MPI_CollectResiduals
     end interface
 

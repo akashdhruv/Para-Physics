@@ -42,19 +42,24 @@ subroutine Solver_evolve
        call HeatAD_solver(tstep)
 #endif
 
-       if (mod(tstep,5) == 0 .and. myid == 0) then
-
 #ifdef SINGLEPHASE
-          call IO_display(ins_u_res,ins_v_res,ins_p_res,ht_T_res,p_counter,tstep*dr_dt,ins_maxdiv,ins_mindiv)
-#endif
 
-#ifdef MULTIPHASE
-          call IO_display_v2(tstep*dr_dt,solnX,ht_T_res)
-#endif
+       if (mod(tstep,5) == 0 .and. myid == 0) then
+          call IO_display(ins_u_res,ins_v_res,ins_p_res,ht_T_res,p_counter,tstep*dr_dt,ins_maxdiv,ins_mindiv)
        endif
 
+#endif
+
 #ifdef MULTIPHASE
-       if(mod(tstep,10000) == 0) then
+
+       if (mod(tstep,50) == 0 .and. myid == 0) then
+          call IO_display_v2(tstep*dr_dt,solnX,ht_T_res)
+       end if
+
+#endif
+
+#ifdef MULTIPHASE
+       if(mod(tstep,100000) == 0) then
           cc => ph_center(:,:,:)
 
           df = ((cc(DFUN_VAR,1:Nxb+1,1:Nyb+1)+cc(DFUN_VAR,2:Nxb+2,1:Nyb+1))/2 + (cc(DFUN_VAR,1:Nxb+1,2:Nyb+2)+cc(DFUN_VAR,2:Nxb+2,2:Nyb+2))/2)/2

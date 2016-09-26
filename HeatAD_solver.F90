@@ -120,7 +120,7 @@ subroutine HeatAD_solver(tstep)
           ht_T_res = ht_T_res + sum((T(i,:)-T_old(i,:))**2)
      enddo
 
-     call MPI_CollectResiduals(ht_T_res,T_res1)
+     call MPI_CollectResiduals(ht_T_res,T_res1,1)
 
      ht_T_res = sqrt(T_res1/((Nxb+2)*(Nyb+2)*(nblockx*nblocky)))
 
@@ -142,8 +142,8 @@ subroutine HeatAD_solver(tstep)
   !______________The Missing Data simulation____________________________!
 
   !$OMP PARALLEL DEFAULT(NONE) PRIVATE(i,j,u_conv,v_conv,u_plus,u_mins,&
-  !$OMP v_plus,v_mins,Tx_plus,Tx_mins,Ty_plus,Ty_mins,ii,jj) NUM_THREADS(NTHREADS) &
-  !$OMP SHARED(s,E_source,ht_src,T,T_old,dr_dt,gr_dy,gr_dx,ht_Pr,ins_inRe,u,v,dr_tile)
+  !$OMP v_plus,v_mins,Tx_plus,Tx_mins,Ty_plus,Ty_mins,ii,jj,E_source) NUM_THREADS(NTHREADS) &
+  !$OMP SHARED(s,ht_src,T,T_old,dr_dt,gr_dy,gr_dx,ht_Pr,ins_inRe,u,v,dr_tile,mph_thco2)
 
   !$OMP DO COLLAPSE(2) SCHEDULE(STATIC)
 
@@ -166,13 +166,14 @@ subroutine HeatAD_solver(tstep)
      Ty_mins = (T_old(i,j)-T_old(i,j-1))/gr_dy
 
 
-     E_source = ht_src/abs(s(i,j))
+     E_source = ht_src*(abs(s(i,j))**2)
 
 
      T(i,j) = T_old(i,j)+((dr_dt*ins_inRe)/(ht_Pr*gr_dx*gr_dx))*(T_old(i+1,j)+T_old(i-1,j)-2*T_old(i,j))&
                         +((dr_dt*ins_inRe)/(ht_Pr*gr_dy*gr_dy))*(T_old(i,j+1)+T_old(i,j-1)-2*T_old(i,j))&
                         -((dr_dt))*(u_plus*Tx_mins + u_mins*Tx_plus)&
-                        -((dr_dt))*(v_plus*Ty_mins + v_mins*Ty_plus) + dr_dt*E_source
+                        -((dr_dt))*(v_plus*Ty_mins + v_mins*Ty_plus)&
+                        + dr_dt*E_source
 
      end do
    end do
@@ -397,7 +398,7 @@ subroutine HeatAD_solver(tstep)
           ht_T_res = ht_T_res + sum((T(i,:)-T_old(i,:))**2)
    enddo
 
-   call MPI_CollectResiduals(ht_T_res,T_res1)
+   call MPI_CollectResiduals(ht_T_res,T_res1,1)
 
    ht_T_res = sqrt(T_res1/((Nxb+2)*(Nyb+2)*(nblockx*nblocky)))
 

@@ -5,7 +5,6 @@ subroutine MPIsolver_init()
     !$ use omp_lib
 
     use MPI_data
-    use physicaldata, only: blockCount,blockID,blockLC
     use morton_interface, only: morton_sort
 
     implicit none

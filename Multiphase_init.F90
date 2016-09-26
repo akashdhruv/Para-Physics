@@ -3,6 +3,7 @@ subroutine Multiphase_init()
    use Multiphase_data
    use physicaldata
    use Grid_data
+   use MPI_interface , only: MPI_CollectResiduals
 
 #include "Solver.h"
 
@@ -10,6 +11,7 @@ subroutine Multiphase_init()
 
    real,pointer,dimension(:,:) :: sf,pf,th,cp
    real :: x0,y0,r,xcell,ycell
+   real :: min_s,max_s,all_min_s,all_max_s
 
    integer :: i,j
 
@@ -57,12 +59,20 @@ subroutine Multiphase_init()
 
          end if
 
-          sf(i,j) = r - sqrt((xcell-x0)**2+(ycell-y0)**2)
+          sf(i,j) = r - sqrt((((xcell-x0)**2)/4)*exp(-3.0*(ycell-y0)) &
+                            +(((ycell-y0)**2)/9))
 
       end do
 
     end do
 
+    min_s = minval(sf)
+    max_s = maxval(sf)
+
+    call MPI_CollectResiduals(min_s,all_min_s,2)
+    call MPI_CollectResiduals(max_s,all_max_s,2)
+
+    sf = (sf - all_min_s)/(all_max_s - all_min_s)
 
    !___________________________End________________________!
 
