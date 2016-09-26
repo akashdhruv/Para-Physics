@@ -1,8 +1,8 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-k=2
-d=1
+k=4
+d=8
 
 M=20+1
 N=20+1
@@ -13,6 +13,11 @@ U=np.zeros((N*d,M*k),dtype=float)
 V=np.zeros((N*d,M*k),dtype=float)
 P=np.zeros((N*d,M*k),dtype=float)
 T=np.zeros((N*d,M*k),dtype=float)
+
+U= 1/U
+V= 1/V
+P= 1/P
+T= 1/T
 
 for i in range(0,k*d):
 	
@@ -37,13 +42,18 @@ for i in range(0,k*d):
 	v=np.reshape(v,[N,M])
         p=np.reshape(p,[N,M])
         t=np.reshape(t,[N,M])
-		
+
+        		
 	X[(i/k)*N:(i/k)*N+N,(i%k)*M:(i%k)*M+M]=x
 	Y[(i/k)*N:(i/k)*N+N,(i%k)*M:(i%k)*M+M]=y
-	U[(i/k)*N:(i/k)*N+N,(i%k)*M:(i%k)*M+M]=u
-	V[(i/k)*N:(i/k)*N+N,(i%k)*M:(i%k)*M+M]=v
-        P[(i/k)*N:(i/k)*N+N,(i%k)*M:(i%k)*M+M]=p
-	T[(i/k)*N:(i/k)*N+N,(i%k)*M:(i%k)*M+M]=t
+
+        if(i == 13 or i==17 or i==21 or i==18 or i==22 or i==26):
+        	#X[(i/k)*N:(i/k)*N+N,(i%k)*M:(i%k)*M+M]=x
+        	#Y[(i/k)*N:(i/k)*N+N,(i%k)*M:(i%k)*M+M]=y
+		U[(i/k)*N:(i/k)*N+N,(i%k)*M:(i%k)*M+M]=u
+		V[(i/k)*N:(i/k)*N+N,(i%k)*M:(i%k)*M+M]=v
+        	P[(i/k)*N:(i/k)*N+N,(i%k)*M:(i%k)*M+M]=p
+		T[(i/k)*N:(i/k)*N+N,(i%k)*M:(i%k)*M+M]=t
 
 """
 plt.figure()
@@ -88,8 +98,8 @@ plt.plot(X[:,0],Y[:,0],'k')
 plt.plot(X[:,-1],Y[:,-1],'k')
 plt.plot(X[0,:],Y[0,:],'k')
 plt.plot(X[-1,:],Y[-1,:],'k')
-plt.plot(X,Y,'g')
-plt.plot(X.T,Y.T,'g')
+#plt.plot(X,Y,'g')
+#plt.plot(X.T,Y.T,'g')
 plt.xlabel('X')
 plt.ylabel('Y')
 plt.axis('equal') 
@@ -119,3 +129,4 @@ plt.xlabel('X')
 plt.ylabel('Y')
 plt.axis('equal')
 plt.show()
+

@@ -52,8 +52,8 @@ Defining Simulation Parameters - Block Size, Domain Length, etc
 
 #define TIME_END 50.0
 
-#define nblockx 2
-#define nblocky 1
+#define nblockx 4
+#define nblocky 8
 
 #define MaxIt 1500
 
@@ -127,4 +127,4 @@ Energy On/Off
 OpenMP threads per MPI rank
 #endif
 
-#define NTHREADS 1
+#define NTHREADS 2
