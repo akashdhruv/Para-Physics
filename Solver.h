@@ -36,7 +36,7 @@ Defining Temperature Solver
 Defining Simulation Parameters - Block Size, Domain Length, etc
 #endif
 
-#define MAX_STRING_LENGTH 80
+#define MAX_BLOCKS 80
 
 
 #define Nxb 20
@@ -53,7 +53,7 @@ Defining Simulation Parameters - Block Size, Domain Length, etc
 #define TIME_END 50.0
 
 #define nblockx 2
-#define nblocky 1
+#define nblocky 2
 
 #define MaxIt 1500
 
@@ -93,7 +93,7 @@ Defining Flow Type
 Multiphase On/Off
 #endif
 
-#define MPH 0
+#define MPH 1
 
 #if MPH == 1
 #define MULTIPHASE
@@ -107,7 +107,7 @@ Multiphase On/Off
 Navier Stokes On/Off
 #endif
 
-#define NS 1
+#define NS 0
 
 #if NS == 1
 #define INS

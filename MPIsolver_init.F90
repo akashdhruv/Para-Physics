@@ -37,10 +37,7 @@ subroutine MPIsolver_init()
 
     end if
 
-    allocate(blockID(blockCount))
-    allocate(blockLC(nblockx*nblocky,2))
-
-    blockID = (/(I,I=1,blockCount)/)
+    blockID(1:blockCount) = (/(I,I=1,blockCount)/)
  
     call morton_sort(blockCount,myid,procs,blockLC)
     call MPI_BARRIER(solver_comm,ierr)
