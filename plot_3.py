@@ -4,8 +4,8 @@ import numpy as np
 k=4
 d=8
 
-M=20+1
-N=20+1
+M=100+1
+N=100+1
 
 X=np.zeros((N*d,M*k),dtype=float)
 Y=np.zeros((N*d,M*k),dtype=float)
@@ -122,7 +122,7 @@ plt.axis('equal')
 
 plt.figure()
 plt.title('Temperature')
-plt.contourf(X,Y,T,density=50)
+plt.contourf(X,Y,T,density=200)
 #plt.streamplot(X,Y,U,V,density=4,color='k')
 plt.plot(X[:,0],Y[:,0],'k')
 plt.plot(X[:,-1],Y[:,-1],'k')

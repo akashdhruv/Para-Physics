@@ -31,7 +31,7 @@ subroutine Multiphase_init()
 
     x0 = 0.d0
     y0 = 0.d0
-    r = 0.d0
+    r = 0.0
 
     do j=1,Nyb+2
 
@@ -59,20 +59,20 @@ subroutine Multiphase_init()
 
          end if
 
-          sf(i,j) = r - sqrt((((xcell-x0)**2)/4)*exp(-3.0*(ycell-y0)) &
+          sf(i,j) = sqrt((((xcell-x0)**2)/4)*exp(-6.0*(ycell-y0)) &
                             +(((ycell-y0)**2)/9))
 
       end do
 
     end do
 
-    min_s = minval(sf)
-    max_s = maxval(sf)
+    !min_s = minval(sf)
+    !max_s = maxval(sf)
 
-    call MPI_CollectResiduals(min_s,all_min_s,2)
-    call MPI_CollectResiduals(max_s,all_max_s,2)
+    !call MPI_CollectResiduals(min_s,mph_min_s,2)
+    !call MPI_CollectResiduals(max_s,mph_max_s,3)
 
-    sf = (sf - all_min_s)/(all_max_s - all_min_s)
+    !sf = (sf - mph_min_s)/(mph_max_s - mph_min_s) + mph_min_s
 
    !___________________________End________________________!
 

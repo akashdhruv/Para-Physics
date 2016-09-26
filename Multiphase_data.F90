@@ -8,5 +8,7 @@ module Multiphase_data
   real, save :: mph_rho2
   real, save :: mph_thco1
   real, save :: mph_thco2
+  real, save :: mph_max_s
+  real, save :: mph_min_s
 
 end module Multiphase_data

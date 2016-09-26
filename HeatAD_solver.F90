@@ -9,7 +9,7 @@ subroutine HeatAD_solver(tstep)
       use Driver_data
       use physicaldata
       use MPI_interface, only: MPI_applyBC, MPI_physicalBC_temp, MPI_CollectResiduals
-      use Multiphase_data, only: mph_cp2,mph_thco2
+      use Multiphase_data, only: mph_cp2,mph_thco2,mph_max_s,mph_min_s
 
       implicit none
       
@@ -143,7 +143,7 @@ subroutine HeatAD_solver(tstep)
 
   !$OMP PARALLEL DEFAULT(NONE) PRIVATE(i,j,u_conv,v_conv,u_plus,u_mins,&
   !$OMP v_plus,v_mins,Tx_plus,Tx_mins,Ty_plus,Ty_mins,ii,jj,E_source) NUM_THREADS(NTHREADS) &
-  !$OMP SHARED(s,ht_src,T,T_old,dr_dt,gr_dy,gr_dx,ht_Pr,ins_inRe,u,v,dr_tile,mph_thco2)
+  !$OMP SHARED(s,ht_src,T,T_old,dr_dt,gr_dy,gr_dx,ht_Pr,ins_inRe,u,v,dr_tile,mph_thco2,mph_max_s)
 
   !$OMP DO COLLAPSE(2) SCHEDULE(STATIC)
 
@@ -166,8 +166,15 @@ subroutine HeatAD_solver(tstep)
      Ty_mins = (T_old(i,j)-T_old(i,j-1))/gr_dy
 
 
-     E_source = ht_src*(abs(s(i,j))**2)
+     if (s(i,j) .le. .01) then
 
+        E_source = ht_src/0.01
+
+     else
+   
+        E_source = ht_src/(abs(s(i,j)))
+
+     end if
 
      T(i,j) = T_old(i,j)+((dr_dt*ins_inRe)/(ht_Pr*gr_dx*gr_dx))*(T_old(i+1,j)+T_old(i-1,j)-2*T_old(i,j))&
                         +((dr_dt*ins_inRe)/(ht_Pr*gr_dy*gr_dy))*(T_old(i,j+1)+T_old(i,j-1)-2*T_old(i,j))&

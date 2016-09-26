@@ -21,7 +21,7 @@ Defining Poisson Solver Parameters
 Defining Temperature Solver
 #endif
 
-#define TEMP_SOLVER 1
+#define TEMP_SOLVER 2
 
 #if TEMP_SOLVER == 1
 #define TEMP_SOLVER_CENTRAL
@@ -43,12 +43,12 @@ Defining Simulation Parameters - Block Size, Domain Length, etc
 #define Nyb 20
 
 
-#define D_xmin -0.5
-#define D_ymin -0.5
+#define D_xmin -0.50
+#define D_ymin -0.50
 
 
-#define D_xmax 0.5
-#define D_ymax 0.5
+#define D_xmax 0.50
+#define D_ymax 0.50
 
 #define TIME_END 100.0
 
