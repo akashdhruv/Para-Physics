@@ -43,6 +43,7 @@ subroutine MPIsolver_init()
     blockID = (/(I,I=1,blockCount)/)
  
     call morton_sort(blockCount,myid,procs,blockLC)
+    call MPI_BARRIER(solver_comm,ierr)
 
     call MPI_COMM_SPLIT(solver_comm,myid/nblockx,myid,x_comm,ierr)
     call MPI_COMM_SPLIT(solver_comm,mod(myid,nblockx),myid,y_comm,ierr)
