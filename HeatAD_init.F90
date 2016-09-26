@@ -20,6 +20,7 @@ subroutine HeatAD_init()
 
    ht_Pr = 0.7
    ht_Nu = 0.332*(ht_Pr**0.33)/(ins_inRe**0.5)
+   ht_src = 1.0
 
    T => ph_center(TEMP_VAR,:,:)
 

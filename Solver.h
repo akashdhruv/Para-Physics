@@ -21,7 +21,7 @@ Defining Poisson Solver Parameters
 Defining Temperature Solver
 #endif
 
-#define TEMP_SOLVER 2
+#define TEMP_SOLVER 1
 
 #if TEMP_SOLVER == 1
 #define TEMP_SOLVER_CENTRAL
@@ -30,6 +30,7 @@ Defining Temperature Solver
 #if TEMP_SOLVER == 2
 #define TEMP_SOLVER_UPWIND
 #endif
+
 
 #if 0
 Defining Simulation Parameters - Block Size, Domain Length, etc
@@ -43,16 +44,16 @@ Defining Simulation Parameters - Block Size, Domain Length, etc
 
 
 #define D_xmin -0.5
-#define D_ymin -0.5
+#define D_ymin -1.0
 
 
 #define D_xmax 0.5
-#define D_ymax 0.5
+#define D_ymax 1.0
 
-#define TIME_END 200.0
+#define TIME_END 50.0
 
-#define nblockx 5
-#define nblocky 4
+#define nblockx 2
+#define nblocky 1
 
 #define MaxIt 1500
 
@@ -92,7 +93,7 @@ Defining Flow Type
 Multiphase On/Off
 #endif
 
-#define MPH 0
+#define MPH 1
 
 #if MPH == 1
 #define MULTIPHASE
@@ -106,7 +107,7 @@ Multiphase On/Off
 Navier Stokes On/Off
 #endif
 
-#define NS 1
+#define NS 0
 
 #if NS == 1
 #define INS
@@ -126,4 +127,4 @@ Energy On/Off
 OpenMP threads per MPI rank
 #endif
 
-#define NTHREADS 2
+#define NTHREADS 1

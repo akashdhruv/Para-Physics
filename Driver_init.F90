@@ -6,10 +6,11 @@ subroutine Driver_init()
       use Grid_data
       use IncompNS_data
       use Multiphase_data
+      use HeatAD_data, only : ht_Pr
 
       implicit none
       
-      real :: dt_sig, dt_cfl, dt_mph, dx_min, dy_min
+      real :: dt_sig, dt_cfl, dt_mph, dx_min, dy_min, dt_temp
 
       dr_t  = TIME_END
 
@@ -21,15 +22,29 @@ subroutine Driver_init()
       dt_cfl = ins_cfl*min(dx_min,dy_min)
 
 #ifdef MULTIPHASE
-      dt_mph = min(0.05*((mph_cp1)/mph_thco1)*min(dx_min,dy_min)**2,&
-                   0.05*((mph_cp2)/mph_thco2)*min(dx_min,dy_min)**2)
+     
+      !dt_mph = min(0.05*((mph_cp1)/mph_thco1)*min(dx_min,dy_min)**2,&
+      !             0.05*((mph_cp2)/mph_thco2)*min(dx_min,dy_min)**2)
+
+      !_________The Missing Data simulation__________!
+
+      dt_mph = (ins_sigma)*(ht_Pr) / (ins_inRe*MAX( 1.0/(gr_dx*gr_dx), 1.0/(gr_dy*gr_dy)))
+
+      !____________________End_______________________!
 #endif
 
       dr_dt = min(dt_sig,dt_cfl)
 
 #ifdef MULTIPHASE
+
+      !_______For testing in Stefan_Problem_____!
+      !dr_dt = min(dr_dt,dt_mph)
+      !dr_dt = 0.000001
+      !___________________End___________________!
+
       dr_dt = min(dr_dt,dt_mph)
-      dr_dt = 0.000001
+
+
 #endif
 
       dr_nt = dr_t/dr_dt

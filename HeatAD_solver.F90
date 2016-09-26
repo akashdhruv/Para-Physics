@@ -24,6 +24,7 @@ subroutine HeatAD_solver(tstep)
       real :: Tij, Tipj, Timj, Tijp, Tijm
       real :: Txx, Tyy, th, dxp, dxm, dyp, dym
       real :: alphax_plus, alphax_mins, alphay_plus, alphay_mins, alpha_interface
+      real :: E_source
 
       real :: tol
 
@@ -130,6 +131,58 @@ subroutine HeatAD_solver(tstep)
 #endif
 
 #ifdef MULTIPHASE
+
+#ifdef TEMP_SOLVER_CENTRAL
+
+
+  !~~This is not a multiphase central difference solver for temperature.
+  !~~This is a singlephase implementation of heat equation solver with a
+  !~~source term which depends on the level set function. 
+
+  !______________The Missing Data simulation____________________________!
+
+  !$OMP PARALLEL DEFAULT(NONE) PRIVATE(i,j,u_conv,v_conv,u_plus,u_mins,&
+  !$OMP v_plus,v_mins,Tx_plus,Tx_mins,Ty_plus,Ty_mins,ii,jj) NUM_THREADS(NTHREADS) &
+  !$OMP SHARED(s,E_source,ht_src,T,T_old,dr_dt,gr_dy,gr_dx,ht_Pr,ins_inRe,u,v,dr_tile)
+
+  !$OMP DO COLLAPSE(2) SCHEDULE(STATIC)
+
+  do j=2,Nyb+1
+     do i=2,Nxb+1
+
+     u_conv = (u(i,j)+u(i-1,j))/2.
+     v_conv = (v(i,j)+v(i,j-1))/2.
+
+     u_plus = max(u_conv, 0.)
+     u_mins = min(u_conv, 0.)
+
+     v_plus = max(v_conv, 0.)
+     v_mins = min(v_conv, 0.)
+
+     Tx_plus = (T_old(i+1,j)-T_old(i,j))/gr_dx
+     Tx_mins = (T_old(i,j)-T_old(i-1,j))/gr_dx
+
+     Ty_plus = (T_old(i,j+1)-T_old(i,j))/gr_dy
+     Ty_mins = (T_old(i,j)-T_old(i,j-1))/gr_dy
+
+
+     E_source = ht_src/abs(s(i,j))
+
+
+     T(i,j) = T_old(i,j)+((dr_dt*ins_inRe)/(ht_Pr*gr_dx*gr_dx))*(T_old(i+1,j)+T_old(i-1,j)-2*T_old(i,j))&
+                        +((dr_dt*ins_inRe)/(ht_Pr*gr_dy*gr_dy))*(T_old(i,j+1)+T_old(i,j-1)-2*T_old(i,j))&
+                        -((dr_dt))*(u_plus*Tx_mins + u_mins*Tx_plus)&
+                        -((dr_dt))*(v_plus*Ty_mins + v_mins*Ty_plus) + dr_dt*E_source
+
+     end do
+   end do
+
+  !$OMP END DO
+  !$OMP END PARALLEL
+
+  !_______________________________________End_________________________________!
+
+#endif
 
 #ifdef TEMP_SOLVER_UPWIND
 
