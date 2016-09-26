@@ -12,8 +12,8 @@ subroutine MPIsolver_finalize()
       call MPI_COMM_FREE(y_comm,ierr)
 
 
-      deallocate(blockID)
-      deallocate(blockLC)
+      !deallocate(blockID)
+      !deallocate(blockLC)
    
       !call cpu_time(finish)
       finish = omp_get_wtime()

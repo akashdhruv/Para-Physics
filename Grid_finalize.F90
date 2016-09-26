@@ -10,5 +10,7 @@ subroutine Grid_finalize()
    deallocate(ph_center)
    deallocate(ph_facex)
    deallocate(ph_facey)
+   deallocate(blockID)
+   deallocate(blockLC)
 
 end subroutine Grid_finalize 
