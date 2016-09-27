@@ -166,9 +166,9 @@ subroutine HeatAD_solver(tstep)
      Ty_mins = (T_old(i,j)-T_old(i,j-1))/gr_dy
 
 
-     if (s(i,j) .le. .01) then
+     if (s(i,j) .ge. 0. .or. abs(s(i,j)) .le. 0.05) then
 
-        E_source = ht_src/0.01
+        E_source = ht_src/0.05
 
      else
    

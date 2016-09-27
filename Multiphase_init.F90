@@ -29,9 +29,9 @@ subroutine Multiphase_init()
 
    !________________The Missing Data Simulation___________!
 
-    x0 = 0.d0
-    y0 = 0.d0
-    r = 0.0
+    x0 = 0.0
+    y0 = 0.0
+    r = 0.05
 
     do j=1,Nyb+2
 
@@ -59,8 +59,10 @@ subroutine Multiphase_init()
 
          end if
 
-          sf(i,j) = sqrt((((xcell-x0)**2)/4)*exp(-6.0*(ycell-y0)) &
-                            +(((ycell-y0)**2)/9))
+          !sf(i,j) = sqrt((((xcell-x0)**2)/4)*exp(-6.0*(ycell-y0)) &
+          !                  +(((ycell-y0)**2)/9))
+
+          sf(i,j) = r - sqrt((xcell-x0)**2+(ycell-y0)**2)
 
       end do
 
