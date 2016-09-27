@@ -137,13 +137,13 @@ subroutine HeatAD_solver(tstep)
 
   !~~This is not a multiphase central difference solver for temperature.
   !~~This is a singlephase implementation of heat equation solver with a
-  !~~source term which depends on the level set function. 
-
-  !______________The Missing Data simulation____________________________!
+  !~~a heated solid body acting as a source
 
   !$OMP PARALLEL DEFAULT(NONE) PRIVATE(i,j,u_conv,v_conv,u_plus,u_mins,&
-  !$OMP v_plus,v_mins,Tx_plus,Tx_mins,Ty_plus,Ty_mins,ii,jj,E_source) NUM_THREADS(NTHREADS) &
-  !$OMP SHARED(s,ht_src,T,T_old,dr_dt,gr_dy,gr_dx,ht_Pr,ins_inRe,u,v,dr_tile,mph_thco2,mph_max_s)
+  !$OMP v_plus,v_mins,Tx_plus,Tx_mins,Ty_plus,Ty_mins,Tij,th,E_source,&
+  !$OMP alphax_plus,alphax_mins,alphay_plus,alphay_mins,alpha_interface,Txx,Tyy) NUM_THREADS(NTHREADS) &
+  !$OMP SHARED(ht_src,T,T_old,dr_dt,ht_Pr,ins_inRe,u,v,s,gr_dx,gr_dy,&
+  !$OMP tol,Tsat,cp,thco,mph_thco2,mph_cp2)
 
   !$OMP DO COLLAPSE(2) SCHEDULE(STATIC)
 
@@ -197,7 +197,7 @@ subroutine HeatAD_solver(tstep)
   !$OMP PARALLEL DEFAULT(NONE) PRIVATE(i,j,u_conv,v_conv,u_plus,u_mins,&
   !$OMP v_plus,v_mins,Tx_plus,Tx_mins,Ty_plus,Ty_mins,Tij,th,&
   !$OMP alphax_plus,alphax_mins,alphay_plus,alphay_mins,alpha_interface,Txx,Tyy) NUM_THREADS(NTHREADS) &
-  !$OMP SHARED(T,T_old,dr_dt,gr_dy,gr_dx,ht_Pr,ins_inRe,u,v,s,gr_dx,gr_dy,tol,Tsat,cp,thco,mph_thco2,mph_cp2)
+  !$OMP SHARED(T,T_old,dr_dt,ht_Pr,ins_inRe,u,v,s,gr_dx,gr_dy,tol,Tsat,cp,thco,mph_thco2,mph_cp2)
 
   !$OMP DO COLLAPSE(2) SCHEDULE(STATIC)
    do j=2,Nxb+1
