@@ -1,10 +1,10 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-k=1
-d=2
+k=2
+d=4
 
-M=20+1
+M=40+1
 N=20+1
 
 X=np.zeros((N*d,M*k),dtype=float)

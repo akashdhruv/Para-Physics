@@ -39,7 +39,7 @@ Defining Simulation Parameters - Block Size, Domain Length, etc
 #define MAX_BLOCKS 80
 
 
-#define Nxb 20
+#define Nxb 40
 #define Nyb 20
 
 
@@ -52,8 +52,8 @@ Defining Simulation Parameters - Block Size, Domain Length, etc
 
 #define TIME_END 100.0
 
-#define nblockx 1
-#define nblocky 2
+#define nblockx 2
+#define nblocky 4
 
 #define MaxIt 1500
 
