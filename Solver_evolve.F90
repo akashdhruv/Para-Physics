@@ -42,11 +42,19 @@ subroutine Solver_evolve
        call HeatAD_solver(tstep)
 #endif
 
+#ifdef ONLY_POISSON
+
+! call FOR Poisson_analytical GOES HERE
+
+#endif
+
 #ifdef SINGLEPHASE
 
        if (mod(tstep,5) == 0 .and. myid == 0) then
           call IO_display(ins_u_res,ins_v_res,ins_p_res,ht_T_res,p_counter,tstep*dr_dt,ins_maxdiv,ins_mindiv)
        endif
+
+       ! IO_display_v3 for Only_Poisson
 
 #endif
 
@@ -100,6 +108,10 @@ subroutine Solver_evolve
     pf = ((cc(PFUN_VAR,1:Nxb+1,1:Nyb+1)+cc(PFUN_VAR,2:Nxb+2,1:Nyb+1))/2 + (cc(PFUN_VAR,1:Nxb+1,2:Nyb+2)+cc(PFUN_VAR,2:Nxb+2,2:Nyb+2))/2)/2
 #endif
 
+#ifdef ONLY_POISSON
+! Post processing goes here
+#endif
+
     nullify(u)
     nullify(v)
     nullify(cc)
@@ -110,6 +122,10 @@ subroutine Solver_evolve
 
 #ifdef MULTIPHASE
     call IO_write(gr_x,gr_y,df,pf,th,tt,myid) 
+#endif
+
+#ifdef ONLY_POISSON
+! IO_write call goes here
 #endif
 
 end subroutine Solver_evolve

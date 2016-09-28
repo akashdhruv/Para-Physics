@@ -124,6 +124,16 @@ Energy On/Off
 #endif
 
 #if 0
+Only Poisson
+#endif
+
+#define PS 0
+
+#if PS == 1
+#define ONLY_POISSON
+#endif
+
+#if 0
 OpenMP threads per MPI rank
 #endif
 
