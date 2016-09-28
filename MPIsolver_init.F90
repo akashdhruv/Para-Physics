@@ -29,7 +29,7 @@ subroutine MPIsolver_init()
         call MPI_FINALIZE(ierr)
 
         if (myid == 0) then 
-        print *,"RUNTIME ERROR: The number blocks should be greater than and exaclty divisible by total number of MPI processes."
+        print *,"RUNTIME ERROR: The number blocks should be greater than and exactly divisible by total number of MPI processes."
         end if
 
         call exit(status)

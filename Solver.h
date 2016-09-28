@@ -21,7 +21,7 @@ Defining Poisson Solver Parameters
 Defining Temperature Solver
 #endif
 
-#define TEMP_SOLVER 1
+#define TEMP_SOLVER 2
 
 #if TEMP_SOLVER == 1
 #define TEMP_SOLVER_CENTRAL
@@ -44,16 +44,16 @@ Defining Simulation Parameters - Block Size, Domain Length, etc
 
 
 #define D_xmin -0.50
-#define D_ymin -1.00
+#define D_ymin -0.50
 
 
 #define D_xmax 0.50
-#define D_ymax 1.00
+#define D_ymax 0.50
 
 #define TIME_END 100.0
 
-#define nblockx 4
-#define nblocky 8
+#define nblockx 1
+#define nblocky 2
 
 #define MaxIt 1500
 
@@ -93,7 +93,7 @@ Defining Flow Type
 Multiphase On/Off
 #endif
 
-#define MPH 1
+#define MPH 0
 
 #if MPH == 1
 #define MULTIPHASE
@@ -107,9 +107,9 @@ Multiphase On/Off
 Navier Stokes On/Off
 #endif
 
-#define NS 0
+#define NS 1
 
-#if NS == 0
+#if NS == 1
 #define INS
 #endif
 
