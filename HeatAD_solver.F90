@@ -136,8 +136,8 @@ subroutine HeatAD_solver(tstep)
 
 
   !~~This is not a multiphase central difference solver for temperature.
-  !~~This is a singlephase implementation of heat equation solver with a
-  !~~a heated solid body acting as a source
+  !~~This is a multiphase first order upwind implementation of heat equation
+  !~~with a heated solid body acting as a source
 
   !$OMP PARALLEL DEFAULT(NONE) PRIVATE(i,j,u_conv,v_conv,u_plus,u_mins,&
   !$OMP v_plus,v_mins,Tx_plus,Tx_mins,Ty_plus,Ty_mins,Tij,th,E_source,&

@@ -21,6 +21,8 @@ subroutine MPIsolver_init()
     call MPI_COMM_RANK(solver_comm, myid, ierr)
     call MPI_COMM_SIZE(solver_comm, procs, ierr)    
 
+    !_______________code for AMR - still in debug_________!
+
     blockCount = ((nblockx*nblocky)/procs)
     checkSumMPI = blockCount*procs
 
@@ -39,6 +41,9 @@ subroutine MPIsolver_init()
     blockID(1:blockCount) = (/(I,I=1,blockCount)/)
  
     call morton_sort(blockCount,myid,procs,blockLC)
+
+    !__________________________End________________________!
+
     call MPI_BARRIER(solver_comm,ierr)
 
     call MPI_COMM_SPLIT(solver_comm,myid/nblockx,myid,x_comm,ierr)
