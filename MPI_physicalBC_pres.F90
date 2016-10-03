@@ -19,7 +19,7 @@ subroutine MPI_physicalBC_pres(p_ex)
 
        if ( x_id == nblockx-1) then
 
-           p_ex(Nxb+2,:)=p_ex(Nxb+1,:)
+           p_ex(Nxb+2,:)=-p_ex(Nxb+1,:)
 
        end if
 

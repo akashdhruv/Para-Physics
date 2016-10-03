@@ -54,7 +54,7 @@ subroutine MPI_physicalBC_vel(u_ex,v_ex)
 
        if ( x_id == 0) then
 
-           v_ex(1,:)=v_ex(2,:)
+           v_ex(1,:)=-v_ex(2,:)
            u_ex(1,:)=1.0
 
        end if
@@ -62,7 +62,7 @@ subroutine MPI_physicalBC_vel(u_ex,v_ex)
        if ( x_id == nblockx-1) then
 
            v_ex(Nxb+2,:)=v_ex(Nxb+1,:)
-           u_ex(Nxb+1,:)=u_ex(Nxb+1,:)-(dr_dt/gr_dx)*(u_ex(Nxb+1,:)-u_ex(Nxb,:))
+           u_ex(Nxb+1,:)=u_ex(Nxb+1,:)
            u_ex(Nxb+2,:)=u_ex(Nxb+1,:)
 
        end if

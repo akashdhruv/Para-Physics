@@ -43,14 +43,14 @@ Defining Simulation Parameters - Block Size, Domain Length, etc
 #define Nyb 20
 
 
-#define D_xmin -0.50
+#define D_xmin -1.50
 #define D_ymin -0.50
 
 
-#define D_xmax 0.50
+#define D_xmax 1.50
 #define D_ymax 0.50
 
-#define TIME_END 100.0
+#define TIME_END 20.0
 
 #define nblockx 2
 #define nblocky 4
@@ -75,7 +75,7 @@ Defining Simulation Parameters - Block Size, Domain Length, etc
 Defining Flow Type
 #endif
 
-#define FLOW 1
+#define FLOW 2
 
 #if FLOW == 1
 #define LID_DRIVEN_FLOW
