@@ -12,7 +12,7 @@ subroutine HeatAD_init()
 
    implicit none
 
-   real,pointer,dimension(:,:) :: T
+   real,pointer,dimension(:,:) :: T,s
    integer :: j,i
    real :: solnX
    real :: solnY
@@ -23,10 +23,26 @@ subroutine HeatAD_init()
    ht_src = 100.0
 
    T => ph_center(TEMP_VAR,:,:)
+   s => ph_center(DFUN_VAR,:,:)
 
-   T = 373.15
+   do j=1,Nyb+2
+     do i=1,Nxb+2
+
+        if(s(i,j) .ge. 0.0) then
+
+             T(i,j) = 0.0
+
+        else 
+
+             T(i,j) = 0.0
+
+        end if
+
+     end do
+   end do
 
    nullify(T)
+   nullify(s)
 
 
 

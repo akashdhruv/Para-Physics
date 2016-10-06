@@ -1,5 +1,5 @@
 #if 0
-Defining Poisson Solver Parameters
+_____________Defining Poisson Solver Parameters_________________
 #endif
 
 #define POIS_SOLVER 2
@@ -18,7 +18,7 @@ Defining Poisson Solver Parameters
 #endif
 
 #if 0
-Defining Temperature Solver
+_________________Defining Temperature Solver____________________
 #endif
 
 #define TEMP_SOLVER 2
@@ -33,7 +33,7 @@ Defining Temperature Solver
 
 
 #if 0
-Defining Simulation Parameters - Block Size, Domain Length, etc
+____Defining Simulation Parameters - Block Size, Domain Length, etc____
 #endif
 
 #define MAX_BLOCKS 80
@@ -74,7 +74,7 @@ Defining Simulation Parameters - Block Size, Domain Length, etc
 
 
 #if 0
-Defining Flow Type
+_______________________Defining Flow Type_____________________
 #endif
 
 #define FLOW 2
@@ -92,7 +92,7 @@ Defining Flow Type
 #endif
 
 #if 0
-Multiphase On/Off
+_______________________Multiphase On/Off_____________________
 #endif
 
 #define MPH 0
@@ -106,7 +106,7 @@ Multiphase On/Off
 #endif
 
 #if 0
-Navier Stokes On/Off
+______________________Navier Stokes On/Off___________________
 #endif
 
 #define NS 1
@@ -116,7 +116,7 @@ Navier Stokes On/Off
 #endif
 
 #if 0
-Energy On/Off
+_________________________Energy On/Off______________________
 #endif
 
 #define HEAT 1
@@ -126,7 +126,7 @@ Energy On/Off
 #endif
 
 #if 0
-Only Poisson
+_________________________Only Poisson______________________
 #endif
 
 #define PS 0
@@ -136,7 +136,7 @@ Only Poisson
 #endif
 
 #if 0
-Immersed Boundary On/Off
+___________________Immersed Boundary On/Off________________
 #endif
 
 #define IB 1
@@ -146,7 +146,7 @@ Immersed Boundary On/Off
 #endif
 
 #if 0
-OpenMP threads per MPI rank
+_________________OpenMP threads per MPI rank_______________
 #endif
 
 #define NTHREADS 1

@@ -3,6 +3,7 @@ subroutine Solver_evolve
 #include "Solver.h"
 
 #define INS_DEBUG
+!#define MULTIPHASE_DEBUG
 
     use IncompNS_interface, only: IncompNS_solver
     use HeatAD_interface, only: HeatAD_solver

@@ -6,7 +6,7 @@ subroutine Multiphase_solver(tstep,solnX)
     use Multiphase_data, only: mph_thco1, mph_cp1, mph_thco2, mph_cp2
     use physicaldata
     use Grid_data
-    use Multiphase_interface , only: Multiphase_evolve
+    use Multiphase_interface , only: mph_FillVars
 
     implicit none
 
@@ -51,7 +51,7 @@ subroutine Multiphase_solver(tstep,solnX)
 
     !______________________________End_______________________________!
 
-   call Multiphase_evolve(s,pf,thco,cprs,mph_thco1,mph_thco2,mph_cp1,mph_cp2)
+   call mph_FillVars(s,pf,thco,cprs,mph_thco1,mph_thco2,mph_cp1,mph_cp2)
 
    call MPI_applyBC(s)
    call MPI_applyBC(pf)

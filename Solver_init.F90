@@ -24,12 +24,12 @@ subroutine Solver_init
     call Multiphase_init()
 #endif
 
-#ifdef ENERGY
-    call HeatAD_init()
-#endif
-
 #ifdef IBM
     call IBM_init()
+#endif
+
+#ifdef ENERGY
+    call HeatAD_init()
 #endif
 
     call Driver_init()

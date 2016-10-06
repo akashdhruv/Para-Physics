@@ -1,4 +1,4 @@
-subroutine Multiphase_evolve(s,pf,thco,cprs,thco1,thco2,cp1,cp2)
+subroutine mph_FillVars(s,pf,thco,cprs,thco1,thco2,cp1,cp2)
 
 #include "Solver.h"
 
@@ -30,4 +30,4 @@ subroutine Multiphase_evolve(s,pf,thco,cprs,thco1,thco2,cp1,cp2)
     end do
 
 
-end subroutine Multiphase_evolve
+end subroutine mph_FillVars

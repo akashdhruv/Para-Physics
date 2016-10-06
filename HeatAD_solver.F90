@@ -79,9 +79,13 @@ subroutine HeatAD_solver(tstep)
 #ifdef TEMP_SOLVER_UPWIND
 
 #ifdef IBM
+
+  !_____________________________CONJUGATE HEAT TRANSFER______________________________!
+
   !$OMP PARALLEL DEFAULT(NONE) PRIVATE(i,j,u_conv,v_conv,u_plus,u_mins,&
-  !$OMP v_plus,v_mins,Tx_plus,Tx_mins,Ty_plus,Ty_mins,ii,jj) NUM_THREADS(NTHREADS) &
-  !$OMP SHARED(T,T_old,dr_dt,gr_dy,gr_dx,ht_Pr,ins_inRe,u,v,dr_tile)
+  !$OMP v_plus,v_mins,Tx_plus,Tx_mins,Ty_plus,Ty_mins,ii,jj,th,Tipj,Timj,&
+  !$OMP Tij,Tijp,Tijm) NUM_THREADS(NTHREADS) &
+  !$OMP SHARED(T,T_old,dr_dt,gr_dy,gr_dx,ht_Pr,ins_inRe,u,v,dr_tile,s,tol,Tsat)
 
   !$OMP DO COLLAPSE(2) SCHEDULE(STATIC)
 
@@ -101,16 +105,89 @@ subroutine HeatAD_solver(tstep)
      v_plus = max(v_conv, 0.)
      v_mins = min(v_conv, 0.)
 
-     Tx_plus = (T_old(i+1,j)-T_old(i,j))/gr_dx
-     Tx_mins = (T_old(i,j)-T_old(i-1,j))/gr_dx
+     Tx_plus = T_old(i+1,j)
+     Tx_mins = T_old(i-1,j)
 
-     Ty_plus = (T_old(i,j+1)-T_old(i,j))/gr_dy
-     Ty_mins = (T_old(i,j)-T_old(i,j-1))/gr_dy
+     Ty_plus = T_old(i,j+1)
+     Ty_mins = T_old(i,j-1)
 
-     T(i,j) = T_old(i,j)+((dr_dt*ins_inRe)/(ht_Pr*gr_dx*gr_dx))*(T_old(i+1,j)+T_old(i-1,j)-2*T_old(i,j))&
-                        +((dr_dt*ins_inRe)/(ht_Pr*gr_dy*gr_dy))*(T_old(i,j+1)+T_old(i,j-1)-2*T_old(i,j))&
-                        -((dr_dt))*(u_plus*Tx_mins + u_mins*Tx_plus)&
-                        -((dr_dt))*(v_plus*Ty_mins + v_mins*Ty_plus)
+     Tij = T_old(i,j)
+
+     ! Case 1 !
+     if(s(i,j)*s(i+1,j).le.0.d0) then
+
+       if (abs(s(i,j))/(abs(s(i,j))+abs(s(i+1,j))) .gt. tol) then
+
+       th = abs(s(i,j))/(abs(s(i,j))+abs(s(i+1,j)))
+       Tx_plus = (Tsat-T_old(i,j))/th + Tij
+
+       else
+
+       th = abs(s(i-1,j))/(abs(s(i-1,j))+abs(s(i+1,j)))
+       Tx_plus = (Tsat-T_old(i-1,j))/th + T_old(i-1,j)
+      
+       end if
+     end if
+     ! End of Case 1 !
+
+
+     ! Case 2 !
+     if(s(i,j)*s(i-1,j).le.0.d0) then
+
+       if (abs(s(i,j))/(abs(s(i,j))+abs(s(i-1,j))) .gt. tol) then
+
+       th = abs(s(i,j))/(abs(s(i,j))+abs(s(i-1,j)))
+       Tx_mins = (Tsat-T_old(i,j))/th + Tij
+    
+       else
+
+       th = abs(s(i+1,j))/(abs(s(i+1,j))+abs(s(i-1,j)))
+       Tx_mins = (Tsat-T_old(i+1,j))/th + T_old(i+1,j)
+             
+       end if
+     end if
+     ! End of Case 2 !
+
+
+    ! Case 3 !
+    if(s(i,j)*s(i,j+1).le.0.d0) then
+
+      if (abs(s(i,j))/(abs(s(i,j))+abs(s(i,j+1))) .gt. tol) then
+
+      th = abs(s(i,j))/(abs(s(i,j))+abs(s(i,j+1)))
+      Ty_plus = (Tsat-T_old(i,j))/th + Tij
+
+      else
+
+      th = abs(s(i,j-1))/(abs(s(i,j-1))+abs(s(i,j+1)))
+      Ty_plus = (Tsat-T_old(i,j-1))/th + T_old(i,j-1)
+    
+      end if
+    end if
+    ! End of Case 3 !
+
+    ! Case 4 !
+    if(s(i,j)*s(i,j-1).le.0.d0) then
+
+      if (abs(s(i,j))/(abs(s(i,j))+abs(s(i,j-1))) .gt. tol) then
+
+      th = abs(s(i,j))/(abs(s(i,j))+abs(s(i,j-1)))
+      Ty_mins = (Tsat-T_old(i,j))/th + Tij
+
+      else
+
+      th = abs(s(i,j+1))/(abs(s(i,j+1))+abs(s(i,j-1)))
+      Ty_mins = (Tsat-T_old(i,j+1))/th + T_old(i,j+1)
+
+      end if
+    end if
+    ! End of Case 4 !
+
+     T(i,j) = T_old(i,j)+((dr_dt*ins_inRe)/(ht_Pr*gr_dx*gr_dx))*(Tx_plus+Tx_mins-2*Tij)&
+                        +((dr_dt*ins_inRe)/(ht_Pr*gr_dy*gr_dy))*(Ty_plus+Ty_mins-2*Tij)&
+                        -((dr_dt))*(u_plus*(Tij-Tx_mins)/gr_dx + u_mins*(Tx_plus-Tij)/gr_dx)&
+                        -((dr_dt))*(v_plus*(Tij-Ty_mins)/gr_dy + v_mins*(Ty_plus-Tij)/gr_dy)
+
 
      end do
   end do
@@ -119,6 +196,8 @@ subroutine HeatAD_solver(tstep)
 
   !$OMP END DO
   !$OMP END PARALLEL
+
+  !___________________________END OF CONJUGATE HEAT TRANSFER_____________________!
 
 #else
   !$OMP PARALLEL DEFAULT(NONE) PRIVATE(i,j,u_conv,v_conv,u_plus,u_mins,&
@@ -188,6 +267,8 @@ subroutine HeatAD_solver(tstep)
 #ifdef MULTIPHASE
 
 #ifdef TEMP_SOLVER_UPWIND
+
+  !______MULTIPHASE TEMPERATURE SOLVER IS IN DEBUG MODE___________!
 
   !$OMP PARALLEL DEFAULT(NONE) PRIVATE(i,j,u_conv,v_conv,u_plus,u_mins,&
   !$OMP v_plus,v_mins,Tx_plus,Tx_mins,Ty_plus,Ty_mins,Tij,th,&
