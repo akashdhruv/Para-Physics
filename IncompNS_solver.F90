@@ -32,14 +32,15 @@ subroutine IncompNS_solver(tstep,p_counter)
        real :: u_res1, v_res1, maxdiv, mindiv
 
        real, dimension(Nxb,Nyb) :: p_RHS
-       integer :: i
+       integer :: i,j
        integer, intent(out) :: p_counter
 
-       real, pointer, dimension(:,:) :: u, v, p
+       real, pointer, dimension(:,:) :: u, v, p, s
 
        p => ph_center(PRES_VAR,:,:)
        u => ph_facex(VELC_VAR,:,:)
        v => ph_facey(VELC_VAR,:,:)
+       s => ph_center(DFUN_VAR,:,:)
 
        ins_v_res = 0
        ins_u_res = 0
@@ -92,6 +93,17 @@ subroutine IncompNS_solver(tstep,p_counter)
        call MPI_applyBC(vt)
        call MPI_physicalBC_vel(ut,vt)
 
+       do j=1,Nyb+2
+         do i=1,Nxb+2
+
+            if(s(i,j) .ge. 0.) then
+                ut(i,j) = 0.0
+                vt(i,j) = 0.0
+            end if
+
+         end do
+       end do
+
        ! Poisson Solver
 
        p_RHS = -((1/(gr_dy*dr_dt))*(vt(2:Nxb+1,2:Nyb+1)-vt(2:Nxb+1,1:Nyb)))&
@@ -109,6 +121,17 @@ subroutine IncompNS_solver(tstep,p_counter)
        call MPI_applyBC(u)
        call MPI_applyBC(v)
        call MPI_physicalBC_vel(u,v)
+
+       do j=1,Nyb+2
+         do i=1,Nxb+2
+
+            if(s(i,j) .ge. 0.) then
+                u(i,j) = 0.0
+                v(i,j) = 0.0
+            end if
+
+         end do
+       end do
 
        ! Divergence
 
@@ -145,6 +168,7 @@ subroutine IncompNS_solver(tstep,p_counter)
        nullify(u)
        nullify(v)
        nullify(p)
+       nullify(s)
 
 end subroutine IncompNS_solver
 

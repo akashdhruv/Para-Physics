@@ -52,6 +52,13 @@ module MPI_interface
    end interface
 
    interface
+        subroutine MPI_physicalBC_dfun(d_ex)
+        implicit none
+        real, dimension(Nxb+2,Nyb+2), intent(inout) :: d_ex
+        end subroutine MPI_physicalBC_dfun
+   end interface
+
+   interface
         subroutine MPI_periodicBC(u_ex,v_ex,aDIM)
         implicit none
         real, dimension(:,:), intent(inout) :: u_ex,v_ex

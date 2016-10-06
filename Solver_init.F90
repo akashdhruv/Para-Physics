@@ -8,6 +8,7 @@ subroutine Solver_init
     use HeatAD_interface, only: HeatAD_init
     use Driver_interface, only: Driver_init
     use Multiphase_interface, only: Multiphase_init
+    use IBM_interface, only: IBM_init
 
     implicit none
 
@@ -22,6 +23,8 @@ subroutine Solver_init
 #endif
 
     call HeatAD_init()
+
+    call IBM_init()
 
     call Driver_init()
 

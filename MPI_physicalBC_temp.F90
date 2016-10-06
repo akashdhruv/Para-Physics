@@ -13,15 +13,15 @@ subroutine MPI_physicalBC_temp(t_ex)
     
        if ( x_id == 0) then
 
-           t_ex(1,:) = 2*383.15-t_ex(2,:)
-           !t_ex(1,:) = t_ex(2,:)
+           !t_ex(1,:) = 2*383.15-t_ex(2,:)
+           t_ex(1,:) = t_ex(2,:)
 
        end if
 
        if ( x_id == nblockx-1) then
 
-           t_ex(Nxb+2,:) = 2*373.15-t_ex(Nxb+1,:)
-           !t_ex(Nxb+2,:) = t_ex(Nxb+1,:)
+           !t_ex(Nxb+2,:) = 2*373.15-t_ex(Nxb+1,:)
+           t_ex(Nxb+2,:) = t_ex(Nxb+1,:)
        end if
 
 
@@ -35,9 +35,9 @@ subroutine MPI_physicalBC_temp(t_ex)
 
        if ( y_id == nblocky-1) then
 
-            !t_ex(:,Nyb+2) = 2*383.15-t_ex(:,Nyb+1)
+            t_ex(:,Nyb+2) = 2*383.15-t_ex(:,Nyb+1)
             !t_ex(:,Nyb+2) = t_ex(:,Nyb+1)
-            t_ex(:,Nyb+2) = t_ex(:,Nyb+1)
+            !t_ex(:,Nyb+2) = t_ex(:,Nyb+1)
 
        end if
 
