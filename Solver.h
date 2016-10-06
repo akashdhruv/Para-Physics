@@ -149,5 +149,5 @@ ___________________Immersed Boundary On/Off________________
 _________________OpenMP threads per MPI rank_______________
 #endif
 
-#define NTHREADS 1
+#define NTHREADS 4
 

@@ -6,7 +6,8 @@ subroutine HeatAD_init()
    use IncompNS_data
    use physicaldata
    use Grid_data
-   use Multiphase_data, only: mph_thco1,mph_cp1
+   use Multiphase_data, only: mph_thco2,mph_cp2,mph_vis2,mph_rho2
+   use IBM_data,        only: ibm_thco2,ibm_cp2,ibm_rho2,ibm_vis2
    use Driver_data, only: dr_dt
    use MPI_interface, only: MPI_applyBC, MPI_physicalBC_temp
 
@@ -25,16 +26,18 @@ subroutine HeatAD_init()
    T => ph_center(TEMP_VAR,:,:)
    s => ph_center(DFUN_VAR,:,:)
 
+   !T = 373.15
+
    do j=1,Nyb+2
      do i=1,Nxb+2
 
         if(s(i,j) .ge. 0.0) then
 
-             T(i,j) = 0.0
+             T(i,j) = 373.00
 
         else 
 
-             T(i,j) = 0.0
+             T(i,j) = 313.00
 
         end if
 
@@ -43,7 +46,5 @@ subroutine HeatAD_init()
 
    nullify(T)
    nullify(s)
-
-
 
 end subroutine HeatAD_init

@@ -10,6 +10,7 @@ subroutine HeatAD_solver(tstep)
       use physicaldata
       use MPI_interface, only: MPI_applyBC, MPI_physicalBC_temp, MPI_CollectResiduals
       use Multiphase_data, only: mph_cp2,mph_thco2,mph_max_s,mph_min_s
+      use IBM_data, only: ibm_cp1,ibm_thco1
 
       implicit none
       
@@ -43,8 +44,8 @@ subroutine HeatAD_solver(tstep)
 #ifdef IBM
 
       s => ph_center(DFUN_VAR,:,:)
-
-      Tsat = 373.13
+      thco => ph_center(THCO_VAR,:,:)
+      cp => ph_center(CPRS_VAR,:,:)
 
 #endif
 
@@ -83,9 +84,10 @@ subroutine HeatAD_solver(tstep)
   !_____________________________CONJUGATE HEAT TRANSFER______________________________!
 
   !$OMP PARALLEL DEFAULT(NONE) PRIVATE(i,j,u_conv,v_conv,u_plus,u_mins,&
-  !$OMP v_plus,v_mins,Tx_plus,Tx_mins,Ty_plus,Ty_mins,ii,jj,th,Tipj,Timj,&
-  !$OMP Tij,Tijp,Tijm) NUM_THREADS(NTHREADS) &
-  !$OMP SHARED(T,T_old,dr_dt,gr_dy,gr_dx,ht_Pr,ins_inRe,u,v,dr_tile,s,tol,Tsat)
+  !$OMP v_plus,v_mins,Tx_plus,Tx_mins,Ty_plus,Ty_mins,ii,jj,th,Tipj,Timj,Txx,Tyy,Tsat,&
+  !$OMP Tij,Tijp,Tijm,alphax_plus,alphay_plus,alphax_mins,alphay_mins,alpha_interface) &
+  !$OMP NUM_THREADS(NTHREADS) &
+  !$OMP SHARED(T,T_old,dr_dt,gr_dy,gr_dx,ht_Pr,ins_inRe,u,v,dr_tile,s,tol,thco,cp,ht_Nu,ibm_cp1,ibm_thco1)
 
   !$OMP DO COLLAPSE(2) SCHEDULE(STATIC)
 
@@ -116,6 +118,12 @@ subroutine HeatAD_solver(tstep)
      ! Case 1 !
      if(s(i,j)*s(i+1,j).le.0.d0) then
 
+       if(s(i,j) .ge. 0.) then
+          Tsat = T_old(i,j)-(ht_Nu*(T_old(i,j)-T_old(i+1,j))*gr_dx)
+       else
+          Tsat = T_old(i+1,j)-(ht_Nu*(T_old(i+1,j)-T_old(i,j))*gr_dx)
+       end if
+
        if (abs(s(i,j))/(abs(s(i,j))+abs(s(i+1,j))) .gt. tol) then
 
        th = abs(s(i,j))/(abs(s(i,j))+abs(s(i+1,j)))
@@ -133,6 +141,12 @@ subroutine HeatAD_solver(tstep)
 
      ! Case 2 !
      if(s(i,j)*s(i-1,j).le.0.d0) then
+
+       if(s(i,j) .ge. 0.) then
+          Tsat = T_old(i,j)-(ht_Nu*(T_old(i,j)-T_old(i-1,j))*gr_dx)
+       else
+          Tsat = T_old(i-1,j)-(ht_Nu*(T_old(i-1,j)-T_old(i,j))*gr_dx)
+       end if
 
        if (abs(s(i,j))/(abs(s(i,j))+abs(s(i-1,j))) .gt. tol) then
 
@@ -152,6 +166,12 @@ subroutine HeatAD_solver(tstep)
     ! Case 3 !
     if(s(i,j)*s(i,j+1).le.0.d0) then
 
+      if(s(i,j) .ge. 0.) then
+          Tsat = T_old(i,j)-(ht_Nu*(T_old(i,j)-T_old(i,j+1))*gr_dy)
+      else
+          Tsat = T_old(i,j+1)-(ht_Nu*(T_old(i,j+1)-T_old(i,j))*gr_dy)
+      end if
+
       if (abs(s(i,j))/(abs(s(i,j))+abs(s(i,j+1))) .gt. tol) then
 
       th = abs(s(i,j))/(abs(s(i,j))+abs(s(i,j+1)))
@@ -169,6 +189,12 @@ subroutine HeatAD_solver(tstep)
     ! Case 4 !
     if(s(i,j)*s(i,j-1).le.0.d0) then
 
+      if(s(i,j) .ge. 0.) then
+          Tsat = T_old(i,j)-(ht_Nu*(T_old(i,j)-T_old(i,j-1))*gr_dy)
+      else
+          Tsat = T_old(i,j-1)-(ht_Nu*(T_old(i,j-1)-T_old(i,j))*gr_dy)
+      end if
+
       if (abs(s(i,j))/(abs(s(i,j))+abs(s(i,j-1))) .gt. tol) then
 
       th = abs(s(i,j))/(abs(s(i,j))+abs(s(i,j-1)))
@@ -183,11 +209,18 @@ subroutine HeatAD_solver(tstep)
     end if
     ! End of Case 4 !
 
-     T(i,j) = T_old(i,j)+((dr_dt*ins_inRe)/(ht_Pr*gr_dx*gr_dx))*(Tx_plus+Tx_mins-2*Tij)&
-                        +((dr_dt*ins_inRe)/(ht_Pr*gr_dy*gr_dy))*(Ty_plus+Ty_mins-2*Tij)&
-                        -((dr_dt))*(u_plus*(Tij-Tx_mins)/gr_dx + u_mins*(Tx_plus-Tij)/gr_dx)&
-                        -((dr_dt))*(v_plus*(Tij-Ty_mins)/gr_dy + v_mins*(Ty_plus-Tij)/gr_dy)
+    if(s(i,j) .ge. 0.) then
 
+    T(i,j) = T_old(i,j)+((dr_dt*ins_inRe*(ibm_thco1/ibm_cp1))/(ht_Pr*gr_dx*gr_dx))*(Tx_plus+Tx_mins-2*Tij)&
+                       +((dr_dt*ins_inRe*(ibm_thco1/ibm_cp1))/(ht_Pr*gr_dy*gr_dy))*(Ty_plus+Ty_mins-2*Tij)
+    else
+    T(i,j) = T_old(i,j)+((dr_dt*ins_inRe)/(ht_Pr*gr_dx*gr_dx))*(Tx_plus+Tx_mins-2*Tij)&
+                       +((dr_dt*ins_inRe)/(ht_Pr*gr_dy*gr_dy))*(Ty_plus+Ty_mins-2*Tij)&
+                       -((dr_dt))*(u_plus*(Tij-Tx_mins)/gr_dx + u_mins*(Tx_plus-Tij)/gr_dx)&
+                       -((dr_dt))*(v_plus*(Tij-Ty_mins)/gr_dy + v_mins*(Ty_plus-Tij)/gr_dy)
+
+
+    end if
 
      end do
   end do
@@ -260,6 +293,8 @@ subroutine HeatAD_solver(tstep)
 
 #ifdef IBM
      nullify(s)
+     nullify(thco)
+     nullify(cp)
 #endif
 
 #endif

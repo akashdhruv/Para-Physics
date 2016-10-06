@@ -16,14 +16,8 @@ subroutine IBM_init()
 
 
    s => ph_center(DFUN_VAR,:,:)
-   pf => ph_center(PFUN_VAR,:,:)
-   thco => ph_center(THCO_VAR,:,:)
-   cprs => ph_center(CPRS_VAR,:,:)
 
    s = 0.0
-   pf = 0.0
-   thco = 0.0
-   cprs = 0.0
 
    x0 = 0.0
    y0 =  0.0
@@ -61,20 +55,16 @@ subroutine IBM_init()
 
    end do
 
-   ibm_rho1 = 0.597
-   ibm_rho2 = 958.4
+   ibm_thco2 = 1.0
+   ibm_rho2 = 1.0
+   ibm_cp2 = 1.0*ibm_rho2
+   ibm_vis2 = 1.0
 
-   ibm_thco1 = 0.025
-   ibm_thco2 = 0.679
-
-   ibm_cp1 = 2030.0*ibm_rho1
-   ibm_cp2 = 4216.0*ibm_rho2
-
-   call mph_FillVars(s,pf,thco,cprs,ibm_thco1,ibm_thco2,ibm_cp1,ibm_cp2)
+   ibm_thco1 = 1.2
+   ibm_rho1 = 1.0
+   ibm_cp1 = 1.0*ibm_rho1
+   ibm_vis1 = 1.0
 
    nullify(s)
-   nullify(pf)
-   nullify(thco)
-   nullify(cprs)
 
 end subroutine IBM_init

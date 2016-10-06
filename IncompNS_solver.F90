@@ -93,7 +93,8 @@ subroutine IncompNS_solver(tstep,p_counter)
        call MPI_applyBC(vt)
        call MPI_physicalBC_vel(ut,vt)
 
-       ! Emmersed Boundary - Predictor BC
+#ifdef IBM
+       ! Immersed Boundary - Predictor BC
 
        do j=2,Nyb+1
          do i=2,Nxb+1
@@ -108,7 +109,7 @@ subroutine IncompNS_solver(tstep,p_counter)
 
          end do
        end do
-
+#endif
        ! Poisson Solver
 
        p_RHS = -((1/(gr_dy*dr_dt))*(vt(2:Nxb+1,2:Nyb+1)-vt(2:Nxb+1,1:Nyb)))&
@@ -126,22 +127,6 @@ subroutine IncompNS_solver(tstep,p_counter)
        call MPI_applyBC(u)
        call MPI_applyBC(v)
        call MPI_physicalBC_vel(u,v)
-
-       ! Emmersed Boundary - Corrector BC
-
-       do j=2,Nyb+1
-         do i=2,Nxb+1
-
-            if(s(i,j) >= 0. .and. s(i-1,j) < 0.) u(i,j) = 0.0
-
-            if(s(i,j) >= 0. .and. s(i+1,j) < 0.) u(i+1,j) = 0.0
-
-            if(s(i,j) >= 0. .and. s(i,j-1) < 0.) v(i,j) = 0.0
-
-            if(s(i,j) >= 0. .and. s(i,j+1) < 0.) v(i,j+1) = 0.0
-
-         end do
-       end do
 
        ! Divergence
 

@@ -96,7 +96,7 @@ subroutine Solver_evolve
           uu = ((u(1:Nxb+1,1:Nyb+1)+u(1:Nxb+1,2:Nyb+2))/2 +(u(2:Nxb+2,1:Nyb+1)+u(2:Nxb+2,2:Nyb+2))/2)/2
           vv = ((v(1:Nxb+1,1:Nyb+1)+v(2:Nxb+2,1:Nyb+1))/2 +(v(1:Nxb+1,2:Nyb+2)+v(2:Nxb+2,2:Nyb+2))/2)/2
           pp = ((cc(PRES_VAR,1:Nxb+1,1:Nyb+1)+cc(PRES_VAR,2:Nxb+2,1:Nyb+1))/2 +(cc(PRES_VAR,1:Nxb+1,2:Nyb+2)+cc(PRES_VAR,2:Nxb+2,2:Nyb+2))/2)/2
-          tt = ((cc(DFUN_VAR,1:Nxb+1,1:Nyb+1)+cc(DFUN_VAR,2:Nxb+2,1:Nyb+1))/2 +(cc(DFUN_VAR,1:Nxb+1,2:Nyb+2)+cc(DFUN_VAR,2:Nxb+2,2:Nyb+2))/2)/2
+          tt = ((cc(TEMP_VAR,1:Nxb+1,1:Nyb+1)+cc(TEMP_VAR,2:Nxb+2,1:Nyb+1))/2 +(cc(TEMP_VAR,1:Nxb+1,2:Nyb+2)+cc(TEMP_VAR,2:Nxb+2,2:Nyb+2))/2)/2
 
           nullify(cc)
           nullify(u)

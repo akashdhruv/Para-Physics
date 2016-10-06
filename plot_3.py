@@ -47,7 +47,7 @@ for i in range(0,k*d):
         P[(i/k)*N:(i/k)*N+N,(i%k)*M:(i%k)*M+M]=p
 	T[(i/k)*N:(i/k)*N+N,(i%k)*M:(i%k)*M+M]=t
 
-x_c = np.linspace(-r,r,50)
+x_c = np.linspace(-r,r,200)
 y_c = np.sqrt(r**2-x_c**2)
 
 x_circle = np.concatenate([x_c,np.fliplr([x_c[:-1]])[0]])
@@ -86,7 +86,9 @@ plt.plot(X[:,0],Y[:,0],'k')
 plt.plot(X[:,-1],Y[:,-1],'k')
 plt.plot(X[0,:],Y[0,:],'k')
 plt.plot(X[-1,:],Y[-1,:],'k')
-plt.fill(x_circle,y_circle,'w')
+plt.plot(x_circle,y_circle,'k')
+#plt.plot(X,Y,'g')
+#plt.plot(X.T,Y.T,'g')
 plt.xlabel('X')
 plt.ylabel('Y')
 plt.axis('equal')
