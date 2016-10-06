@@ -4,7 +4,6 @@ subroutine IBM_init()
 
    use physicaldata
    use Grid_data
-   use MPI_interface, only: MPI_applyBC, MPI_physicalBC_dfun
 
    implicit none
 
@@ -20,7 +19,7 @@ subroutine IBM_init()
 
    x0 = 0.0
    y0 =  0.0
-   r = 0.1
+   r = 0.2
 
    do j=1,Nyb+2
 
@@ -53,9 +52,6 @@ subroutine IBM_init()
      end do
 
    end do
-
-   call MPI_applyBC(s)
-   call MPI_physicalBC_dfun(s)
 
    nullify(s)
 

@@ -93,13 +93,18 @@ subroutine IncompNS_solver(tstep,p_counter)
        call MPI_applyBC(vt)
        call MPI_physicalBC_vel(ut,vt)
 
-       do j=1,Nyb+2
-         do i=1,Nxb+2
+       ! Emmersed Boundary - Predictor BC
 
-            if(s(i,j) .ge. 0.) then
-                ut(i,j) = 0.0
-                vt(i,j) = 0.0
-            end if
+       do j=2,Nyb+1
+         do i=2,Nxb+1
+         
+            if(s(i,j) >= 0. .and. s(i-1,j) < 0.) ut(i,j) = 0.0
+            
+            if(s(i,j) >= 0. .and. s(i+1,j) < 0.) ut(i+1,j) = 0.0
+
+            if(s(i,j) >= 0. .and. s(i,j-1) < 0.) vt(i,j) = 0.0
+
+            if(s(i,j) >= 0. .and. s(i,j+1) < 0.) vt(i,j+1) = 0.0
 
          end do
        end do
@@ -122,13 +127,18 @@ subroutine IncompNS_solver(tstep,p_counter)
        call MPI_applyBC(v)
        call MPI_physicalBC_vel(u,v)
 
-       do j=1,Nyb+2
-         do i=1,Nxb+2
+       ! Emmersed Boundary - Corrector BC
 
-            if(s(i,j) .ge. 0.) then
-                u(i,j) = 0.0
-                v(i,j) = 0.0
-            end if
+       do j=2,Nyb+1
+         do i=2,Nxb+1
+
+            if(s(i,j) >= 0. .and. s(i-1,j) < 0.) u(i,j) = 0.0
+
+            if(s(i,j) >= 0. .and. s(i+1,j) < 0.) u(i+1,j) = 0.0
+
+            if(s(i,j) >= 0. .and. s(i,j-1) < 0.) v(i,j) = 0.0
+
+            if(s(i,j) >= 0. .and. s(i,j+1) < 0.) v(i,j+1) = 0.0
 
          end do
        end do

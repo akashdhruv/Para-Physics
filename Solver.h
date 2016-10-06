@@ -43,11 +43,11 @@ Defining Simulation Parameters - Block Size, Domain Length, etc
 #define Nyb 20
 
 
-#define D_xmin -0.50
+#define D_xmin -1.50
 #define D_ymin -0.50
 
 
-#define D_xmax 0.50
+#define D_xmax 1.50
 #define D_ymax 0.50
 
 #define TIME_END 20.0
@@ -77,7 +77,7 @@ Defining Simulation Parameters - Block Size, Domain Length, etc
 Defining Flow Type
 #endif
 
-#define FLOW 1
+#define FLOW 2
 
 #if FLOW == 1
 #define LID_DRIVEN_FLOW
@@ -136,7 +136,18 @@ Only Poisson
 #endif
 
 #if 0
+Immersed Boundary On/Off
+#endif
+
+#define IB 1
+
+#if IB == 1
+#define IBM
+#endif
+
+#if 0
 OpenMP threads per MPI rank
 #endif
 
 #define NTHREADS 1
+

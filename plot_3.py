@@ -2,10 +2,12 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 k=2
-d=1
+d=4
 
-M=20+1
+M=40+1
 N=20+1
+
+r=0.2
 
 X=np.zeros((N*d,M*k),dtype=float)
 Y=np.zeros((N*d,M*k),dtype=float)
@@ -13,11 +15,6 @@ U=np.zeros((N*d,M*k),dtype=float)
 V=np.zeros((N*d,M*k),dtype=float)
 P=np.zeros((N*d,M*k),dtype=float)
 T=np.zeros((N*d,M*k),dtype=float)
-
-U= 1/U
-V= 1/V
-P= 1/P
-T= 1/T
 
 for i in range(0,k*d):
 	
@@ -43,93 +40,59 @@ for i in range(0,k*d):
         p=np.reshape(p,[N,M])
         t=np.reshape(t,[N,M])
 
-        		
 	X[(i/k)*N:(i/k)*N+N,(i%k)*M:(i%k)*M+M]=x
 	Y[(i/k)*N:(i/k)*N+N,(i%k)*M:(i%k)*M+M]=y
+	U[(i/k)*N:(i/k)*N+N,(i%k)*M:(i%k)*M+M]=u
+	V[(i/k)*N:(i/k)*N+N,(i%k)*M:(i%k)*M+M]=v
+        P[(i/k)*N:(i/k)*N+N,(i%k)*M:(i%k)*M+M]=p
+	T[(i/k)*N:(i/k)*N+N,(i%k)*M:(i%k)*M+M]=t
 
-        if(i == 13 or i==17 or i==21 or i==18 or i==22 or i==26):
+x_c = np.linspace(-r,r,50)
+y_c = np.sqrt(r**2-x_c**2)
 
-                #if(i%2 == 1):
-		#X[(i/k)*N:(i/k)*N+N,(i%k)*M:(i%k)*M+M]=X[(i/k)*N:(i/k)*N+N,(i%k)*M:(i%k)*M+M]+0.1
-        	#X[(i/k)*N:(i/k)*N+N,(i%k)*M:(i%k)*M+M]=x
-        	#Y[(i/k)*N:(i/k)*N+N,(i%k)*M:(i%k)*M+M]=y
-		U[(i/k)*N:(i/k)*N+N,(i%k)*M:(i%k)*M+M]=u
-		V[(i/k)*N:(i/k)*N+N,(i%k)*M:(i%k)*M+M]=v
-        	P[(i/k)*N:(i/k)*N+N,(i%k)*M:(i%k)*M+M]=p
-		T[(i/k)*N:(i/k)*N+N,(i%k)*M:(i%k)*M+M]=t
+x_circle = np.concatenate([x_c,np.fliplr([x_c[:-1]])[0]])
+y_circle = np.concatenate([y_c,-np.fliplr([y_c[:-1]])[0]])
 
-"""
 plt.figure()
-plt.title('V Velocity')
-#plt.title('Re = 1000, Grid = 128 x 128, Solver = FORTRAN')
-#plt.contourf(X,Y,V,density=5)
-plt.streamplot(X,Y,U,V,density=5)
+plt.title('Resultant Velocity')
+plt.contourf(X,Y,np.sqrt(U**2+V**2),density=20)
+plt.quiver(X,Y,U,V)
 plt.plot(X[:,0],Y[:,0],'k')
 plt.plot(X[:,-1],Y[:,-1],'k')
 plt.plot(X[0,:],Y[0,:],'k')
 plt.plot(X[-1,:],Y[-1,:],'k')
-#plt.plot(X,Y,'g')
-#plt.plot(X.T,Y.T,'g')
-#plt.ylim(-0.2,1.2)
-#plt.xlim(-0.2,2.2)
-plt.xlabel('X')
-plt.ylabel('Y')
-plt.axis('equal')
-
-plt.figure()
-plt.title('U Velocity')
-plt.contourf(X,Y,U,density=5)
-plt.plot(X[:,0],Y[:,0],'k')
-plt.plot(X[:,-1],Y[:,-1],'k')
-plt.plot(X[0,:],Y[0,:],'k')
-plt.plot(X[-1,:],Y[-1,:],'k')
-plt.xlabel('X')
-plt.ylabel('Y')
-plt.axis('equal')
-
-"""
-Dataout = np.row_stack((T[:,3]))
-np.savetxt('Parasolve.dat',Dataout)
-
-#Dataout = np.row_stack((Y[:,3]))
-#np.savetxt('Parasolve_Y.dat',Dataout)
-
-plt.figure()
-plt.title('Distance Function')
-plt.contourf(X,Y,U,density=20)
-plt.plot(X[:,0],Y[:,0],'k')
-plt.plot(X[:,-1],Y[:,-1],'k')
-plt.plot(X[0,:],Y[0,:],'k')
-plt.plot(X[-1,:],Y[-1,:],'k')
-#plt.plot(X,Y,'g')
-#plt.plot(X.T,Y.T,'g')
+plt.fill(x_circle,y_circle,'w')
 plt.xlabel('X')
 plt.ylabel('Y')
 plt.axis('equal') 
 
 plt.figure()
-plt.title('Thermal Conductivity')
+plt.title('Pressure')
 plt.contourf(X,Y,P,density=5)
 plt.plot(X[:,0],Y[:,0],'k')
 plt.plot(X[:,-1],Y[:,-1],'k')
 plt.plot(X[0,:],Y[0,:],'k')
 plt.plot(X[-1,:],Y[-1,:],'k')
-plt.plot(X,Y,'g')
-plt.plot(X.T,Y.T,'g')
+plt.fill(x_circle,y_circle,'w')
 plt.xlabel('X')
 plt.ylabel('Y')
 plt.axis('equal') 
 
 plt.figure()
 plt.title('Temperature')
-plt.contourf(X,Y,T,density=200)
+plt.contourf(X,Y,T,density=5)
 #plt.streamplot(X,Y,U,V,density=4,color='k')
 plt.plot(X[:,0],Y[:,0],'k')
 plt.plot(X[:,-1],Y[:,-1],'k')
 plt.plot(X[0,:],Y[0,:],'k')
 plt.plot(X[-1,:],Y[-1,:],'k')
+plt.fill(x_circle,y_circle,'w')
 plt.xlabel('X')
 plt.ylabel('Y')
 plt.axis('equal')
-plt.show()
+#plt.show()
 
+#plt.figure()
+#plt.title('Velocity Profile')
+#plt.plot(Y[:,(M-1)/2],U[:,(M-1)/2],'k')
+plt.show()

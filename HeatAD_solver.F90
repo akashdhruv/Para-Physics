@@ -40,6 +40,14 @@ subroutine HeatAD_solver(tstep)
       u => ph_facex(VELC_VAR,:,:)
       v => ph_facey(VELC_VAR,:,:)
 
+#ifdef IBM
+
+      s => ph_center(DFUN_VAR,:,:)
+
+      Tsat = 373.13
+
+#endif
+
 #ifdef MULTIPHASE
 
       s => ph_center(DFUN_VAR,:,:)
@@ -70,6 +78,7 @@ subroutine HeatAD_solver(tstep)
 
 #ifdef TEMP_SOLVER_UPWIND
 
+#ifdef IBM
   !$OMP PARALLEL DEFAULT(NONE) PRIVATE(i,j,u_conv,v_conv,u_plus,u_mins,&
   !$OMP v_plus,v_mins,Tx_plus,Tx_mins,Ty_plus,Ty_mins,ii,jj) NUM_THREADS(NTHREADS) &
   !$OMP SHARED(T,T_old,dr_dt,gr_dy,gr_dx,ht_Pr,ins_inRe,u,v,dr_tile)
@@ -111,42 +120,17 @@ subroutine HeatAD_solver(tstep)
   !$OMP END DO
   !$OMP END PARALLEL
 
-#endif
-
-     call MPI_applyBC(T)
-     call MPI_physicalBC_temp(T)
-
-     do i=1,Nxb+2
-          ht_T_res = ht_T_res + sum((T(i,:)-T_old(i,:))**2)
-     enddo
-
-     call MPI_CollectResiduals(ht_T_res,T_res1,1)
-
-     ht_T_res = sqrt(T_res1/((Nxb+2)*(Nyb+2)*(nblockx*nblocky)))
-
-     nullify(T)
-     nullify(u)
-     nullify(v)
-
-#endif
-
-#ifdef MULTIPHASE
-
-#ifdef TEMP_SOLVER_CENTRAL
-
-
-  !~~This is not a multiphase central difference solver for temperature.
-  !~~This is a multiphase first order upwind implementation of heat equation
-  !~~with a heated solid body acting as a source
-
+#else
   !$OMP PARALLEL DEFAULT(NONE) PRIVATE(i,j,u_conv,v_conv,u_plus,u_mins,&
-  !$OMP v_plus,v_mins,Tx_plus,Tx_mins,Ty_plus,Ty_mins,Tij,th,E_source,&
-  !$OMP alphax_plus,alphax_mins,alphay_plus,alphay_mins,alpha_interface,Txx,Tyy) NUM_THREADS(NTHREADS) &
-  !$OMP SHARED(ht_src,T,T_old,dr_dt,ht_Pr,ins_inRe,u,v,s,gr_dx,gr_dy,&
-  !$OMP tol,Tsat,cp,thco,mph_thco2,mph_cp2)
+  !$OMP v_plus,v_mins,Tx_plus,Tx_mins,Ty_plus,Ty_mins,ii,jj) NUM_THREADS(NTHREADS) &
+  !$OMP SHARED(T,T_old,dr_dt,gr_dy,gr_dx,ht_Pr,ins_inRe,u,v,dr_tile)
 
   !$OMP DO COLLAPSE(2) SCHEDULE(STATIC)
 
+  !do jj=2,Nyb+1,dr_tile
+  !do ii=2,Nxb+1,dr_tile
+  !do j=jj,jj+dr_tile-1
+     !do i=ii,ii+dr_tile-1
   do j=2,Nyb+1
      do i=2,Nxb+1
 
@@ -165,32 +149,43 @@ subroutine HeatAD_solver(tstep)
      Ty_plus = (T_old(i,j+1)-T_old(i,j))/gr_dy
      Ty_mins = (T_old(i,j)-T_old(i,j-1))/gr_dy
 
-
-     if (s(i,j) .ge. 0. .or. abs(s(i,j)) .le. 0.05) then
-
-        E_source = ht_src/0.05
-
-     else
-   
-        E_source = ht_src/(abs(s(i,j)))
-
-     end if
-
      T(i,j) = T_old(i,j)+((dr_dt*ins_inRe)/(ht_Pr*gr_dx*gr_dx))*(T_old(i+1,j)+T_old(i-1,j)-2*T_old(i,j))&
                         +((dr_dt*ins_inRe)/(ht_Pr*gr_dy*gr_dy))*(T_old(i,j+1)+T_old(i,j-1)-2*T_old(i,j))&
                         -((dr_dt))*(u_plus*Tx_mins + u_mins*Tx_plus)&
-                        -((dr_dt))*(v_plus*Ty_mins + v_mins*Ty_plus)&
-                        + dr_dt*E_source
+                        -((dr_dt))*(v_plus*Ty_mins + v_mins*Ty_plus)
 
      end do
-   end do
+  end do
+  !end do
+  !end do
 
   !$OMP END DO
   !$OMP END PARALLEL
+#endif
+#endif
 
-  !_______________________________________End_________________________________!
+     call MPI_applyBC(T)
+     call MPI_physicalBC_temp(T)
+
+     do i=1,Nxb+2
+          ht_T_res = ht_T_res + sum((T(i,:)-T_old(i,:))**2)
+     enddo
+
+     call MPI_CollectResiduals(ht_T_res,T_res1,1)
+
+     ht_T_res = sqrt(T_res1/((Nxb+2)*(Nyb+2)*(nblockx*nblocky)))
+
+     nullify(T)
+     nullify(u)
+     nullify(v)
+
+#ifdef IBM
+     nullify(s)
+#endif
 
 #endif
+
+#ifdef MULTIPHASE
 
 #ifdef TEMP_SOLVER_UPWIND
 

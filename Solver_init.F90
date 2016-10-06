@@ -16,15 +16,21 @@ subroutine Solver_init
 
     call Grid_init()
 
+#ifdef INS
     call IncompNS_init()
+#endif
 
 #ifdef MULTIPHASE
     call Multiphase_init()
 #endif
 
+#ifdef ENERGY
     call HeatAD_init()
+#endif
 
+#ifdef IBM
     call IBM_init()
+#endif
 
     call Driver_init()
 
