@@ -64,8 +64,10 @@ Defining Simulation Parameters - Block Size, Domain Length, etc
 #define PFUN_VAR 4
 #define THCO_VAR 5
 #define CPRS_VAR 6
+#define NRMX_VAR 7
+#define NRMY_VAR 8
 
-#define CENT_VAR 6
+#define CENT_VAR 8
 
 #define VELC_VAR 1
 #define FACE_VAR 1
@@ -86,7 +88,7 @@ Defining Flow Type
 #endif
 
 #if FLOW == 3
-#define COUETTE_FLOW
+#define MPH_FLOW
 #endif
 
 #if 0

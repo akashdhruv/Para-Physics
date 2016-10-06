@@ -7,6 +7,7 @@ subroutine IncompNS_solver(tstep,p_counter)
        use MPI_data
        use IncompNS_data
        use MPI_interface, ONLY: MPI_applyBC, MPI_CollectResiduals, MPI_physicalBC_vel
+       use IncompNS_interface, ONLY: ins_rescaleVel
 
 #include "Solver.h"
 
@@ -45,6 +46,9 @@ subroutine IncompNS_solver(tstep,p_counter)
 
        v_res1 = 0
        u_res1 = 0
+
+       ! Rescaling velocities after first step
+       !if(tstep>1) call ins_rescaleVel(u,v)
 
        u_old = u
        v_old = v

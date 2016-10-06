@@ -4,7 +4,7 @@ subroutine MPI_physicalBC_vel(u_ex,v_ex)
 
        use MPI_data
        use Driver_data, only: dr_dt
-       use Grid_data, only: gr_dx
+       use Grid_data, only: gr_dx,gr_dy
        use MPI_interface, only: MPI_periodicBC
 
        implicit none
@@ -54,31 +54,33 @@ subroutine MPI_physicalBC_vel(u_ex,v_ex)
 
        if ( x_id == 0) then
 
-           v_ex(1,:)=-v_ex(2,:)
+           v_ex(1,:)=v_ex(2,:)
            u_ex(1,:)=1.0
 
        end if
 
        if ( x_id == nblockx-1) then
 
-           v_ex(Nxb+2,:)=v_ex(Nxb+1,:)
-           u_ex(Nxb+1,:)=u_ex(Nxb+1,:)
-           u_ex(Nxb+2,:)=u_ex(Nxb+1,:)
+           !v_ex(Nxb+2,:)=v_ex(Nxb+2,:) - dr_dt*(v_ex(Nxb+2,:)-v_ex(Nxb+1,:))/gr_dy
+           !u_ex(Nxb+2,:)=u_ex(Nxb+2,:) - dr_dt*(u_ex(Nxb+2,:)-u_ex(Nxb+1,:))/gr_dx
+
+           v_ex(Nxb+2,:) = v_ex(Nxb+1,:)
+           u_ex(Nxb+2,:) = u_ex(Nxb+1,:)
 
        end if
 
 
        if ( y_id == 0) then
 
-           v_ex(:,1)=0
+           v_ex(:,1)=0.0
            u_ex(:,1)=-u_ex(:,2)
 
        end if
 
        if ( y_id == nblocky-1) then
 
-           v_ex(:,Nyb+2)=0
-           v_ex(:,Nyb+1)=0
+           v_ex(:,Nyb+2)=0.0
+           v_ex(:,Nyb+1)=0.0
            u_ex(:,Nyb+2)=-u_ex(:,Nyb+1)
 
        end if
@@ -108,6 +110,41 @@ subroutine MPI_physicalBC_vel(u_ex,v_ex)
            v_ex(:,Nyb+2)=0
            v_ex(:,Nyb+1)=0
            u_ex(:,Nyb+2)=2-u_ex(:,Nyb+1)
+
+       end if
+
+#endif
+
+#ifdef MPH_FLOW
+
+       if ( x_id == 0) then
+
+           v_ex(1,:)=v_ex(2,:)
+           u_ex(1,:)=u_ex(2,:)
+
+       end if
+
+       if ( x_id == nblockx-1) then
+
+           v_ex(Nxb+2,:)=v_ex(Nxb+1,:)
+           !u_ex(Nxb+1,:)=u_ex(Nxb,:)
+           u_ex(Nxb+2,:)=u_ex(Nxb+1,:)
+
+       end if
+
+
+       if ( y_id == 0) then
+
+           v_ex(:,1)=v_ex(:,2)
+           u_ex(:,1)=u_ex(:,2)
+
+       end if
+
+       if ( y_id == nblocky-1) then
+
+           !v_ex(:,Nyb+1)=v_ex(:,Nyb)
+           v_ex(:,Nyb+2)=v_ex(:,Ny+1)
+           u_ex(:,Nyb+2)=u_ex(:,Nyb+1)
 
        end if
 

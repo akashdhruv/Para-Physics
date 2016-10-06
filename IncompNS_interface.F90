@@ -22,7 +22,9 @@ module IncompNS_interface
 
 
        interface 
-           subroutine ins_rescaleVelout()
+           subroutine ins_rescaleVel(u,v)
+            implicit none
+            real, dimension(:,:), intent(inout) :: u,v
            end subroutine
        end interface
 

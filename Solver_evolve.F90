@@ -2,6 +2,8 @@ subroutine Solver_evolve
 
 #include "Solver.h"
 
+#define INS_DEBUG
+
     use IncompNS_interface, only: IncompNS_solver
     use HeatAD_interface, only: HeatAD_solver
     use Grid_data
@@ -66,7 +68,7 @@ subroutine Solver_evolve
 
 #endif
 
-#ifdef MULTIPHASE
+#ifdef MULTIPHASE_DEBUG
        if(mod(tstep,100000) == 0) then
           cc => ph_center(:,:,:)
 
@@ -80,6 +82,28 @@ subroutine Solver_evolve
           call IO_write(gr_x,gr_y,df,pf,th,tt,myid)
 
        end if
+#endif
+
+#ifdef INS_DEBUG
+
+       if(mod(tstep,10) == 0) then
+
+          u => ph_facex(VELC_VAR,:,:)
+          v => ph_facey(VELC_VAR,:,:)
+          cc => ph_center(:,:,:)
+
+          uu = ((u(1:Nxb+1,1:Nyb+1)+u(1:Nxb+1,2:Nyb+2))/2 +(u(2:Nxb+2,1:Nyb+1)+u(2:Nxb+2,2:Nyb+2))/2)/2
+          vv = ((v(1:Nxb+1,1:Nyb+1)+v(2:Nxb+2,1:Nyb+1))/2 +(v(1:Nxb+1,2:Nyb+2)+v(2:Nxb+2,2:Nyb+2))/2)/2
+          pp = ((cc(PRES_VAR,1:Nxb+1,1:Nyb+1)+cc(PRES_VAR,2:Nxb+2,1:Nyb+1))/2 +(cc(PRES_VAR,1:Nxb+1,2:Nyb+2)+cc(PRES_VAR,2:Nxb+2,2:Nyb+2))/2)/2
+          tt = ((cc(TEMP_VAR,1:Nxb+1,1:Nyb+1)+cc(TEMP_VAR,2:Nxb+2,1:Nyb+1))/2 +(cc(TEMP_VAR,1:Nxb+1,2:Nyb+2)+cc(TEMP_VAR,2:Nxb+2,2:Nyb+2))/2)/2
+
+          nullify(cc)
+          nullify(u)
+          nullify(v)
+
+          call IO_write(gr_x,gr_y,uu,vv,pp,tt,myid)
+
+        end if
 #endif
 
 #ifdef INS

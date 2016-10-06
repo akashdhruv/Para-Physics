@@ -12,5 +12,6 @@ module IncompNS_data
     real, save, dimension(Nxb,Nyb)   :: ins_G2_old
 
     real, save :: ins_Qin,ins_Qout,ins_convvel
+    real, save :: ins_maxU
 
 end module IncompNS_data
