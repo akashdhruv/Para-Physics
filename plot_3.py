@@ -1,11 +1,11 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-k=3
-d=3
+k=2
+d=4
 
-M=300+1
-N=100+1
+M=40+1
+N=20+1
 
 r=0.15
 
@@ -56,8 +56,8 @@ y_circle = np.concatenate([y_c,-np.fliplr([y_c[:-1]])[0]])
 x_circle2 = x_circle.copy()
 y_circle2 = y_circle.copy()
 
-x_circle = x_circle-0.75
-x_circle2= x_circle2-0.25
+x_circle = x_circle-0.2
+x_circle2= x_circle2+0.2
 
 plt.figure()
 plt.title('Resultant Velocity')

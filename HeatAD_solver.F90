@@ -90,8 +90,9 @@ subroutine HeatAD_solver(tstep)
   !$OMP NUM_THREADS(NTHREADS) &
   !$OMP SHARED(s2,T,T_old,dr_dt,gr_dy,gr_dx,ht_Pr,ins_inRe,u,v,dr_tile,s,tol,thco,cp,ht_Nu,ibm_cp1,ibm_thco1)
 
-  !$OMP DO COLLAPSE(2) SCHEDULE(STATIC)
+  Tsat = 373.00
 
+  !$OMP DO COLLAPSE(2) SCHEDULE(STATIC)
   !do jj=2,Nyb+1,dr_tile
   !do ii=2,Nxb+1,dr_tile
   !do j=jj,jj+dr_tile-1
@@ -119,11 +120,11 @@ subroutine HeatAD_solver(tstep)
      ! Case 1 !
      if(s(i,j)*s(i+1,j).le.0.d0) then
 
-       if(s(i,j) .ge. 0.) then
-          Tsat = T_old(i,j)-(ht_Nu*(T_old(i,j)-T_old(i+1,j))*gr_dx)
-       else
-          Tsat = T_old(i+1,j)-(ht_Nu*(T_old(i+1,j)-T_old(i,j))*gr_dx)
-       end if
+       !if(s(i,j) .ge. 0.) then
+       !   Tsat = T_old(i,j)-(ht_Nu*(T_old(i,j)-T_old(i+1,j))*gr_dx)
+       !else
+       !   Tsat = T_old(i+1,j)-(ht_Nu*(T_old(i+1,j)-T_old(i,j))*gr_dx)
+       !end if
 
        if (abs(s(i,j))/(abs(s(i,j))+abs(s(i+1,j))) .gt. tol) then
 
@@ -143,11 +144,11 @@ subroutine HeatAD_solver(tstep)
      ! Case 2 !
      if(s(i,j)*s(i-1,j).le.0.d0) then
 
-       if(s(i,j) .ge. 0.) then
-          Tsat = T_old(i,j)-(ht_Nu*(T_old(i,j)-T_old(i-1,j))*gr_dx)
-       else
-          Tsat = T_old(i-1,j)-(ht_Nu*(T_old(i-1,j)-T_old(i,j))*gr_dx)
-       end if
+       !if(s(i,j) .ge. 0.) then
+       !   Tsat = T_old(i,j)-(ht_Nu*(T_old(i,j)-T_old(i-1,j))*gr_dx)
+       !else
+       !   Tsat = T_old(i-1,j)-(ht_Nu*(T_old(i-1,j)-T_old(i,j))*gr_dx)
+       !end if
 
        if (abs(s(i,j))/(abs(s(i,j))+abs(s(i-1,j))) .gt. tol) then
 
@@ -167,11 +168,11 @@ subroutine HeatAD_solver(tstep)
     ! Case 3 !
     if(s(i,j)*s(i,j+1).le.0.d0) then
 
-      if(s(i,j) .ge. 0.) then
-          Tsat = T_old(i,j)-(ht_Nu*(T_old(i,j)-T_old(i,j+1))*gr_dy)
-      else
-          Tsat = T_old(i,j+1)-(ht_Nu*(T_old(i,j+1)-T_old(i,j))*gr_dy)
-      end if
+      !if(s(i,j) .ge. 0.) then
+      !    Tsat = T_old(i,j)-(ht_Nu*(T_old(i,j)-T_old(i,j+1))*gr_dy)
+      !else
+      !    Tsat = T_old(i,j+1)-(ht_Nu*(T_old(i,j+1)-T_old(i,j))*gr_dy)
+      !end if
 
       if (abs(s(i,j))/(abs(s(i,j))+abs(s(i,j+1))) .gt. tol) then
 
@@ -190,11 +191,11 @@ subroutine HeatAD_solver(tstep)
     ! Case 4 !
     if(s(i,j)*s(i,j-1).le.0.d0) then
 
-      if(s(i,j) .ge. 0.) then
-          Tsat = T_old(i,j)-(ht_Nu*(T_old(i,j)-T_old(i,j-1))*gr_dy)
-      else
-          Tsat = T_old(i,j-1)-(ht_Nu*(T_old(i,j-1)-T_old(i,j))*gr_dy)
-      end if
+      !if(s(i,j) .ge. 0.) then
+      !    Tsat = T_old(i,j)-(ht_Nu*(T_old(i,j)-T_old(i,j-1))*gr_dy)
+      !else
+      !    Tsat = T_old(i,j-1)-(ht_Nu*(T_old(i,j-1)-T_old(i,j))*gr_dy)
+      !end if
 
       if (abs(s(i,j))/(abs(s(i,j))+abs(s(i,j-1))) .gt. tol) then
 
@@ -215,11 +216,11 @@ subroutine HeatAD_solver(tstep)
      ! Case 1 !
      if(s2(i,j)*s2(i+1,j).le.0.d0) then
 
-       if(s2(i,j) .ge. 0.) then
-          Tsat = T_old(i,j)-(ht_Nu*(T_old(i,j)-T_old(i+1,j))*gr_dx)
-       else
-          Tsat = T_old(i+1,j)-(ht_Nu*(T_old(i+1,j)-T_old(i,j))*gr_dx)
-       end if
+       !if(s2(i,j) .ge. 0.) then
+       !   Tsat = T_old(i,j)-(ht_Nu*(T_old(i,j)-T_old(i+1,j))*gr_dx)
+       !else
+       !   Tsat = T_old(i+1,j)-(ht_Nu*(T_old(i+1,j)-T_old(i,j))*gr_dx)
+       !end if
 
        if (abs(s2(i,j))/(abs(s2(i,j))+abs(s2(i+1,j))) .gt. tol) then
 
@@ -239,11 +240,11 @@ subroutine HeatAD_solver(tstep)
      ! Case 2 !
      if(s2(i,j)*s2(i-1,j).le.0.d0) then
 
-       if(s2(i,j) .ge. 0.) then
-          Tsat = T_old(i,j)-(ht_Nu*(T_old(i,j)-T_old(i-1,j))*gr_dx)
-       else
-          Tsat = T_old(i-1,j)-(ht_Nu*(T_old(i-1,j)-T_old(i,j))*gr_dx)
-       end if
+       !if(s2(i,j) .ge. 0.) then
+       !   Tsat = T_old(i,j)-(ht_Nu*(T_old(i,j)-T_old(i-1,j))*gr_dx)
+       !else
+       !   Tsat = T_old(i-1,j)-(ht_Nu*(T_old(i-1,j)-T_old(i,j))*gr_dx)
+       !end if
 
        if (abs(s2(i,j))/(abs(s2(i,j))+abs(s2(i-1,j))) .gt. tol) then
 
@@ -263,11 +264,11 @@ subroutine HeatAD_solver(tstep)
     ! Case 3 !
     if(s2(i,j)*s2(i,j+1).le.0.d0) then
 
-      if(s2(i,j) .ge. 0.) then
-          Tsat = T_old(i,j)-(ht_Nu*(T_old(i,j)-T_old(i,j+1))*gr_dy)
-      else
-          Tsat = T_old(i,j+1)-(ht_Nu*(T_old(i,j+1)-T_old(i,j))*gr_dy)
-      end if
+      !if(s2(i,j) .ge. 0.) then
+      !    Tsat = T_old(i,j)-(ht_Nu*(T_old(i,j)-T_old(i,j+1))*gr_dy)
+      !else
+      !    Tsat = T_old(i,j+1)-(ht_Nu*(T_old(i,j+1)-T_old(i,j))*gr_dy)
+      !end if
 
       if (abs(s2(i,j))/(abs(s2(i,j))+abs(s2(i,j+1))) .gt. tol) then
 
@@ -286,11 +287,11 @@ subroutine HeatAD_solver(tstep)
     ! Case 4 !
     if(s2(i,j)*s2(i,j-1).le.0.d0) then
 
-      if(s2(i,j) .ge. 0.) then
-          Tsat = T_old(i,j)-(ht_Nu*(T_old(i,j)-T_old(i,j-1))*gr_dy)
-      else
-          Tsat = T_old(i,j-1)-(ht_Nu*(T_old(i,j-1)-T_old(i,j))*gr_dy)
-      end if
+      !if(s2(i,j) .ge. 0.) then
+      !    Tsat = T_old(i,j)-(ht_Nu*(T_old(i,j)-T_old(i,j-1))*gr_dy)
+      !else
+      !    Tsat = T_old(i,j-1)-(ht_Nu*(T_old(i,j-1)-T_old(i,j))*gr_dy)
+      !end if
 
       if (abs(s2(i,j))/(abs(s2(i,j))+abs(s2(i,j-1))) .gt. tol) then
 

@@ -87,7 +87,7 @@ subroutine Solver_evolve
 
 #ifdef INS_DEBUG
 
-       if(mod(tstep,100000) == 0) then
+       if(mod(tstep,10000) == 0) then
 
           u => ph_facex(VELC_VAR,:,:)
           v => ph_facey(VELC_VAR,:,:)

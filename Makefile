@@ -49,4 +49,4 @@ $(EXE): $(ALL_OBJS)
 	$(MPIFF) $(FFLAGS) $<
 
 clean:
-	rm -f *.dat *.mod *.o $(EXE)
+	rm -f *.dat *.mod *.o

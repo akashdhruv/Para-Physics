@@ -34,14 +34,14 @@ subroutine HeatAD_init()
 
         if(s(i,j) .ge. 0.0) then
 
-             T(i,j) = 373.00
+             T(i,j) = 400.00
 
          end if
 
 #if NBOD == 2
         if(s2(i,j) .ge. 0.0) then
 
-             T(i,j) = 373.00
+             T(i,j) = 400.00
 
         end if
 #endif
