@@ -8,6 +8,7 @@ subroutine IncompNS_solver(tstep,p_counter)
        use IncompNS_data
        use MPI_interface, ONLY: MPI_applyBC, MPI_CollectResiduals, MPI_physicalBC_vel
        use IncompNS_interface, ONLY: ins_rescaleVel
+       use IBM_interface, ONLY: IBM_ApplyForcing
 
 #include "Solver.h"
 
@@ -96,19 +97,8 @@ subroutine IncompNS_solver(tstep,p_counter)
 #ifdef IBM
        ! Immersed Boundary - Predictor BC
 
-       do j=2,Nyb+1
-         do i=2,Nxb+1
-         
-            if(s(i,j) >= 0. .and. s(i-1,j) < 0.) ut(i,j) = 0.0
-            
-            if(s(i,j) >= 0. .and. s(i+1,j) < 0.) ut(i+1,j) = 0.0
+       call IBM_ApplyForcing(ut,vt,s)
 
-            if(s(i,j) >= 0. .and. s(i,j-1) < 0.) vt(i,j) = 0.0
-
-            if(s(i,j) >= 0. .and. s(i,j+1) < 0.) vt(i,j+1) = 0.0
-
-         end do
-       end do
 #endif
        ! Poisson Solver
 

@@ -19,9 +19,9 @@ subroutine IBM_init()
 
    s = 0.0
 
-   x0 = 0.0
+   x0 = -0.75
    y0 =  0.0
-   r = 0.2
+   r  =  0.1
 
    do j=1,Nyb+2
 

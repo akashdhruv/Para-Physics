@@ -33,7 +33,7 @@ _________________Defining Temperature Solver____________________
 
 
 #if 0
-____Defining Simulation Parameters - Block Size, Domain Length, etc____
+_______________________Grid Parameters___________________________
 #endif
 
 #define MAX_BLOCKS 80
@@ -126,7 +126,7 @@ _________________________Energy On/Off______________________
 #endif
 
 #if 0
-_________________________Only Poisson______________________
+_____________________Only Poisson On/Off_____________________
 #endif
 
 #define PS 0

@@ -7,6 +7,7 @@ subroutine Multiphase_solver(tstep,solnX)
     use physicaldata
     use Grid_data
     use Multiphase_interface , only: mph_FillVars
+    use MPI_interface, only: MPI_applyBC,MPI_physicalBC_dfun
 
     implicit none
 
@@ -58,10 +59,10 @@ subroutine Multiphase_solver(tstep,solnX)
    call MPI_applyBC(thco)
    call MPI_applyBC(cprs)
 
-   call MPI_physicalBC_pres(s)
-   call MPI_physicalBC_pres(pf)
-   call MPI_physicalBC_pres(thco)
-   call MPI_physicalBC_pres(cprs)
+   call MPI_physicalBC_dfun(s)
+   call MPI_physicalBC_dfun(pf)
+   call MPI_physicalBC_dfun(thco)
+   call MPI_physicalBC_dfun(cprs)
     
    nullify(s)
    nullify(pf)
