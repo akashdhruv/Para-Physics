@@ -36,12 +36,13 @@ subroutine IncompNS_solver(tstep,p_counter)
        integer :: i,j
        integer, intent(out) :: p_counter
 
-       real, pointer, dimension(:,:) :: u, v, p, s
+       real, pointer, dimension(:,:) :: u, v, p, s, s2
 
        p => ph_center(PRES_VAR,:,:)
        u => ph_facex(VELC_VAR,:,:)
        v => ph_facey(VELC_VAR,:,:)
-       s => ph_center(DFUN_VAR,:,:)
+       s => ph_center(IBM1_VAR,:,:)
+       s2 => ph_center(IBM2_VAR,:,:)
 
        ins_v_res = 0
        ins_u_res = 0
@@ -97,7 +98,7 @@ subroutine IncompNS_solver(tstep,p_counter)
 #ifdef IBM
        ! Immersed Boundary - Predictor BC
 
-       call IBM_ApplyForcing(ut,vt,s)
+       call IBM_ApplyForcing(ut,vt,s,s2)
 
 #endif
        ! Poisson Solver
@@ -154,6 +155,7 @@ subroutine IncompNS_solver(tstep,p_counter)
        nullify(v)
        nullify(p)
        nullify(s)
+       nullify(s2)
 
 end subroutine IncompNS_solver
 

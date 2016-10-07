@@ -15,7 +15,7 @@ subroutine HeatAD_solver(tstep)
       implicit none
       
       integer, intent(in) :: tstep
-      real, pointer, dimension(:,:) :: T,u,v,s,pf,thco,cp
+      real, pointer, dimension(:,:) :: T,u,v,s,pf,thco,cp,s2
       real, dimension(Nxb+2,Nyb+2) :: T_old
 
       integer :: i,j,ii,jj
@@ -43,9 +43,10 @@ subroutine HeatAD_solver(tstep)
 
 #ifdef IBM
 
-      s => ph_center(DFUN_VAR,:,:)
+      s => ph_center(IBM1_VAR,:,:)
       thco => ph_center(THCO_VAR,:,:)
       cp => ph_center(CPRS_VAR,:,:)
+      s2 => ph_center(IBM2_VAR,:,:)
 
 #endif
 
@@ -87,7 +88,7 @@ subroutine HeatAD_solver(tstep)
   !$OMP v_plus,v_mins,Tx_plus,Tx_mins,Ty_plus,Ty_mins,ii,jj,th,Tipj,Timj,Txx,Tyy,Tsat,&
   !$OMP Tij,Tijp,Tijm,alphax_plus,alphay_plus,alphax_mins,alphay_mins,alpha_interface) &
   !$OMP NUM_THREADS(NTHREADS) &
-  !$OMP SHARED(T,T_old,dr_dt,gr_dy,gr_dx,ht_Pr,ins_inRe,u,v,dr_tile,s,tol,thco,cp,ht_Nu,ibm_cp1,ibm_thco1)
+  !$OMP SHARED(s2,T,T_old,dr_dt,gr_dy,gr_dx,ht_Pr,ins_inRe,u,v,dr_tile,s,tol,thco,cp,ht_Nu,ibm_cp1,ibm_thco1)
 
   !$OMP DO COLLAPSE(2) SCHEDULE(STATIC)
 
@@ -209,10 +210,116 @@ subroutine HeatAD_solver(tstep)
     end if
     ! End of Case 4 !
 
+#if NBOD ==2
+
+     ! Case 1 !
+     if(s2(i,j)*s2(i+1,j).le.0.d0) then
+
+       if(s2(i,j) .ge. 0.) then
+          Tsat = T_old(i,j)-(ht_Nu*(T_old(i,j)-T_old(i+1,j))*gr_dx)
+       else
+          Tsat = T_old(i+1,j)-(ht_Nu*(T_old(i+1,j)-T_old(i,j))*gr_dx)
+       end if
+
+       if (abs(s2(i,j))/(abs(s2(i,j))+abs(s2(i+1,j))) .gt. tol) then
+
+       th = abs(s2(i,j))/(abs(s2(i,j))+abs(s2(i+1,j)))
+       Tx_plus = (Tsat-T_old(i,j))/th + Tij
+
+       else
+
+       th = abs(s2(i-1,j))/(abs(s2(i-1,j))+abs(s2(i+1,j)))
+       Tx_plus = (Tsat-T_old(i-1,j))/th + T_old(i-1,j)
+      
+       end if
+     end if
+     ! End of Case 1 !
+
+
+     ! Case 2 !
+     if(s2(i,j)*s2(i-1,j).le.0.d0) then
+
+       if(s2(i,j) .ge. 0.) then
+          Tsat = T_old(i,j)-(ht_Nu*(T_old(i,j)-T_old(i-1,j))*gr_dx)
+       else
+          Tsat = T_old(i-1,j)-(ht_Nu*(T_old(i-1,j)-T_old(i,j))*gr_dx)
+       end if
+
+       if (abs(s2(i,j))/(abs(s2(i,j))+abs(s2(i-1,j))) .gt. tol) then
+
+       th = abs(s2(i,j))/(abs(s2(i,j))+abs(s2(i-1,j)))
+       Tx_mins = (Tsat-T_old(i,j))/th + Tij
+    
+       else
+
+       th = abs(s2(i+1,j))/(abs(s2(i+1,j))+abs(s2(i-1,j)))
+       Tx_mins = (Tsat-T_old(i+1,j))/th + T_old(i+1,j)
+             
+       end if
+     end if
+     ! End of Case 2 !
+
+
+    ! Case 3 !
+    if(s2(i,j)*s2(i,j+1).le.0.d0) then
+
+      if(s2(i,j) .ge. 0.) then
+          Tsat = T_old(i,j)-(ht_Nu*(T_old(i,j)-T_old(i,j+1))*gr_dy)
+      else
+          Tsat = T_old(i,j+1)-(ht_Nu*(T_old(i,j+1)-T_old(i,j))*gr_dy)
+      end if
+
+      if (abs(s2(i,j))/(abs(s2(i,j))+abs(s2(i,j+1))) .gt. tol) then
+
+      th = abs(s2(i,j))/(abs(s2(i,j))+abs(s2(i,j+1)))
+      Ty_plus = (Tsat-T_old(i,j))/th + Tij
+
+      else
+
+      th = abs(s2(i,j-1))/(abs(s2(i,j-1))+abs(s2(i,j+1)))
+      Ty_plus = (Tsat-T_old(i,j-1))/th + T_old(i,j-1)
+    
+      end if
+    end if
+    ! End of Case 3 !
+
+    ! Case 4 !
+    if(s2(i,j)*s2(i,j-1).le.0.d0) then
+
+      if(s2(i,j) .ge. 0.) then
+          Tsat = T_old(i,j)-(ht_Nu*(T_old(i,j)-T_old(i,j-1))*gr_dy)
+      else
+          Tsat = T_old(i,j-1)-(ht_Nu*(T_old(i,j-1)-T_old(i,j))*gr_dy)
+      end if
+
+      if (abs(s2(i,j))/(abs(s2(i,j))+abs(s2(i,j-1))) .gt. tol) then
+
+      th = abs(s2(i,j))/(abs(s2(i,j))+abs(s2(i,j-1)))
+      Ty_mins = (Tsat-T_old(i,j))/th + Tij
+
+      else
+
+      th = abs(s2(i,j+1))/(abs(s2(i,j+1))+abs(s2(i,j-1)))
+      Ty_mins = (Tsat-T_old(i,j+1))/th + T_old(i,j+1)
+
+      end if
+    end if
+    ! End of Case 4 !
+
+#endif
+
     if(s(i,j) .ge. 0.) then
 
     T(i,j) = T_old(i,j)+((dr_dt*ins_inRe*(ibm_thco1/ibm_cp1))/(ht_Pr*gr_dx*gr_dx))*(Tx_plus+Tx_mins-2*Tij)&
                        +((dr_dt*ins_inRe*(ibm_thco1/ibm_cp1))/(ht_Pr*gr_dy*gr_dy))*(Ty_plus+Ty_mins-2*Tij)
+#if NBOD == 2
+   
+    else if(s2(i,j) .ge. 0.) then
+
+    T(i,j) = T_old(i,j)+((dr_dt*ins_inRe*(ibm_thco1/ibm_cp1))/(ht_Pr*gr_dx*gr_dx))*(Tx_plus+Tx_mins-2*Tij)&
+                       +((dr_dt*ins_inRe*(ibm_thco1/ibm_cp1))/(ht_Pr*gr_dy*gr_dy))*(Ty_plus+Ty_mins-2*Tij)
+#endif
+
     else
     T(i,j) = T_old(i,j)+((dr_dt*ins_inRe)/(ht_Pr*gr_dx*gr_dx))*(Tx_plus+Tx_mins-2*Tij)&
                        +((dr_dt*ins_inRe)/(ht_Pr*gr_dy*gr_dy))*(Ty_plus+Ty_mins-2*Tij)&
@@ -530,6 +637,7 @@ subroutine HeatAD_solver(tstep)
    nullify(pf)
    nullify(thco)
    nullify(cp)
+   nullify(s2)
 
 #endif
 

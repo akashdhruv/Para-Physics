@@ -39,8 +39,8 @@ _______________________Grid Parameters___________________________
 #define MAX_BLOCKS 80
 
 
-#define Nxb 40
-#define Nyb 20
+#define Nxb 300
+#define Nyb 100
 
 
 #define D_xmin -1.50
@@ -52,8 +52,8 @@ _______________________Grid Parameters___________________________
 
 #define TIME_END 20.0
 
-#define nblockx 2
-#define nblocky 4
+#define nblockx 3
+#define nblocky 3
 
 #define MaxIt 1500
 
@@ -66,8 +66,10 @@ _______________________Grid Parameters___________________________
 #define CPRS_VAR 6
 #define NRMX_VAR 7
 #define NRMY_VAR 8
+#define IBM1_VAR 9
+#define IBM2_VAR 10
 
-#define CENT_VAR 8
+#define CENT_VAR 10
 
 #define VELC_VAR 1
 #define FACE_VAR 1
@@ -144,6 +146,8 @@ ___________________Immersed Boundary On/Off________________
 #if IB == 1
 #define IBM
 #endif
+
+#define NBOD 2
 
 #if 0
 _________________OpenMP threads per MPI rank_______________

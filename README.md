@@ -1,8 +1,15 @@
-## Fortran based Hybrid MPI-OpenMP AMR based Computational Physics Solver 
+## Fortran based Hybrid MPI-OpenMP, Block Structured Computational Multi-Physics Solver 
 
-# The solver is still in debug mode, AMR implementations are not working properly. Please look at other ParaSolve repositories for previous version
+### Important Information
 
-Execution instructions
+  1. This is the latest version of ParaSolve, for previous versions look at other ParaSolve repositories.
+  2. Single phase Heat Equation, Navier Stokes and Poisson Solver modules are working.
+  3. Immersed boundary module is working.
+  4. Conjugate Heat Transfer is in beta.
+  5. AMR module not yet implemented.
+  6. Multiphase module is still in beta.
+
+### Execution instructions
 
   1. Download the source code 
   2. Make sure you have make utility and the latest version of GNU and MPI installed
@@ -13,13 +20,13 @@ Execution instructions
         mpirun -n [number_of_procs] ./Solver 
      ~~~
 
-  5. Note that the number of processes in each direction is HK defined in the header file Solver.h. And for 2D cases HD = 2. Therefore, the total number of processes will be HK^HD.
+  5. Note that the total number of MPI processes must be equal to the total number of blocks (nblockx X nblocky) defined in Solver.h
 
-  4. To plot results, edit the python file (plot.py) to match your grid size and simply type (make sure k = HK and d = HD)
+  4. To plot results, edit the python file (plot.py) to match your grid size and simply type (make sure k = nblockx and d = nblocky)
 
      ~~~terminal
         python plot.py
      ~~~ 
 
-Author - Akash V. Dhruv  
-License - Refer LICENSE.md
+### Author - Akash V. Dhruv  
+### License - Refer LICENSE.md

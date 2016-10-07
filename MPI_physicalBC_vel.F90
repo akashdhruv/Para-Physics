@@ -61,8 +61,8 @@ subroutine MPI_physicalBC_vel(u_ex,v_ex)
 
        if ( x_id == nblockx-1) then
 
-           !v_ex(Nxb+2,:)=v_ex(Nxb+2,:) - dr_dt*(v_ex(Nxb+2,:)-v_ex(Nxb+1,:))/gr_dy
-           !u_ex(Nxb+2,:)=u_ex(Nxb+2,:) - dr_dt*(u_ex(Nxb+2,:)-u_ex(Nxb+1,:))/gr_dx
+           !v_ex(Nxb+2,:)=v_ex(Nxb+2,:) - dr_dt*(v_ex(Nxb+1,:)-v_ex(Nxb,:))/gr_dy
+           !u_ex(Nxb+2,:)=u_ex(Nxb+2,:) - dr_dt*(u_ex(Nxb+1,:)-u_ex(Nxb,:))/gr_dx
 
            v_ex(Nxb+2,:) = v_ex(Nxb+1,:)
            u_ex(Nxb+2,:) = u_ex(Nxb+1,:)

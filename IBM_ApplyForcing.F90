@@ -1,10 +1,10 @@
-subroutine IBM_ApplyForcing(ut,vt,s)
+subroutine IBM_ApplyForcing(ut,vt,s,s2)
 
 #include "Solver.h"
 
     implicit none
 
-    real, dimension(:,:),intent(inout) :: ut,vt,s
+    real, dimension(:,:),intent(inout) :: ut,vt,s,s2
 
     integer :: i,j
 
@@ -55,6 +55,53 @@ subroutine IBM_ApplyForcing(ut,vt,s)
        
              end if
           end if
+
+#if NBOD == 2
+
+          if(s2(i,j) >= 0. .and. s2(i-1,j) < 0.) then
+
+             if(abs(s2(i,j))/(abs(s2(i,j))+abs(s2(i-1,j))) .le. 0.5) then
+             ut(i,j) = 0.0
+
+             else
+             ut(i-1,j) = 0.0
+
+             end if
+          end if
+
+          if(s2(i,j) >= 0. .and. s2(i+1,j) < 0.) then 
+
+             if(abs(s2(i,j))/(abs(s2(i,j))+abs(s2(i+1,j))) .le. 0.5) then
+             ut(i,j) = 0.0
+
+             else
+             ut(i+1,j) = 0.0
+
+             end if
+          end if
+
+          if(s2(i,j) >= 0. .and. s2(i,j-1) < 0.) then
+
+             if(abs(s2(i,j))/(abs(s2(i,j))+abs(s2(i,j-1))) .le. 0.5) then
+             vt(i,j) = 0.0
+            
+             else
+             vt(i,j-1) = 0.0
+       
+             end if
+          end if
+
+          if(s2(i,j) >= 0. .and. s2(i,j+1) < 0.) then
+
+             if(abs(s2(i,j))/(abs(s2(i,j))+abs(s2(i,j+1))) .le. 0.5) then
+             vt(i,j) = 0.0
+            
+             else
+             vt(i,j+1) = 0.0
+       
+             end if
+          end if
+#endif
 
        end do
     end do

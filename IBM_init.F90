@@ -9,19 +9,26 @@ subroutine IBM_init()
 
    implicit none
 
-   real,pointer,dimension(:,:) :: s,pf,thco,cprs
+   real,pointer,dimension(:,:) :: s,pf,thco,cprs,s2
    real :: x0,y0,r,xcell,ycell
+   real :: x1,y1,r1
 
    integer :: i,j
 
 
-   s => ph_center(DFUN_VAR,:,:)
+   s => ph_center(IBM1_VAR,:,:)
+   s2 => ph_center(IBM2_VAR,:,:)
 
    s = 0.0
+   s2 = 0.0
 
    x0 = -0.75
    y0 =  0.0
-   r  =  0.1
+   r  =  0.15
+
+   x1 = -0.25
+   y1 =  0.0
+   r1 =  0.15
 
    do j=1,Nyb+2
 
@@ -51,6 +58,10 @@ subroutine IBM_init()
 
      s(i,j) = r - sqrt((xcell-x0)**2+(ycell-y0)**2)
 
+#if NBOD == 2
+     s2(i,j) = r1 - sqrt((xcell-x1)**2+(ycell-y1)**2)
+#endif
+
      end do
 
    end do
@@ -66,5 +77,6 @@ subroutine IBM_init()
    ibm_vis1 = 1.0
 
    nullify(s)
+   nullify(s2)
 
 end subroutine IBM_init
