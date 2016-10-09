@@ -1,11 +1,11 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-k=5
-d=5
+k=2
+d=2
 
-M=200+1
-N=200+1
+M=80+1
+N=40+1
 
 r=0.15
 
@@ -75,7 +75,7 @@ plt.plot(X[:,-1],Y[:,-1],'k')
 plt.plot(X[0,:],Y[0,:],'k')
 plt.plot(X[-1,:],Y[-1,:],'k')
 plt.fill(x_circle,y_circle,'w')
-plt.fill(x_circle2,y_circle2,'w')
+#plt.fill(x_circle2,y_circle2,'w')
 plt.xlabel('X')
 plt.ylabel('Y')
 plt.axis('equal') 
@@ -88,7 +88,7 @@ plt.plot(X[:,-1],Y[:,-1],'k')
 plt.plot(X[0,:],Y[0,:],'k')
 plt.plot(X[-1,:],Y[-1,:],'k')
 plt.fill(x_circle,y_circle,'w')
-plt.fill(x_circle2,y_circle2,'w')
+#plt.fill(x_circle2,y_circle2,'w')
 plt.xlabel('X')
 plt.ylabel('Y')
 plt.axis('equal') 
@@ -102,7 +102,7 @@ plt.plot(X[:,-1],Y[:,-1],'k')
 plt.plot(X[0,:],Y[0,:],'k')
 plt.plot(X[-1,:],Y[-1,:],'k')
 plt.plot(x_circle,y_circle,'k')
-plt.plot(x_circle2,y_circle2,'k')
+#plt.plot(x_circle2,y_circle2,'k')
 #plt.plot(X,Y,'g')
 #plt.plot(X.T,Y.T,'g')
 plt.xlabel('X')
