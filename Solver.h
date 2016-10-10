@@ -39,8 +39,8 @@ _______________________Grid Parameters___________________________
 #define MAX_BLOCKS 80
 
 
-#define Nxb 80
-#define Nyb 40
+#define Nxb 40
+#define Nyb 20
 
 
 #define D_xmin -2.00
@@ -52,8 +52,8 @@ _______________________Grid Parameters___________________________
 
 #define TIME_END 20.0
 
-#define nblockx 2
-#define nblocky 2
+#define nblockx 3
+#define nblocky 3
 
 #define MaxIt 1500
 

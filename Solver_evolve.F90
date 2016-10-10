@@ -15,14 +15,13 @@ subroutine Solver_evolve
     use MPI_data
     use IO_interface, only: IO_display, IO_write, IO_display_v2
     use Multiphase_interface, only:Multiphase_solver
+    use IBM_interface, only: IBM_solver
 
     implicit none
 
     integer :: tstep,p_counter
 
-    real, dimension(Nxb+1,Nyb+1) :: uu
-    real, dimension(Nxb+1,Nyb+1) :: vv
-    real, dimension(Nxb+1,Nyb+1) :: pp, tt, df, pf, th, cp
+    real, allocatable,  dimension(:,:) :: uu,vv,pp,tt,df,pf,th,cp
 
     real, pointer, dimension(:,:) :: u,v
     real, pointer, dimension(:,:,:) :: cc
@@ -45,10 +44,12 @@ subroutine Solver_evolve
        call HeatAD_solver(tstep)
 #endif
 
+#ifdef IBM
+       !call IBM_solver(tstep)
+#endif
+
 #ifdef ONLY_POISSON
-
 ! call FOR Poisson_analytical GOES HERE
-
 #endif
 
 #ifdef SINGLEPHASE
@@ -71,6 +72,16 @@ subroutine Solver_evolve
 
 #ifdef MULTIPHASE_DEBUG
        if(mod(tstep,100000) == 0) then
+
+          !allocate(uu(Nxb+1,Nyb+1))
+          !allocate(vv(Nxb+1,Nyb+1))
+          !allocate(pp(Nxb+1,Nyb+1))
+          allocate(tt(Nxb+1,Nyb+1))
+          allocate(df(Nxb+1,Nyb+1))
+          allocate(pf(Nxb+1,Nyb+1))
+          allocate(th(Nxb+1,Nyb+1))
+          !allocate(cp(Nxb+1,Nyb+1))
+
           cc => ph_center(:,:,:)
 
           df = ((cc(DFUN_VAR,1:Nxb+1,1:Nyb+1)+cc(DFUN_VAR,2:Nxb+2,1:Nyb+1))/2 + (cc(DFUN_VAR,1:Nxb+1,2:Nyb+2)+cc(DFUN_VAR,2:Nxb+2,2:Nyb+2))/2)/2
@@ -82,12 +93,23 @@ subroutine Solver_evolve
 
           call IO_write(gr_x,gr_y,df,pf,th,tt,myid)
 
+          deallocate(tt,df,pf,th)
+
        end if
 #endif
 
 #ifdef INS_DEBUG
 
-       if(mod(tstep,10000) == 0) then
+       if(mod(tstep,100) == 0) then
+
+          allocate(uu(Nxb+1,Nyb+1))
+          allocate(vv(Nxb+1,Nyb+1))
+          allocate(pp(Nxb+1,Nyb+1))
+          allocate(tt(Nxb+1,Nyb+1))
+          !allocate(df(Nxb+1,Nyb+1))
+          !allocate(pf(Nxb+1,Nyb+1))
+          !allocate(th(Nxb+1,Nyb+1))
+          !allocate(cp(Nxb+1,Nyb+1))
 
           u => ph_facex(VELC_VAR,:,:)
           v => ph_facey(VELC_VAR,:,:)
@@ -104,6 +126,8 @@ subroutine Solver_evolve
 
           call IO_write(gr_x,gr_y,uu,vv,pp,tt,myid)
 
+          deallocate(uu,vv,pp,tt)
+
         end if
 #endif
 
@@ -118,6 +142,15 @@ subroutine Solver_evolve
     u => ph_facex(VELC_VAR,:,:)
     v => ph_facey(VELC_VAR,:,:)
     cc => ph_center(:,:,:)
+
+    allocate(uu(Nxb+1,Nyb+1))
+    allocate(vv(Nxb+1,Nyb+1))
+    allocate(pp(Nxb+1,Nyb+1))
+    allocate(tt(Nxb+1,Nyb+1))
+    allocate(df(Nxb+1,Nyb+1))
+    allocate(pf(Nxb+1,Nyb+1))
+    allocate(th(Nxb+1,Nyb+1))
+    allocate(cp(Nxb+1,Nyb+1))
    
 #ifdef INS 
     uu = ((u(1:Nxb+1,1:Nyb+1)+u(1:Nxb+1,2:Nyb+2))/2 + (u(2:Nxb+2,1:Nyb+1)+u(2:Nxb+2,2:Nyb+2))/2)/2
@@ -152,5 +185,7 @@ subroutine Solver_evolve
 #ifdef ONLY_POISSON
 ! IO_write call goes here
 #endif
+
+   deallocate(uu,vv,pp,tt,df,pf,th,cp)
 
 end subroutine Solver_evolve

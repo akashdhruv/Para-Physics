@@ -8,7 +8,7 @@ subroutine MPI_physicalBC_dfun(d_ex)
 
        include "mpif.h"
 
-       real, dimension(Nxb+2,Nyb+2), intent(inout) :: d_ex
+       real, dimension(:,:), intent(inout) :: d_ex
        integer :: status(MPI_STATUS_SIZE)
        logical :: mask
 

@@ -14,28 +14,15 @@ subroutine IncompNS_solver(tstep,p_counter)
 
        implicit none
 
+       !-Arguments
        integer, intent(in) :: tstep
-
-       real, dimension(Nxb+2,Nyb+2) :: ut
-       real, dimension(Nxb+2,Nyb+2) :: vt
-
-       real, dimension(Nxb+2,Nyb+2) :: u_old
-       real, dimension(Nxb+2,Nyb+2) :: v_old
-
-       real, dimension(Nxb,Nyb)   :: C1
-       real, dimension(Nxb,Nyb)   :: G1
-       real, dimension(Nxb,Nyb)   :: D1
-
-       real, dimension(Nxb,Nyb)   :: C2
-       real, dimension(Nxb,Nyb)   :: G2
-       real, dimension(Nxb,Nyb)   :: D2
-
-       real :: u_res1, v_res1, maxdiv, mindiv
-
-       real, dimension(Nxb,Nyb) :: p_RHS
-       integer :: i,j
        integer, intent(out) :: p_counter
 
+       !-Local Variables
+       real, allocatable, dimension(:,:) :: ut,vt,u_old,v_old
+       real, allocatable, dimension(:,:) :: C1,G1,D1,C2,G2,D2,p_RHS
+       real :: u_res1, v_res1, maxdiv, mindiv
+       integer :: i,j
        real, pointer, dimension(:,:) :: u, v, p, s, s2
 
        p => ph_center(PRES_VAR,:,:)
@@ -43,6 +30,22 @@ subroutine IncompNS_solver(tstep,p_counter)
        v => ph_facey(VELC_VAR,:,:)
        s => ph_center(IBM1_VAR,:,:)
        s2 => ph_center(IBM2_VAR,:,:)
+
+       allocate(C1(Nxb,Nyb))
+       allocate(G1(Nxb,Nyb))
+       allocate(D1(Nxb,Nyb))
+
+       allocate(C2(Nxb,Nyb))
+       allocate(G2(Nxb,Nyb))
+       allocate(D2(Nxb,Nyb))
+
+       allocate(ut(Nxb+2,Nyb+2))
+       allocate(vt(Nxb+2,Nyb+2))
+
+       allocate(u_old(Nxb+2,Nyb+2))
+       allocate(v_old(Nxb+2,Nyb+2))
+
+       allocate(p_RHS(Nxb,Nyb))
 
        ins_v_res = 0
        ins_u_res = 0
@@ -98,7 +101,7 @@ subroutine IncompNS_solver(tstep,p_counter)
 #ifdef IBM
        ! Immersed Boundary - Predictor BC
 
-       call IBM_ApplyForcing(ut,vt,s,s2)
+       call IBM_ApplyForcing(ut,vt,s,s2,0.0,0.0)
 
 #endif
        ! Poisson Solver
@@ -150,6 +153,9 @@ subroutine IncompNS_solver(tstep,p_counter)
        call MPI_CollectResiduals(ins_v_res,v_res1,1)
        ins_v_res = sqrt(v_res1/((nblockx*nblocky)*(Nxb+2)*(Nyb+2)))
 
+
+       deallocate(ut,vt,u_old,v_old)
+       deallocate(C1,G1,D1,C2,G2,D2,p_RHS)
 
        nullify(u)
        nullify(v)

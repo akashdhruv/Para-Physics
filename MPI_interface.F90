@@ -18,7 +18,7 @@ module MPI_interface
     interface
           subroutine MPI_applyBC(u_ex)
           implicit none
-          real, dimension(Nxb+2,Nyb+2),intent(inout) :: u_ex
+          real, dimension(:,:),intent(inout) :: u_ex
           end subroutine MPI_applyBC
     end interface
 
@@ -33,28 +33,28 @@ module MPI_interface
     interface 
         subroutine MPI_physicalBC_vel(u_ex,v_ex)
         implicit none
-        real, dimension(Nxb+2,Nyb+2), intent(inout) :: u_ex, v_ex
+        real, dimension(:,:), intent(inout) :: u_ex, v_ex
         end subroutine MPI_physicalBC_vel
     end interface
 
     interface
         subroutine MPI_physicalBC_pres(p_ex)
         implicit none
-        real, dimension(Nxb+2,Nyb+2), intent(inout) :: p_ex
+        real, dimension(:,:), intent(inout) :: p_ex
         end subroutine MPI_physicalBC_pres
     end interface
 
    interface
         subroutine MPI_physicalBC_temp(t_ex)
         implicit none
-        real, dimension(Nxb+2,Nyb+2), intent(inout) :: t_ex
+        real, dimension(:,:), intent(inout) :: t_ex
         end subroutine MPI_physicalBC_temp
    end interface
 
    interface
         subroutine MPI_physicalBC_dfun(d_ex)
         implicit none
-        real, dimension(Nxb+2,Nyb+2), intent(inout) :: d_ex
+        real, dimension(:,:), intent(inout) :: d_ex
         end subroutine MPI_physicalBC_dfun
    end interface
 

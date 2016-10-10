@@ -11,7 +11,7 @@ subroutine MPI_physicalBC_vel(u_ex,v_ex)
 
        include "mpif.h"
 
-       real, dimension(Nxb+2,Nyb+2), intent(inout) :: u_ex, v_ex
+       real, dimension(:,:), intent(inout) :: u_ex, v_ex
        integer :: status(MPI_STATUS_SIZE)
 
 

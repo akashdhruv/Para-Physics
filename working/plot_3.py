@@ -1,11 +1,11 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-k=2
-d=2
+k=3
+d=3
 
-M=80+1
-N=40+1
+M=40+1
+N=20+1
 
 r=0.15
 

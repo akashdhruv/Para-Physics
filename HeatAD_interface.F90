@@ -15,5 +15,11 @@ module HeatAD_interface
          end subroutine HeatAD_solver
      end interface
 
+     interface
+         subroutine HeatAD_SolveTemp(tstep)
+         implicit none
+         integer, intent(in) :: tstep
+         end subroutine
+     end interface
 
 end module HeatAD_interface

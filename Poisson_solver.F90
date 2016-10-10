@@ -10,13 +10,13 @@ subroutine Poisson_solver(ps_RHS,ps,ps_res,ps_counter,ps_quant)
                 
   implicit none
 
-  real, dimension(Nxb,Nyb), intent(in) :: ps_RHS
+  real, dimension(:,:), intent(in) :: ps_RHS
 
-  real, dimension(Nxb+2,Nyb+2), intent(inout) :: ps
+  real, dimension(:,:), intent(inout) :: ps
 
   integer, intent(in) :: ps_quant
 
-  real, dimension(Nxb+2,Nyb+2) :: ps_old, ps_new
+  real, allocatable, dimension(:,:) :: ps_old, ps_new
 
   real, intent(out) :: ps_res
 
@@ -30,6 +30,9 @@ subroutine Poisson_solver(ps_RHS,ps,ps_res,ps_counter,ps_quant)
   thread_id = 0
   ps_old = 0
   ps_counter = 0
+
+  allocate(ps_old(Nxb+2,Nyb+2))
+  allocate(ps_new(Nxb+2,Nyb+2))
 
   !DIR$ OFFLOAD BEGIN TARGET(mic) in(ps_old,gr_dy,gr_dx,ps_RHS,i,j,thread_id,ps_res1,ps_quant,dr_tile,ii,jj) inout(ps,ps_res,ps_counter)
 
@@ -136,5 +139,7 @@ subroutine Poisson_solver(ps_RHS,ps,ps_res,ps_counter,ps_quant)
   !$OMP END PARALLEL
 
   !DIR$ END OFFLOAD
+
+  deallocate(ps_old,ps_new)
 
 end subroutine Poisson_solver

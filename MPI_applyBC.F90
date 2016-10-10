@@ -8,7 +8,7 @@ subroutine MPI_applyBC(u_ex)
 
        include "mpif.h"
 
-       real, dimension(Nxb+2,Nyb+2), intent(inout) :: u_ex
+       real, dimension(:,:), intent(inout) :: u_ex
        integer :: status(MPI_STATUS_SIZE)
 
       if (x_procs > 1) then
