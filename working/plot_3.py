@@ -4,8 +4,8 @@ import numpy as np
 k=3
 d=3
 
-M=40+1
-N=20+1
+M=80+1
+N=40+1
 
 r=0.15
 

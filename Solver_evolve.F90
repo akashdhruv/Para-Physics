@@ -100,7 +100,7 @@ subroutine Solver_evolve
 
 #ifdef INS_DEBUG
 
-       if(mod(tstep,100) == 0) then
+       if(mod(tstep,100000) == 0) then
 
           allocate(uu(Nxb+1,Nyb+1))
           allocate(vv(Nxb+1,Nyb+1))
