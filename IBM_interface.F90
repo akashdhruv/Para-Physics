@@ -7,10 +7,9 @@ module IBM_interface
    end interface
 
    interface
-      subroutine IBM_ApplyForcing(ut,vt,s,s2,omega1,omega2)
+      subroutine IBM_ApplyForcing(ut,vt,s,s2)
       implicit none
       real,dimension(:,:),intent(inout) :: ut,vt,s,s2
-      real, intent(in) :: omega1,omega2
       end subroutine
    end interface
 

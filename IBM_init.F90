@@ -16,19 +16,15 @@ subroutine IBM_init()
    integer :: i,j
 
 
-   s => ph_center(IBM1_VAR,:,:)
-   s2 => ph_center(IBM2_VAR,:,:)
+   s => ph_facex(IBMF_VAR,:,:)
+   s2 => ph_facey(IBMF_VAR,:,:)
 
    s = 0.0
    s2 = 0.0
 
-   x0 = -0.4
-   y0 =  0.0
-   r  =  0.15
-
-   x1 = -0.10
-   y1 =  0.0
-   r1 =  0.10
+   ibm_x0 = -0.4
+   ibm_y0 =  0.0
+   ibm_r0 =  0.15
 
    do j=1,Nyb+2
 
@@ -45,25 +41,46 @@ subroutine IBM_init()
 
     do i=1,Nxb+2
 
-     if(i==1) then
-          xcell = gr_x(i,1) - 0.5*gr_dx
-
-     else if(i==Nxb+2) then
-          xcell = gr_x(Nxb+1,1) + 0.5*gr_dx
+     if(i==Nxb+2) then
+          xcell = gr_x(Nxb+1,1) + gr_dx
 
      else
-          xcell = 0.5*(gr_x(i,1) + gr_x(i-1,1))
+          xcell = gr_x(i,1)
 
      end if
 
-     s(i,j) = r - sqrt((xcell-x0)**2+(ycell-y0)**2)
-
-#if NBOD == 2
-     s2(i,j) = r1 - sqrt((xcell-x1)**2+(ycell-y1)**2)
-#endif
+     s(i,j) = ibm_r0 - sqrt((xcell-ibm_x0)**2+(ycell-ibm_y0)**2)
 
      end do
 
+   end do
+
+   do j=1,Nyb+2
+
+    if(j==Nyb+2) then
+        ycell = gr_y(1,Nyb+1) + gr_dy
+
+    else
+        ycell = gr_y(1,j)
+
+    end if
+
+    do i=1,Nxb+2
+
+    if(i==1) then
+          xcell = gr_x(i,1) - 0.5*gr_dx
+
+    else if(i==Nxb+2) then
+          xcell = gr_x(Nxb+1,1) + 0.5*gr_dx
+
+    else
+          xcell = 0.5*(gr_x(i,1) + gr_x(i-1,1))
+
+    end if
+
+    s2(i,j) = ibm_r0 - sqrt((xcell-ibm_x0)**2+(ycell-ibm_y0)**2)
+
+    end do
    end do
 
    ibm_thco2 = 1.0
@@ -75,6 +92,8 @@ subroutine IBM_init()
    ibm_rho1 = 1.0
    ibm_cp1 = 1.0*ibm_rho1
    ibm_vis1 = 1.0
+
+   ibm_omega = 1.0
 
    nullify(s)
    nullify(s2)

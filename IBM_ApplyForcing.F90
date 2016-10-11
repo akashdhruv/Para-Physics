@@ -1,129 +1,98 @@
-subroutine IBM_ApplyForcing(ut,vt,s,s2,omega1,omega2)
+subroutine IBM_ApplyForcing(ut,vt,s,s2)
 
 #include "Solver.h"
 
     use Grid_data
+    use IBM_data
 
     implicit none
 
     real, dimension(:,:),intent(inout) :: ut,vt,s,s2
-    real, intent(in) :: omega1,omega2
 
-    real :: xcell,ycell,x0,y0,r0,x1,y1,r1,theta
+    real :: xcell_up,xcell_vp,xcell_um,xcell_vm,xcell_u,xcell_v
+    real :: ycell_up,ycell_vp,ycell_um,ycell_vm,ycell_u,ycell_v
+    real :: theta_uxp,theta_vxp,theta_uxm,theta_vxm
+    real :: theta_uyp,theta_vyp,theta_uym,theta_vym
 
     integer :: i,j
 
-    x0 = -0.40
-    x1 = -0.10
 
-    y0 = 0.0
-    y1 = 0.0
-
-    r0 = 0.15
-    r1 = 0.10
-    
     do j=2,Nyb+1
 
-       ycell = 0.5*(gr_y(1,j) + gr_y(1,j-1))
+      ! if(j==2) then
+      ! ycell_um = gr_y(1,j-1)-0.5*gr_dy
+      ! ycell_up = (gr_y(1,j)+gr_y(1,j+1))*0.5
+      ! ycell_vm = gr_y(1,j-1)
+      ! ycell_vp = gr_y(1,j+1)
+
+      ! else if(j==Nyb+1) then
+      ! ycell_um = (gr_y(1,j-1)+gr_y(1,j-2))*0.5
+      ! ycell_up = gr_y(1,j)+0.5*gr_dy
+      ! ycell_vm = gr_y(1,j-1)
+      ! ycell_vp = gr_y(1,j) + gr_dy
+
+      ! else
+      ! ycell_um = (gr_y(1,j-1)+gr_y(1,j-2))*0.5
+      ! ycell_up = (gr_y(1,j)+gr_y(1,j+1))*0.5
+      ! ycell_vm = gr_y(1,j-1)
+      ! ycell_vp = gr_y(1,j+1)
+
+      ! end if
+
+      ! ycell_u = (gr_y(1,j)+gr_y(1,j-1))*0.5
+      ! ycell_v = gr_y(1,j)
 
        do i=2,Nxb+1
 
-          xcell = 0.5*(gr_x(i,1) + gr_x(i-1,1)) 
 
-          theta = atan2((ycell-y0),(xcell-x0))
+         ! if(i==2) then
+         ! xcell_um = gr_x(i-1,1)
+         ! xcell_up = gr_x(i+1,1)
+         ! xcell_vm = gr_x(i-1,1)-0.5*gr_dx
+         ! xcell_vp = (gr_x(i,1)+gr_x(i+1,1))*0.5
 
-          if(s(i,j) >= 0. .and. s(i-1,j) < 0.) then
+         ! else if(j==Nxb+1) then
+         ! xcell_um = gr_x(i-1,1)
+         ! xcell_up = gr_x(i,1) + gr_dx
+         ! xcell_vm = (gr_x(i-1,1)+gr_x(i-2,1))*0.5
+         ! xcell_vp = gr_x(i,1)+0.5*gr_dx
 
-             if(abs(s(i,j))/(abs(s(i,j))+abs(s(i-1,j))) .le. 0.5) then
-             ut(i,j) = omega1*cos(theta)
+         ! else
+         ! xcell_um = gr_x(i-1,1)
+         ! xcell_up = gr_x(i+1,1)
+         ! xcell_vm = (gr_x(i-1,1)+gr_x(i-2,1))*0.5
+         ! xcell_vp = (gr_x(i,1)+gr_x(i+1,1))*0.5
 
-             else
-             ut(i-1,j) = omega1*cos(theta)
+         ! end if
 
-             end if
-          end if
+         ! xcell_u = gr_x(1,i)
+         ! xcell_v = 0.5*(gr_x(1,i)+gr_x(1,i-1))
 
-          if(s(i,j) >= 0. .and. s(i+1,j) < 0.) then 
+         ! theta_uxm = atan2(ycell_u-ibm_y0,xcell_um-ibm_x0)
+         ! theta_uxp = atan2(ycell_u-ibm_y0,xcell_up-ibm_x0)
+         ! theta_uym = atan2(ycell_um-ibm_y0,xcell_u-ibm_x0)
+         ! theta_uyp = atan2(ycell_up-ibm_y0,xcell_u-ibm_x0)
 
-             if(abs(s(i,j))/(abs(s(i,j))+abs(s(i+1,j))) .le. 0.5) then
-             ut(i,j) = omega1*cos(theta)
+         ! theta_vxm = atan2(ycell_v-ibm_y0,xcell_vm-ibm_x0)
+         ! theta_vxp = atan2(ycell_v-ibm_y0,xcell_vp-ibm_x0)
+         ! theta_vym = atan2(ycell_vm-ibm_y0,xcell_v-ibm_x0)
+         ! theta_vyp = atan2(ycell_vp-ibm_y0,xcell_v-ibm_x0)
 
-             else
-             ut(i+1,j) = omega1*cos(theta)
+          if(s(i,j) > 0. .and. s(i-1,j) <= 0.) ut(i-1,j) = 0.0
 
-             end if
-          end if
+          if(s(i,j) > 0. .and. s(i+1,j) <= 0.) ut(i+1,j) = 0.0
 
-          if(s(i,j) >= 0. .and. s(i,j-1) < 0.) then
+          if(s(i,j) > 0. .and. s(i,j-1) <= 0.) ut(i,j-1) = 0.0
 
-             if(abs(s(i,j))/(abs(s(i,j))+abs(s(i,j-1))) .le. 0.5) then
-             vt(i,j) = omega1*sin(theta)
-            
-             else
-             vt(i,j-1) = omega1*sin(theta)
-       
-             end if
-          end if
+          if(s(i,j) > 0. .and. s(i,j+1) <= 0.) ut(i,j+1) = 0.0
 
-          if(s(i,j) >= 0. .and. s(i,j+1) < 0.) then
+          if(s2(i,j) > 0. .and. s2(i-1,j) <= 0.) vt(i-1,j) = 0.0
 
-             if(abs(s(i,j))/(abs(s(i,j))+abs(s(i,j+1))) .le. 0.5) then
-             vt(i,j) = omega1*sin(theta)
-            
-             else
-             vt(i,j+1) = omega1*sin(theta)
-       
-             end if
-          end if
+          if(s2(i,j) > 0. .and. s2(i+1,j) <= 0.) vt(i+1,j) = 0.0
 
-#if NBOD == 2
+          if(s2(i,j) > 0. .and. s2(i,j-1) <= 0.) vt(i,j-1) = 0.0
 
-          theta = atan2((ycell-y1),(xcell-x1))
-
-          if(s2(i,j) >= 0. .and. s2(i-1,j) < 0.) then
-
-             if(abs(s2(i,j))/(abs(s2(i,j))+abs(s2(i-1,j))) .le. 0.5) then
-             ut(i,j) = omega2*cos(theta)
-
-             else
-             ut(i-1,j) = omega2*cos(theta)
-
-             end if
-          end if
-
-          if(s2(i,j) >= 0. .and. s2(i+1,j) < 0.) then 
-
-             if(abs(s2(i,j))/(abs(s2(i,j))+abs(s2(i+1,j))) .le. 0.5) then
-             ut(i,j) = omega2*cos(theta)
-
-             else
-             ut(i+1,j) = omega2*cos(theta)
-
-             end if
-          end if
-
-          if(s2(i,j) >= 0. .and. s2(i,j-1) < 0.) then
-
-             if(abs(s2(i,j))/(abs(s2(i,j))+abs(s2(i,j-1))) .le. 0.5) then
-             vt(i,j) = omega2*sin(theta)
-            
-             else
-             vt(i,j-1) = omega2*sin(theta)
-       
-             end if
-          end if
-
-          if(s2(i,j) >= 0. .and. s2(i,j+1) < 0.) then
-
-             if(abs(s2(i,j))/(abs(s2(i,j))+abs(s2(i,j+1))) .le. 0.5) then
-             vt(i,j) = omega2*sin(theta)
-            
-             else
-             vt(i,j+1) = omega2*sin(theta)
-       
-             end if
-          end if
-#endif
+          if(s2(i,j) > 0. .and. s2(i,j+1) <= 0.) vt(i,j+1) = 0.0
 
        end do
     end do

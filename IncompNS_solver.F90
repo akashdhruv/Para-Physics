@@ -28,8 +28,8 @@ subroutine IncompNS_solver(tstep,p_counter)
        p => ph_center(PRES_VAR,:,:)
        u => ph_facex(VELC_VAR,:,:)
        v => ph_facey(VELC_VAR,:,:)
-       s => ph_center(IBM1_VAR,:,:)
-       s2 => ph_center(IBM2_VAR,:,:)
+       s => ph_facex(IBMF_VAR,:,:)
+       s2 => ph_facey(IBMF_VAR,:,:)
 
        allocate(C1(Nxb,Nyb))
        allocate(G1(Nxb,Nyb))
@@ -101,7 +101,7 @@ subroutine IncompNS_solver(tstep,p_counter)
 #ifdef IBM
        ! Immersed Boundary - Predictor BC
 
-       call IBM_ApplyForcing(ut,vt,s,s2,0.0,0.0)
+       call IBM_ApplyForcing(ut,vt,s,s2)
 
 #endif
        ! Poisson Solver

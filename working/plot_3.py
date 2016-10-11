@@ -4,8 +4,8 @@ import numpy as np
 k=3
 d=3
 
-M=80+1
-N=40+1
+M=40+1
+N=20+1
 
 r=0.15
 
@@ -74,8 +74,10 @@ plt.plot(X[:,0],Y[:,0],'k')
 plt.plot(X[:,-1],Y[:,-1],'k')
 plt.plot(X[0,:],Y[0,:],'k')
 plt.plot(X[-1,:],Y[-1,:],'k')
-plt.fill(x_circle,y_circle,'w')
+#plt.fill(x_circle,y_circle,'w')
 #plt.fill(x_circle2,y_circle2,'w')
+plt.plot(X,Y,'g')
+plt.plot(X.T,Y.T,'g')
 plt.xlabel('X')
 plt.ylabel('Y')
 plt.axis('equal') 

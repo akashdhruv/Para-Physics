@@ -10,7 +10,7 @@ subroutine Multiphase_init()
    implicit none
 
    real,pointer,dimension(:,:) :: sf,pf,th,cp
-   real :: x0,y0,r,xcell,ycell
+   real :: xcell,ycell
    real :: min_s,max_s,all_min_s,all_max_s
 
    integer :: i,j
@@ -27,13 +27,11 @@ subroutine Multiphase_init()
    th = 0.
    cp = 0.
 
-   !________________The Missing Data Simulation___________!
+   mph_x0 = -0.4
+   mph_y0 =  0.0
+   mph_r0 =  0.15
 
-    x0 = 0.0
-    y0 = 0.0
-    r = 0.05
-
-    do j=1,Nyb+2
+   do j=1,Nyb+2
 
       if(j==1) then     
           ycell = gr_y(1,j) - 0.5*gr_dy
@@ -59,24 +57,11 @@ subroutine Multiphase_init()
 
          end if
 
-          !sf(i,j) = sqrt((((xcell-x0)**2)/4)*exp(-6.0*(ycell-y0)) &
-          !                  +(((ycell-y0)**2)/9))
-
-          sf(i,j) = r - sqrt((xcell-x0)**2+(ycell-y0)**2)
+              sf(i,j) = mph_r0 - sqrt((xcell-mph_x0)**2+(ycell-mph_y0)**2)
 
       end do
 
     end do
-
-    !min_s = minval(sf)
-    !max_s = maxval(sf)
-
-    !call MPI_CollectResiduals(min_s,mph_min_s,2)
-    !call MPI_CollectResiduals(max_s,mph_max_s,3)
-
-    !sf = (sf - mph_min_s)/(mph_max_s - mph_min_s) + mph_min_s
-
-   !___________________________End________________________!
 
    mph_rho1 = 0.597
    mph_rho2 = 958.4
