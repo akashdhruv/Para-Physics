@@ -16,6 +16,21 @@ module IncompNS_interface
        end interface
 
        interface
+           subroutine ins_momentum(tstep,p_counter)
+            implicit none
+            integer, intent(in) :: tstep
+            integer, intent(out) :: p_counter
+           end subroutine ins_momentum
+       end interface
+
+       interface
+           subroutine ins_vorticity(tstep)
+           implicit none
+           integer,intent(in) :: tstep
+           end subroutine ins_vorticity
+       end interface
+
+       interface
            subroutine ins_computeQinout()
            end subroutine
        end interface

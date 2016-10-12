@@ -5,9 +5,9 @@ module IO_interface
        implicit none
 
        interface
-             subroutine IO_display(u_res,v_res,p_res,T_res,p_counter,simtime,maxdiv,mindiv)
+             subroutine IO_display(u_res,v_res,w_res,p_res,T_res,p_counter,simtime,maxdiv,mindiv)
              implicit none
-             real, intent(in) :: u_res,v_res,p_res,simtime,T_res,maxdiv,mindiv
+             real, intent(in) :: u_res,v_res,p_res,simtime,T_res,maxdiv,mindiv,w_res
              integer, intent(in) :: p_counter
              end subroutine IO_display
        end interface

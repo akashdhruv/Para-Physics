@@ -39,21 +39,21 @@ _______________________Grid Parameters___________________________
 #define MAX_BLOCKS 80
 
 
-#define Nxb 40
+#define Nxb 20
 #define Nyb 20
 
 
-#define D_xmin -2.00
-#define D_ymin -1.00
+#define D_xmin -1.50
+#define D_ymin -0.50
 
 
-#define D_xmax  2.00
-#define D_ymax  1.00
+#define D_xmax  1.50
+#define D_ymax  0.50
 
-#define TIME_END 20.0
+#define TIME_END 60.0
 
-#define nblockx 3
-#define nblocky 3
+#define nblockx 2
+#define nblocky 2
 
 #define MaxIt 1500
 
@@ -66,8 +66,9 @@ _______________________Grid Parameters___________________________
 #define CPRS_VAR 6
 #define NRMX_VAR 7
 #define NRMY_VAR 8
+#define OMGA_VAR 9
 
-#define CENT_VAR 8
+#define CENT_VAR 9
 
 #define VELC_VAR 1
 #define IBMF_VAR 2

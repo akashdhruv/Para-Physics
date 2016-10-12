@@ -21,7 +21,7 @@ subroutine Solver_evolve
 
     integer :: tstep,p_counter
 
-    real, allocatable,  dimension(:,:) :: uu,vv,pp,tt,df,pf,th,cp
+    real, allocatable,  dimension(:,:) :: uu,vv,pp,tt,df,pf,th,cp,ww
 
     real, pointer, dimension(:,:) :: u,v
     real, pointer, dimension(:,:,:) :: cc
@@ -55,7 +55,7 @@ subroutine Solver_evolve
 #ifdef SINGLEPHASE
 
        if (mod(tstep,5) == 0 .and. myid == 0) then
-          call IO_display(ins_u_res,ins_v_res,ins_p_res,ht_T_res,p_counter,tstep*dr_dt,ins_maxdiv,ins_mindiv)
+          call IO_display(ins_u_res,ins_v_res,ins_w_res,ins_p_res,ht_T_res,p_counter,tstep*dr_dt,ins_maxdiv,ins_mindiv)
        endif
 
        ! IO_display_v3 for Only_Poisson
@@ -106,6 +106,7 @@ subroutine Solver_evolve
           allocate(vv(Nxb+1,Nyb+1))
           allocate(pp(Nxb+1,Nyb+1))
           allocate(tt(Nxb+1,Nyb+1))
+          allocate(ww(Nxb+1,Nyb+1))
           !allocate(df(Nxb+1,Nyb+1))
           !allocate(pf(Nxb+1,Nyb+1))
           !allocate(th(Nxb+1,Nyb+1))
@@ -119,14 +120,17 @@ subroutine Solver_evolve
           vv = (v(1:Nxb+1,1:Nyb+1)+v(2:Nxb+2,1:Nyb+1))/2
           pp = ((cc(PRES_VAR,1:Nxb+1,1:Nyb+1)+cc(PRES_VAR,2:Nxb+2,1:Nyb+1))/2 +(cc(PRES_VAR,1:Nxb+1,2:Nyb+2)+cc(PRES_VAR,2:Nxb+2,2:Nyb+2))/2)/2
           tt = ((cc(TEMP_VAR,1:Nxb+1,1:Nyb+1)+cc(TEMP_VAR,2:Nxb+2,1:Nyb+1))/2 +(cc(TEMP_VAR,1:Nxb+1,2:Nyb+2)+cc(TEMP_VAR,2:Nxb+2,2:Nyb+2))/2)/2
-    
+          ww = ((cc(OMGA_VAR,1:Nxb+1,1:Nyb+1)+cc(OMGA_VAR,2:Nxb+2,1:Nyb+1))/2 +(cc(OMGA_VAR,1:Nxb+1,2:Nyb+2)+cc(OMGA_VAR,2:Nxb+2,2:Nyb+2))/2)/2
+          !ww = ((v(2:Nxb+2,1:Nyb+1)-v(1:Nxb+1,1:Nyb+1))/gr_dx) - &
+          !     ((u(1:Nxb+1,2:Nyb+2)-u(1:Nxb+1,1:Nyb+1))/gr_dy)
+
           nullify(cc)
           nullify(u)
           nullify(v)
 
-          call IO_write(gr_x,gr_y,uu,vv,pp,tt,myid)
+          call IO_write(gr_x,gr_y,uu,vv,ww,tt,myid)
 
-          deallocate(uu,vv,pp,tt)
+          deallocate(uu,vv,pp,tt,ww)
 
         end if
 #endif
@@ -151,12 +155,15 @@ subroutine Solver_evolve
     allocate(pf(Nxb+1,Nyb+1))
     allocate(th(Nxb+1,Nyb+1))
     allocate(cp(Nxb+1,Nyb+1))
+    allocate(ww(Nxb+1,Nyb+1))
    
 #ifdef INS 
     uu = (u(1:Nxb+1,1:Nyb+1)+u(1:Nxb+1,2:Nyb+2))/2
     vv = (v(1:Nxb+1,1:Nyb+1)+v(2:Nxb+2,1:Nyb+1))/2
     pp = ((cc(PRES_VAR,1:Nxb+1,1:Nyb+1)+cc(PRES_VAR,2:Nxb+2,1:Nyb+1))/2 + (cc(PRES_VAR,1:Nxb+1,2:Nyb+2)+cc(PRES_VAR,2:Nxb+2,2:Nyb+2))/2)/2
     tt = ((cc(TEMP_VAR,1:Nxb+1,1:Nyb+1)+cc(TEMP_VAR,2:Nxb+2,1:Nyb+1))/2 + (cc(TEMP_VAR,1:Nxb+1,2:Nyb+2)+cc(TEMP_VAR,2:Nxb+2,2:Nyb+2))/2)/2
+    ww = ((cc(OMGA_VAR,1:Nxb+1,1:Nyb+1)+cc(OMGA_VAR,2:Nxb+2,1:Nyb+1))/2 + (cc(OMGA_VAR,1:Nxb+1,2:Nyb+2)+cc(OMGA_VAR,2:Nxb+2,2:Nyb+2))/2)/2
+    !ww = ((v(2:Nxb+2,1:Nyb+1)-v(1:Nxb+1,1:Nyb+1))/gr_dx) - ((u(1:Nxb+1,2:Nyb+2)-u(1:Nxb+1,1:Nyb+1))/gr_dy)
 #endif
 
 #ifdef MULTIPHASE
@@ -175,7 +182,7 @@ subroutine Solver_evolve
     nullify(cc)
 
 #ifdef INS
-    call IO_write(gr_x,gr_y,uu,vv,pp,tt,myid)
+    call IO_write(gr_x,gr_y,uu,vv,ww,tt,myid)
 #endif
 
 #ifdef MULTIPHASE
@@ -186,6 +193,6 @@ subroutine Solver_evolve
 ! IO_write call goes here
 #endif
 
-   deallocate(uu,vv,pp,tt,df,pf,th,cp)
+   deallocate(uu,vv,pp,tt,df,pf,th,cp,ww)
 
 end subroutine Solver_evolve
