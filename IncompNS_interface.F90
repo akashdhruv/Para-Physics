@@ -25,8 +25,8 @@ module IncompNS_interface
 
        interface
            subroutine ins_vorticity(tstep)
-           implicit none
-           integer,intent(in) :: tstep
+            implicit none
+            integer, intent(in) :: tstep
            end subroutine ins_vorticity
        end interface
 

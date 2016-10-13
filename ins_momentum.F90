@@ -179,13 +179,20 @@ subroutine Convective_U(ut,vt,dx,dy,C1)
       real,intent(in) :: dx
       real,intent(in) :: dy
 
-      real, dimension(Nxb,Nyb) :: ue
-      real, dimension(Nxb,Nyb) :: uw
-      real, dimension(Nxb,Nyb) :: us
-      real, dimension(Nxb,Nyb) :: un
-      real, dimension(Nxb,Nyb) :: vs
-      real, dimension(Nxb,Nyb) :: vn
+      real, allocatable, dimension(:,:) :: ue
+      real, allocatable, dimension(:,:) :: uw
+      real, allocatable, dimension(:,:) :: us
+      real, allocatable, dimension(:,:) :: un
+      real, allocatable, dimension(:,:) :: vs
+      real, allocatable, dimension(:,:) :: vn
       real, dimension(Nxb,Nyb), intent(out) :: C1
+
+      allocate(ue(Nxb,Nyb))
+      allocate(uw(Nxb,Nyb))
+      allocate(us(Nxb,Nyb))
+      allocate(un(Nxb,Nyb))
+      allocate(vs(Nxb,Nyb))
+      allocate(vn(Nxb,Nyb))
 
       ue = (ut(2:Nxb+1,2:Nyb+1)+ut(3:Nxb+2,2:Nyb+1))/2
       uw = (ut(2:Nxb+1,2:Nyb+1)+ut(1:Nxb,2:Nyb+1))/2
@@ -195,6 +202,8 @@ subroutine Convective_U(ut,vt,dx,dy,C1)
       vn = (vt(2:Nxb+1,2:Nyb+1)+vt(3:Nxb+2,2:Nyb+1))/2
 
       C1 = -((ue**2)-(uw**2))/dx - ((un*vn)-(us*vs))/dy
+
+      deallocate(ue,uw,us,un,vs,vn)
 
 end subroutine Convective_U
 
@@ -210,8 +219,15 @@ subroutine Convective_V(ut,vt,dx,dy,C2)
 
       real, intent(in) :: dx
       real, intent(in) :: dy      
-      real, dimension(Nxb,Nyb) :: vn, vs, ve, vw, ue, uw
-      real, dimension(Nxb,Nyb), intent(out) :: C2
+      real, allocatable,dimension(:,:) :: vn, vs, ve, vw, ue, uw
+      real, dimension(Nyb,Nyb), intent(out) :: C2
+
+      allocate(vn(Nxb,Nyb))
+      allocate(vs(Nxb,Nyb))
+      allocate(ve(Nxb,Nyb))
+      allocate(vw(Nxb,Nyb))
+      allocate(ue(Nxb,Nyb))
+      allocate(uw(Nxb,Nyb))
 
       vs = (vt(2:Nxb+1,2:Nyb+1)+vt(2:Nxb+1,1:Nyb))/2
       vn = (vt(2:Nxb+1,2:Nyb+1)+vt(2:Nxb+1,3:Nyb+2))/2
@@ -221,6 +237,8 @@ subroutine Convective_V(ut,vt,dx,dy,C2)
       uw = (ut(1:Nxb,2:Nyb+1)+ut(1:Nxb,3:Nyb+2))/2
 
       C2 = -((ue*ve)-(uw*vw))/dx - ((vn**2)-(vs**2))/dy
+
+      deallocate(vn,vs,ve,vw,ue,uw)
 
 end subroutine Convective_V
 
@@ -238,13 +256,19 @@ subroutine Diffusive_U(ut,dx,dy,inRe,D1)
 
       real, intent(in) :: inRe
 
-      real, dimension(Nxb,Nyb) :: uP
-      real, dimension(Nxb,Nyb) :: uN
-      real, dimension(Nxb,Nyb) :: uS
-      real, dimension(Nxb,Nyb) :: uE
-      real, dimension(Nxb,Nyb) :: uW
+      real, allocatable, dimension(:,:) :: uP
+      real, allocatable, dimension(:,:) :: uN
+      real, allocatable, dimension(:,:) :: uS
+      real, allocatable, dimension(:,:) :: uE
+      real, allocatable, dimension(:,:) :: uW
 
       real, dimension(Nxb,Nyb), intent(out) :: D1
+
+      allocate(uP(Nxb,Nyb))
+      allocate(uN(Nxb,Nyb))
+      allocate(uS(Nxb,Nyb))
+      allocate(uE(Nxb,Nyb))
+      allocate(uW(Nxb,Nyb))
 
       uP = ut(2:Nxb+1,2:Nyb+1)
       uE = ut(3:Nxb+2,2:Nyb+1)
@@ -253,10 +277,16 @@ subroutine Diffusive_U(ut,dx,dy,inRe,D1)
       uS = ut(2:Nxb+1,1:Nyb)
 
       !D1 = (inRe/dx)*(((uE-uP)/dx)-((uP-uW)/dx)) + (inRe/dy)*(((uN-uP)/dy)-((uP-uS)/dy))
-      D1 = (inRe/dx)*((uE-uP)/dx)&
-          -(inRe/dx)*((uP-uW)/dx)&
-          +(inRe/dy)*((uN-uP)/dy)&
-          -(inRe/dy)*((uP-uS)/dy)
+
+      !D1 = (inRe/dx)*((uE-uP)/dx)&
+      !    -(inRe/dx)*((uP-uW)/dx)&
+      !    +(inRe/dy)*((uN-uP)/dy)&
+      !    -(inRe/dy)*((uP-uS)/dy)
+
+      D1 = ((inRe*(uE-uP)/dx)-(inRe*(uP-uW)/dx))/dx + &
+           ((inRe*(uN-uP)/dy)-(inRe*(uP-uS)/dy))/dy
+
+      deallocate(uP,uN,uS,uE,uW)
 
 end subroutine Diffusive_U
 
@@ -274,9 +304,15 @@ subroutine Diffusive_V(vt,dx,dy,inRe,D2)
 
       real, intent(in) :: inRe
 
-      real, dimension(Nxb,Nyb) :: vP,vE,vW,vN,vS
+      real, allocatable, dimension(:,:) :: vP,vE,vW,vN,vS
 
       real, dimension(Nxb,Nyb), intent(out) :: D2
+
+      allocate(vP(Nxb,Nyb))
+      allocate(vE(Nxb,Nyb))
+      allocate(vW(Nxb,Nyb)) 
+      allocate(vN(Nxb,Nyb))
+      allocate(vS(Nxb,Nyb))
 
       vP = vt(2:Nxb+1,2:Nyb+1)
       vE = vt(3:Nxb+2,2:Nyb+1)
@@ -285,10 +321,16 @@ subroutine Diffusive_V(vt,dx,dy,inRe,D2)
       vS = vt(2:Nxb+1,1:Nyb)
 
       !D2 = (inRe/dx)*(((vE-vP)/dx)-((vP-vW)/dx)) + (inRe/dy)*(((vN-vP)/dy)-((vP-vS)/dy))
-      D2 = (inRe/dx)*((vE-vP)/dx)&
-          -(inRe/dx)*((vP-vW)/dx)&
-          +(inRe/dy)*((vN-vP)/dy)&
-          -(inRe/dy)*((vP-vS)/dy)
+
+      !D2 = (inRe/dx)*((vE-vP)/dx)&
+      !    -(inRe/dx)*((vP-vW)/dx)&
+      !    +(inRe/dy)*((vN-vP)/dy)&
+      !    -(inRe/dy)*((vP-vS)/dy)
+
+      D2 = ((inRe*(vE-vP)/dx)-(inRe*(vP-vW)/dx))/dx + &
+           ((inRe*(vN-vP)/dy)-(inRe*(vP-vS)/dy))/dy
+
+      deallocate(vP,vE,vW,vN,vS)
 
 end subroutine Diffusive_V
 

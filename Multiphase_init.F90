@@ -27,10 +27,10 @@ subroutine Multiphase_init()
    th = 0.
    cp = 0.
 
-   mph_x0 = -0.4
+   mph_x0 = -0.2
    !mph_x0 = 0.0
    mph_y0 =  0.0
-   mph_r0 =  0.15
+   mph_r0 =  0.05
 
    do j=1,Nyb+2
 

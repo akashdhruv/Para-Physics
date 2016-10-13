@@ -34,8 +34,8 @@ Objects += physicaldata.o Grid_data.o Grid_init.o IncompNS_init.o IncompNS_data.
            Poisson_solver.o IO_write.o IO_display.o IO_display_v2.o morton_sort.o MPIsolver_init.o MPIsolver_finalize.o MPI_periodicBC.o MPI_data.o\
            MPI_applyBC.o MPI_physicalBC_vel.o MPI_physicalBC_pres.o MPI_physicalBC_temp.o MPI_physicalBC_dfun.o MPI_CollectResiduals.o Solver_init.o\
            Solver_evolve.o Solver_finalize.o Grid_finalize.o Multiphase_data.o Multiphase_init.o mph_FillVars.o Multiphase_solver.o HeatAD_data.o \
-           HeatAD_init.o HeatAD_solver.o Solver.o IBM_init.o IBM_data.o IBM_ApplyForcing.o HeatAD_SolveTemp.o IBM_solver.o ibm_evolve.o ins_momentum.o \
-           ins_vorticity.o MPI_physicalBC_vort.o
+           HeatAD_init.o HeatAD_solver.o Solver.o IBM_init.o IBM_data.o IBM_ApplyForcing.o HeatAD_SolveTemp.o IBM_solver.o ibm_evolve.o \
+           ins_momentum.o ins_vorticity.o MPI_physicalBC_vort.o
 
 ALL_OBJS = $(Modules) $(Objects)
 

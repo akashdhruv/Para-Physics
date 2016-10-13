@@ -28,17 +28,17 @@ subroutine HeatAD_init()
 
    T = 313.0
 
-   do j=1,Nyb+2
-     do i=1,Nxb+2
+   !do j=1,Nyb+2
+   !  do i=1,Nxb+2
 
-        if(s(i,j) .ge. 0.0) then
+   !     if(s(i,j) .ge. 0.0) then
 
-             T(i,j) = 400.00
+   !          T(i,j) = 400.00
 
-         end if
+   !      end if
 
-     end do
-   end do
+   !  end do
+   !end do
 
    nullify(T)
    nullify(s)

@@ -22,10 +22,10 @@ subroutine IBM_init()
    s = 0.0
    s2 = 0.0
 
-   ibm_x0 = -0.4
+   ibm_x0 = -0.2
    !ibm_x0 = 0.0
    ibm_y0 =  0.0
-   ibm_r0 =  0.15
+   ibm_r0 =  0.05
 
    do j=1,Nyb+2
 

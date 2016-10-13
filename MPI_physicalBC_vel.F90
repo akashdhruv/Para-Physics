@@ -73,7 +73,7 @@ subroutine MPI_physicalBC_vel(u_ex,v_ex)
        if ( y_id == 0) then
 
            v_ex(:,1)=0.0
-           u_ex(:,1)=-u_ex(:,2)
+           u_ex(:,1)=2.0-u_ex(:,2)
 
        end if
 
@@ -81,7 +81,7 @@ subroutine MPI_physicalBC_vel(u_ex,v_ex)
 
            v_ex(:,Nyb+2)=0.0
            v_ex(:,Nyb+1)=0.0
-           u_ex(:,Nyb+2)=-u_ex(:,Nyb+1)
+           u_ex(:,Nyb+2)=2.0-u_ex(:,Nyb+1)
 
        end if
 
