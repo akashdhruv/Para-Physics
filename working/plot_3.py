@@ -1,11 +1,11 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-k=2
-d=2
+k=5
+d=4
 
-M=400+1
-N=400+1
+M=50+1
+N=40+1
 
 r=0.05
 #r=0.1

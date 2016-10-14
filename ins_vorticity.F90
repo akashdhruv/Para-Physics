@@ -21,7 +21,7 @@ subroutine ins_vorticity(tstep)
 
     allocate(w_old(Nxb+2,Nyb+2))
 
-    w => ph_center(OMGA_VAR,:,:)
+    w => ph_center(VORT_VAR,:,:)
     u => ph_facex(VELC_VAR,:,:)
     v => ph_facey(VELC_VAR,:,:)
     s => ph_center(DFUN_VAR,:,:)

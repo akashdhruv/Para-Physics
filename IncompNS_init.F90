@@ -14,16 +14,15 @@ subroutine IncompNS_init()
       v => ph_facey(VELC_VAR,:,:)  
 
       p = 0.0
-      u = 0.0
+      u = 1.0
       v = 0.0
 
       nullify(p)
       nullify(u)
       nullify(v)
       
-      ins_inRe = 0.001
-      ins_sigma = 0.01
-      !ins_cfl = 0.001
+      ins_inRe = 0.0001
+      ins_sigma = 0.001
       ins_cfl = 0.15
 
 end subroutine IncompNS_init

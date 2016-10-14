@@ -21,6 +21,10 @@ subroutine Driver_init()
       dt_sig = ins_sigma*(min(dx_min,dy_min)**2)/ins_inRe
       dt_cfl = ins_cfl*min(dx_min,dy_min)
 
+#ifdef ENERGY
+      dt_temp = dt_sig*ht_Pr
+#endif
+
 #ifdef MULTIPHASE
      
       !dt_mph = min(0.05*((mph_cp1)/mph_thco1)*min(dx_min,dy_min)**2,&
@@ -34,6 +38,12 @@ subroutine Driver_init()
 #endif
 
       dr_dt = min(dt_sig,dt_cfl)
+
+#ifdef ENERGY
+ 
+      dr_dt = min(dr_dt,dt_temp)
+
+#endif
 
 #ifdef MULTIPHASE
 

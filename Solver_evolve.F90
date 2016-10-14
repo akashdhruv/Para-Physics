@@ -100,7 +100,7 @@ subroutine Solver_evolve
 
 #ifdef INS_DEBUG
 
-       if(mod(tstep,10) == 0) then
+       if(mod(tstep,100000) == 0) then
 
           allocate(uu(Nxb+1,Nyb+1))
           allocate(vv(Nxb+1,Nyb+1))
@@ -120,7 +120,7 @@ subroutine Solver_evolve
           vv = (v(1:Nxb+1,1:Nyb+1)+v(2:Nxb+2,1:Nyb+1))/2
           pp = ((cc(PRES_VAR,1:Nxb+1,1:Nyb+1)+cc(PRES_VAR,2:Nxb+2,1:Nyb+1))/2 +(cc(PRES_VAR,1:Nxb+1,2:Nyb+2)+cc(PRES_VAR,2:Nxb+2,2:Nyb+2))/2)/2
           tt = ((cc(TEMP_VAR,1:Nxb+1,1:Nyb+1)+cc(TEMP_VAR,2:Nxb+2,1:Nyb+1))/2 +(cc(TEMP_VAR,1:Nxb+1,2:Nyb+2)+cc(TEMP_VAR,2:Nxb+2,2:Nyb+2))/2)/2
-          ww = ((cc(OMGA_VAR,1:Nxb+1,1:Nyb+1)+cc(OMGA_VAR,2:Nxb+2,1:Nyb+1))/2 +(cc(OMGA_VAR,1:Nxb+1,2:Nyb+2)+cc(OMGA_VAR,2:Nxb+2,2:Nyb+2))/2)/2
+          ww = ((cc(VORT_VAR,1:Nxb+1,1:Nyb+1)+cc(VORT_VAR,2:Nxb+2,1:Nyb+1))/2 +(cc(VORT_VAR,1:Nxb+1,2:Nyb+2)+cc(VORT_VAR,2:Nxb+2,2:Nyb+2))/2)/2
           !ww = ((v(2:Nxb+2,1:Nyb+1)-v(1:Nxb+1,1:Nyb+1))/gr_dx) - &
           !     ((u(1:Nxb+1,2:Nyb+2)-u(1:Nxb+1,1:Nyb+1))/gr_dy)
 
@@ -162,7 +162,7 @@ subroutine Solver_evolve
     vv = (v(1:Nxb+1,1:Nyb+1)+v(2:Nxb+2,1:Nyb+1))/2
     pp = ((cc(PRES_VAR,1:Nxb+1,1:Nyb+1)+cc(PRES_VAR,2:Nxb+2,1:Nyb+1))/2 + (cc(PRES_VAR,1:Nxb+1,2:Nyb+2)+cc(PRES_VAR,2:Nxb+2,2:Nyb+2))/2)/2
     tt = ((cc(TEMP_VAR,1:Nxb+1,1:Nyb+1)+cc(TEMP_VAR,2:Nxb+2,1:Nyb+1))/2 + (cc(TEMP_VAR,1:Nxb+1,2:Nyb+2)+cc(TEMP_VAR,2:Nxb+2,2:Nyb+2))/2)/2
-    ww = ((cc(OMGA_VAR,1:Nxb+1,1:Nyb+1)+cc(OMGA_VAR,2:Nxb+2,1:Nyb+1))/2 + (cc(OMGA_VAR,1:Nxb+1,2:Nyb+2)+cc(OMGA_VAR,2:Nxb+2,2:Nyb+2))/2)/2
+    ww = ((cc(VORT_VAR,1:Nxb+1,1:Nyb+1)+cc(VORT_VAR,2:Nxb+2,1:Nyb+1))/2 + (cc(VORT_VAR,1:Nxb+1,2:Nyb+2)+cc(VORT_VAR,2:Nxb+2,2:Nyb+2))/2)/2
     !ww = ((v(2:Nxb+2,1:Nyb+1)-v(1:Nxb+1,1:Nyb+1))/gr_dx) - ((u(1:Nxb+1,2:Nyb+2)-u(1:Nxb+1,1:Nyb+1))/gr_dy)
 #endif
 
