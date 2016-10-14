@@ -1,13 +1,14 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-k=5
-d=4
+k=2
+d=2
 
-M=50+1
-N=50+1
+M=400+1
+N=400+1
 
 r=0.05
+#r=0.1
 
 X=np.zeros((N*d,M*k),dtype=float)
 Y=np.zeros((N*d,M*k),dtype=float)
@@ -75,8 +76,8 @@ x_circle2= x_circle2-0.10
 
 plt.figure()
 plt.title('Resultant Velocity')
-#plt.contourf(X,Y,np.sqrt(U**2+V**2),density=20)
-plt.contourf(X,Y,U,density=20)
+plt.contourf(X,Y,np.sqrt(U**2+V**2),density=20)
+#plt.contourf(X,Y,U,density=20)
 #plt.quiver(X,Y,U,V)
 plt.plot(X[:,0],Y[:,0],'k')
 plt.plot(X[:,-1],Y[:,-1],'k')
