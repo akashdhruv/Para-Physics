@@ -56,6 +56,8 @@ subroutine MPI_applyBC(u_ex)
        end if
 
      end if
+
+     call MPI_BARRIER(solver_comm,ierr)
  
        !! Second dimension !!
 
@@ -105,6 +107,8 @@ subroutine MPI_applyBC(u_ex)
        end if            
 
     end if
+  
+    call MPI_BARRIER(solver_comm,ierr)
 
 end subroutine
 

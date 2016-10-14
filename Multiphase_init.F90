@@ -9,23 +9,18 @@ subroutine Multiphase_init()
 
    implicit none
 
-   real,pointer,dimension(:,:) :: sf,pf,th,cp
+   real,pointer,dimension(:,:,:) :: solnData
    real :: xcell,ycell
    real :: min_s,max_s,all_min_s,all_max_s
 
    integer :: i,j
 
+   solnData => ph_center
 
-   sf => ph_center(DFUN_VAR,:,:)
-   pf => ph_center(PFUN_VAR,:,:)
-   th => ph_center(THCO_VAR,:,:)
-   cp => ph_center(CPRS_VAR,:,:)
-
-
-   sf = 0.
-   pf = 0.
-   th = 0.
-   cp = 0.
+   solnData(DFUN_VAR,:,:) = 0.0
+   solnData(PFUN_VAR,:,:) = 0.0
+   solnData(THCO_VAR,:,:) = 0.0
+   solnData(CPRS_VAR,:,:) = 0.0
 
    mph_x0 = -0.2
    !mph_x0 = 0.0
@@ -59,7 +54,7 @@ subroutine Multiphase_init()
 
          end if
 
-              sf(i,j) = mph_r0 - sqrt((xcell-mph_x0)**2+(ycell-mph_y0)**2)
+              solnData(DFUN_VAR,i,j) = mph_r0 - sqrt((xcell-mph_x0)**2+(ycell-mph_y0)**2)
 
       end do
 
@@ -74,9 +69,6 @@ subroutine Multiphase_init()
    mph_cp1 = 2030.0*mph_rho1
    mph_cp2 = 4216.0*mph_rho2
 
-   nullify(sf)
-   nullify(pf)
-   nullify(th)
-   nullify(cp)
+   nullify(solnData)
 
 end subroutine Multiphase_init

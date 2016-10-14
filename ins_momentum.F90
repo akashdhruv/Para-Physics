@@ -1,8 +1,7 @@
-subroutine ins_momentum(tstep,p_counter)
+subroutine ins_momentum(tstep,p_counter,p,u,v,s,s2)
 
        use Poisson_interface, ONLY: Poisson_solver            
        use Grid_data
-       use physicaldata
        use Driver_data
        use MPI_data
        use IncompNS_data
@@ -23,13 +22,7 @@ subroutine ins_momentum(tstep,p_counter)
        real, allocatable, dimension(:,:) :: C1,G1,D1,C2,G2,D2,p_RHS
        real :: u_res1, v_res1, maxdiv, mindiv
        integer :: i,j
-       real, pointer, dimension(:,:) :: u, v, p, s, s2
-
-       p => ph_center(PRES_VAR,:,:)
-       u => ph_facex(VELC_VAR,:,:)
-       v => ph_facey(VELC_VAR,:,:)
-       s => ph_facex(IBMF_VAR,:,:)
-       s2 => ph_facey(IBMF_VAR,:,:)
+       real, intent(inout), dimension(:,:) :: u, v, p, s, s2
 
        allocate(C1(Nxb,Nyb))
        allocate(G1(Nxb,Nyb))
@@ -156,12 +149,6 @@ subroutine ins_momentum(tstep,p_counter)
 
        deallocate(ut,vt,u_old,v_old)
        deallocate(C1,G1,D1,C2,G2,D2,p_RHS)
-
-       nullify(u)
-       nullify(v)
-       nullify(p)
-       nullify(s)
-       nullify(s2)
 
 end subroutine ins_momentum
 

@@ -7,22 +7,24 @@ subroutine IncompNS_init()
    
       implicit none
       
-      real,pointer,dimension(:,:) :: u,v,p
+      real,pointer,dimension(:,:,:) :: facexData,faceyData,solnData
 
-      p => ph_center(PRES_VAR,:,:)
-      u => ph_facex(VELC_VAR,:,:)
-      v => ph_facey(VELC_VAR,:,:)  
+      solnData => ph_center
+      facexData => ph_facex
+      faceyData => ph_facey
 
-      p = 0.0
-      u = 1.0
-      v = 0.0
+      solnData(PRES_VAR,:,:) = 0.0
+      facexData(VELC_VAR,:,:) = 1.0
+      faceyData(VELC_VAR,:,:) = 0.0
 
-      nullify(p)
-      nullify(u)
-      nullify(v)
+      nullify(solnData)
+      nullify(facexData)
+      nullify(faceyData)
       
       ins_inRe = 0.0001
       ins_sigma = 0.001
-      ins_cfl = 0.15
+      ins_cfl = 0.01
+      !ins_sigma = 0.01
+      !ins_cfl = 0.15
 
 end subroutine IncompNS_init

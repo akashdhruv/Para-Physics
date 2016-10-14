@@ -1,4 +1,4 @@
-subroutine HeatAD_SolveTemp(tstep)
+subroutine HeatAD_SolveTemp(tstep,T,u,v,s,pf,thco,cp)
 
 #include "Solver.h"
 
@@ -7,7 +7,6 @@ subroutine HeatAD_SolveTemp(tstep)
       use IncompNS_data
       use HeatAD_data
       use Driver_data
-      use physicaldata
       use MPI_interface, only: MPI_applyBC, MPI_physicalBC_temp, MPI_CollectResiduals
       use Multiphase_data, only: mph_cp2,mph_thco2,mph_max_s,mph_min_s
       use IBM_data, only: ibm_cp1,ibm_thco1
@@ -15,7 +14,7 @@ subroutine HeatAD_SolveTemp(tstep)
       implicit none
       
       integer, intent(in) :: tstep
-      real, pointer, dimension(:,:) :: T,u,v,s,pf,thco,cp
+      real, intent(inout), dimension(:,:) :: T,u,v,s,pf,thco,cp
       real, allocatable, dimension(:,:) :: T_old
 
       integer :: i,j,ii,jj
@@ -39,28 +38,7 @@ subroutine HeatAD_SolveTemp(tstep)
 
       allocate(T_old(Nxb+2,Nyb+2))
 
-      T => ph_center(TEMP_VAR,:,:)
-      u => ph_facex(VELC_VAR,:,:)
-      v => ph_facey(VELC_VAR,:,:)
-
-#ifdef IBM
-
-      s => ph_center(DFUN_VAR,:,:)
-      thco => ph_center(THCO_VAR,:,:)
-      cp => ph_center(CPRS_VAR,:,:)
-
-#endif
-
-#ifdef MULTIPHASE
-
-      s => ph_center(DFUN_VAR,:,:)
-      pf => ph_center(PFUN_VAR,:,:)
-      thco => ph_center(THCO_VAR,:,:)
-      cp => ph_center(CPRS_VAR,:,:)
-
       Tsat = 373.13
-
-#endif
 
       T_old = T
 
@@ -291,16 +269,6 @@ subroutine HeatAD_SolveTemp(tstep)
 
      ht_T_res = sqrt(T_res1/((Nxb+2)*(Nyb+2)*(nblockx*nblocky)))
 
-     nullify(T)
-     nullify(u)
-     nullify(v)
-
-#ifdef IBM
-     nullify(s)
-     nullify(thco)
-     nullify(cp)
-#endif
-
 #endif
 
 #ifdef MULTIPHASE
@@ -526,14 +494,6 @@ subroutine HeatAD_SolveTemp(tstep)
 
    call MPI_applyBC(T)
    call MPI_physicalBC_temp(T)
-
-   nullify(T)
-   nullify(u)
-   nullify(v)
-   nullify(s)
-   nullify(pf)
-   nullify(thco)
-   nullify(cp)
 
 #endif
 

@@ -1,4 +1,4 @@
-subroutine Solver_evolve       
+subroutine Solver_evolve    
 
 #include "Solver.h"
 
@@ -23,9 +23,20 @@ subroutine Solver_evolve
 
     real, allocatable,  dimension(:,:) :: uu,vv,pp,tt,df,pf,th,cp,ww
 
-    real, pointer, dimension(:,:) :: u,v
-    real, pointer, dimension(:,:,:) :: cc
+    real, pointer, dimension(:,:,:) :: facexData,faceyData
+    real, pointer, dimension(:,:,:) :: solnData
+
     real :: solnX
+
+    allocate(uu(Nxb+1,Nyb+1))
+    allocate(vv(Nxb+1,Nyb+1))
+    allocate(pp(Nxb+1,Nyb+1))
+    allocate(tt(Nxb+1,Nyb+1))
+    allocate(df(Nxb+1,Nyb+1))
+    allocate(pf(Nxb+1,Nyb+1))
+    allocate(th(Nxb+1,Nyb+1))
+    allocate(cp(Nxb+1,Nyb+1))
+    allocate(ww(Nxb+1,Nyb+1))
   
     tstep = 0
 
@@ -73,64 +84,46 @@ subroutine Solver_evolve
 #ifdef MULTIPHASE_DEBUG
        if(mod(tstep,100000) == 0) then
 
-          !allocate(uu(Nxb+1,Nyb+1))
-          !allocate(vv(Nxb+1,Nyb+1))
-          !allocate(pp(Nxb+1,Nyb+1))
-          allocate(tt(Nxb+1,Nyb+1))
-          allocate(df(Nxb+1,Nyb+1))
-          allocate(pf(Nxb+1,Nyb+1))
-          allocate(th(Nxb+1,Nyb+1))
-          !allocate(cp(Nxb+1,Nyb+1))
+          solnData => ph_center
 
-          cc => ph_center(:,:,:)
+          df = ((solnData(DFUN_VAR,1:Nxb+1,1:Nyb+1)+solnData(DFUN_VAR,2:Nxb+2,1:Nyb+1))/2 + (solnData(DFUN_VAR,1:Nxb+1,2:Nyb+2)+solnData(DFUN_VAR,2:Nxb+2,2:Nyb+2))/2)/2
+          th = ((solnData(THCO_VAR,1:Nxb+1,1:Nyb+1)+solnData(THCO_VAR,2:Nxb+2,1:Nyb+1))/2 + (solnData(THCO_VAR,1:Nxb+1,2:Nyb+2)+solnData(THCO_VAR,2:Nxb+2,2:Nyb+2))/2)/2
+          tt = ((solnData(TEMP_VAR,1:Nxb+1,1:Nyb+1)+solnData(TEMP_VAR,2:Nxb+2,1:Nyb+1))/2 + (solnData(TEMP_VAR,1:Nxb+1,2:Nyb+2)+solnData(TEMP_VAR,2:Nxb+2,2:Nyb+2))/2)/2
+          pf = ((solnData(PFUN_VAR,1:Nxb+1,1:Nyb+1)+solnData(PFUN_VAR,2:Nxb+2,1:Nyb+1))/2 + (solnData(PFUN_VAR,1:Nxb+1,2:Nyb+2)+solnData(PFUN_VAR,2:Nxb+2,2:Nyb+2))/2)/2
 
-          df = ((cc(DFUN_VAR,1:Nxb+1,1:Nyb+1)+cc(DFUN_VAR,2:Nxb+2,1:Nyb+1))/2 + (cc(DFUN_VAR,1:Nxb+1,2:Nyb+2)+cc(DFUN_VAR,2:Nxb+2,2:Nyb+2))/2)/2
-          th = ((cc(THCO_VAR,1:Nxb+1,1:Nyb+1)+cc(THCO_VAR,2:Nxb+2,1:Nyb+1))/2 + (cc(THCO_VAR,1:Nxb+1,2:Nyb+2)+cc(THCO_VAR,2:Nxb+2,2:Nyb+2))/2)/2
-          tt = ((cc(TEMP_VAR,1:Nxb+1,1:Nyb+1)+cc(TEMP_VAR,2:Nxb+2,1:Nyb+1))/2 + (cc(TEMP_VAR,1:Nxb+1,2:Nyb+2)+cc(TEMP_VAR,2:Nxb+2,2:Nyb+2))/2)/2
-          pf = ((cc(PFUN_VAR,1:Nxb+1,1:Nyb+1)+cc(PFUN_VAR,2:Nxb+2,1:Nyb+1))/2 + (cc(PFUN_VAR,1:Nxb+1,2:Nyb+2)+cc(PFUN_VAR,2:Nxb+2,2:Nyb+2))/2)/2
-
-          nullify(cc)
+          nullify(solnData)
 
           call IO_write(gr_x,gr_y,df,pf,th,tt,myid)
-
-          deallocate(tt,df,pf,th)
 
        end if
 #endif
 
 #ifdef INS_DEBUG
 
-       if(mod(tstep,100000) == 0) then
+       if(mod(tstep,10) == 0) then
+   
+          facexData => ph_facex
+          faceyData => ph_facey
+          solnData => ph_center
 
-          allocate(uu(Nxb+1,Nyb+1))
-          allocate(vv(Nxb+1,Nyb+1))
-          allocate(pp(Nxb+1,Nyb+1))
-          allocate(tt(Nxb+1,Nyb+1))
-          allocate(ww(Nxb+1,Nyb+1))
-          !allocate(df(Nxb+1,Nyb+1))
-          !allocate(pf(Nxb+1,Nyb+1))
-          !allocate(th(Nxb+1,Nyb+1))
-          !allocate(cp(Nxb+1,Nyb+1))
+          uu = (facexData(VELC_VAR,1:Nxb+1,1:Nyb+1)+facexData(VELC_VAR,1:Nxb+1,2:Nyb+2))/2 
 
-          u => ph_facex(VELC_VAR,:,:)
-          v => ph_facey(VELC_VAR,:,:)
-          cc => ph_center(:,:,:)
+          vv = (faceyData(VELC_VAR,1:Nxb+1,1:Nyb+1)+faceyData(VELC_VAR,2:Nxb+2,1:Nyb+1))/2
 
-          uu = (u(1:Nxb+1,1:Nyb+1)+u(1:Nxb+1,2:Nyb+2))/2 
-          vv = (v(1:Nxb+1,1:Nyb+1)+v(2:Nxb+2,1:Nyb+1))/2
-          pp = ((cc(PRES_VAR,1:Nxb+1,1:Nyb+1)+cc(PRES_VAR,2:Nxb+2,1:Nyb+1))/2 +(cc(PRES_VAR,1:Nxb+1,2:Nyb+2)+cc(PRES_VAR,2:Nxb+2,2:Nyb+2))/2)/2
-          tt = ((cc(TEMP_VAR,1:Nxb+1,1:Nyb+1)+cc(TEMP_VAR,2:Nxb+2,1:Nyb+1))/2 +(cc(TEMP_VAR,1:Nxb+1,2:Nyb+2)+cc(TEMP_VAR,2:Nxb+2,2:Nyb+2))/2)/2
-          ww = ((cc(VORT_VAR,1:Nxb+1,1:Nyb+1)+cc(VORT_VAR,2:Nxb+2,1:Nyb+1))/2 +(cc(VORT_VAR,1:Nxb+1,2:Nyb+2)+cc(VORT_VAR,2:Nxb+2,2:Nyb+2))/2)/2
-          !ww = ((v(2:Nxb+2,1:Nyb+1)-v(1:Nxb+1,1:Nyb+1))/gr_dx) - &
-          !     ((u(1:Nxb+1,2:Nyb+2)-u(1:Nxb+1,1:Nyb+1))/gr_dy)
+          pp = ((solnData(PRES_VAR,1:Nxb+1,1:Nyb+1)+solnData(PRES_VAR,2:Nxb+2,1:Nyb+1))/2 &
+               +(solnData(PRES_VAR,1:Nxb+1,2:Nyb+2)+solnData(PRES_VAR,2:Nxb+2,2:Nyb+2))/2)/2
 
-          nullify(cc)
-          nullify(u)
-          nullify(v)
+          tt = ((solnData(TEMP_VAR,1:Nxb+1,1:Nyb+1)+solnData(TEMP_VAR,2:Nxb+2,1:Nyb+1))/2 &
+               +(solnData(TEMP_VAR,1:Nxb+1,2:Nyb+2)+solnData(TEMP_VAR,2:Nxb+2,2:Nyb+2))/2)/2
+
+          ww = ((solnData(VORT_VAR,1:Nxb+1,1:Nyb+1)+solnData(VORT_VAR,2:Nxb+2,1:Nyb+1))/2 &
+               +(solnData(VORT_VAR,1:Nxb+1,2:Nyb+2)+solnData(VORT_VAR,2:Nxb+2,2:Nyb+2))/2)/2
+
+          nullify(solnData)
+          nullify(facexData)
+          nullify(faceyData)
 
           call IO_write(gr_x,gr_y,uu,vv,ww,tt,myid)
-
-          deallocate(uu,vv,pp,tt,ww)
 
         end if
 #endif
@@ -143,43 +136,33 @@ subroutine Solver_evolve
 
     end do
 
-    u => ph_facex(VELC_VAR,:,:)
-    v => ph_facey(VELC_VAR,:,:)
-    cc => ph_center(:,:,:)
+    facexData => ph_facex
+    faceyData => ph_facey
+    solnData => ph_center
 
-    allocate(uu(Nxb+1,Nyb+1))
-    allocate(vv(Nxb+1,Nyb+1))
-    allocate(pp(Nxb+1,Nyb+1))
-    allocate(tt(Nxb+1,Nyb+1))
-    allocate(df(Nxb+1,Nyb+1))
-    allocate(pf(Nxb+1,Nyb+1))
-    allocate(th(Nxb+1,Nyb+1))
-    allocate(cp(Nxb+1,Nyb+1))
-    allocate(ww(Nxb+1,Nyb+1))
-   
+  
 #ifdef INS 
-    uu = (u(1:Nxb+1,1:Nyb+1)+u(1:Nxb+1,2:Nyb+2))/2
-    vv = (v(1:Nxb+1,1:Nyb+1)+v(2:Nxb+2,1:Nyb+1))/2
-    pp = ((cc(PRES_VAR,1:Nxb+1,1:Nyb+1)+cc(PRES_VAR,2:Nxb+2,1:Nyb+1))/2 + (cc(PRES_VAR,1:Nxb+1,2:Nyb+2)+cc(PRES_VAR,2:Nxb+2,2:Nyb+2))/2)/2
-    tt = ((cc(TEMP_VAR,1:Nxb+1,1:Nyb+1)+cc(TEMP_VAR,2:Nxb+2,1:Nyb+1))/2 + (cc(TEMP_VAR,1:Nxb+1,2:Nyb+2)+cc(TEMP_VAR,2:Nxb+2,2:Nyb+2))/2)/2
-    ww = ((cc(VORT_VAR,1:Nxb+1,1:Nyb+1)+cc(VORT_VAR,2:Nxb+2,1:Nyb+1))/2 + (cc(VORT_VAR,1:Nxb+1,2:Nyb+2)+cc(VORT_VAR,2:Nxb+2,2:Nyb+2))/2)/2
-    !ww = ((v(2:Nxb+2,1:Nyb+1)-v(1:Nxb+1,1:Nyb+1))/gr_dx) - ((u(1:Nxb+1,2:Nyb+2)-u(1:Nxb+1,1:Nyb+1))/gr_dy)
+    uu = (facexData(VELC_VAR,1:Nxb+1,1:Nyb+1)+facexData(VELC_VAR,1:Nxb+1,2:Nyb+2))/2
+    vv = (faceyData(VELC_VAR,1:Nxb+1,1:Nyb+1)+faceyData(VELC_VAR,2:Nxb+2,1:Nyb+1))/2
+    pp = ((solnData(PRES_VAR,1:Nxb+1,1:Nyb+1)+solnData(PRES_VAR,2:Nxb+2,1:Nyb+1))/2 + (solnData(PRES_VAR,1:Nxb+1,2:Nyb+2)+solnData(PRES_VAR,2:Nxb+2,2:Nyb+2))/2)/2
+    tt = ((solnData(TEMP_VAR,1:Nxb+1,1:Nyb+1)+solnData(TEMP_VAR,2:Nxb+2,1:Nyb+1))/2 + (solnData(TEMP_VAR,1:Nxb+1,2:Nyb+2)+solnData(TEMP_VAR,2:Nxb+2,2:Nyb+2))/2)/2
+    ww = ((solnData(VORT_VAR,1:Nxb+1,1:Nyb+1)+solnData(VORT_VAR,2:Nxb+2,1:Nyb+1))/2 + (solnData(VORT_VAR,1:Nxb+1,2:Nyb+2)+solnData(VORT_VAR,2:Nxb+2,2:Nyb+2))/2)/2
 #endif
 
 #ifdef MULTIPHASE
-    df = ((cc(DFUN_VAR,1:Nxb+1,1:Nyb+1)+cc(DFUN_VAR,2:Nxb+2,1:Nyb+1))/2 + (cc(DFUN_VAR,1:Nxb+1,2:Nyb+2)+cc(DFUN_VAR,2:Nxb+2,2:Nyb+2))/2)/2
-    th = ((cc(THCO_VAR,1:Nxb+1,1:Nyb+1)+cc(THCO_VAR,2:Nxb+2,1:Nyb+1))/2 + (cc(THCO_VAR,1:Nxb+1,2:Nyb+2)+cc(THCO_VAR,2:Nxb+2,2:Nyb+2))/2)/2
-    cp = ((cc(CPRS_VAR,1:Nxb+1,1:Nyb+1)+cc(CPRS_VAR,2:Nxb+2,1:Nyb+1))/2 + (cc(CPRS_VAR,1:Nxb+1,2:Nyb+2)+cc(CPRS_VAR,2:Nxb+2,2:Nyb+2))/2)/2
-    pf = ((cc(PFUN_VAR,1:Nxb+1,1:Nyb+1)+cc(PFUN_VAR,2:Nxb+2,1:Nyb+1))/2 + (cc(PFUN_VAR,1:Nxb+1,2:Nyb+2)+cc(PFUN_VAR,2:Nxb+2,2:Nyb+2))/2)/2
+    df = ((solnData(DFUN_VAR,1:Nxb+1,1:Nyb+1)+solnData(DFUN_VAR,2:Nxb+2,1:Nyb+1))/2 + (solnData(DFUN_VAR,1:Nxb+1,2:Nyb+2)+solnData(DFUN_VAR,2:Nxb+2,2:Nyb+2))/2)/2
+    th = ((solnData(THCO_VAR,1:Nxb+1,1:Nyb+1)+solnData(THCO_VAR,2:Nxb+2,1:Nyb+1))/2 + (solnData(THCO_VAR,1:Nxb+1,2:Nyb+2)+solnData(THCO_VAR,2:Nxb+2,2:Nyb+2))/2)/2
+    cp = ((solnData(CPRS_VAR,1:Nxb+1,1:Nyb+1)+solnData(CPRS_VAR,2:Nxb+2,1:Nyb+1))/2 + (solnData(CPRS_VAR,1:Nxb+1,2:Nyb+2)+solnData(CPRS_VAR,2:Nxb+2,2:Nyb+2))/2)/2
+    pf = ((solnData(PFUN_VAR,1:Nxb+1,1:Nyb+1)+solnData(PFUN_VAR,2:Nxb+2,1:Nyb+1))/2 + (solnData(PFUN_VAR,1:Nxb+1,2:Nyb+2)+solnData(PFUN_VAR,2:Nxb+2,2:Nyb+2))/2)/2
 #endif
 
 #ifdef ONLY_POISSON
 ! Post processing goes here
 #endif
 
-    nullify(u)
-    nullify(v)
-    nullify(cc)
+    nullify(facexData)
+    nullify(faceyData)
+    nullify(solnData)
 
 #ifdef INS
     call IO_write(gr_x,gr_y,uu,vv,ww,tt,myid)

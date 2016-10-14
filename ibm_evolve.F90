@@ -8,14 +8,14 @@ subroutine ibm_evolve(x0,y0,r0,x1,y1,r1)
    implicit none
   
    real, intent(in) :: x0,y0,r0,x1,y1,r1
-   real, pointer, dimension(:,:) :: s,s2
+   real, pointer, dimension(:,:,:) :: facexData,faceyData
    real :: ycell,xcell
    integer :: i,j
 
-   s => ph_facex(IBMF_VAR,:,:)
-   s2 => ph_facey(IBMF_VAR,:,:)
+   facexData => ph_facex
+   faceyData => ph_facey
 
-   nullify(s)
-   nullify(s2)
+   nullify(facexData)
+   nullify(faceyData)
    
 end subroutine

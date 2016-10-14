@@ -9,18 +9,18 @@ subroutine IBM_init()
 
    implicit none
 
-   real,pointer,dimension(:,:) :: s,pf,thco,cprs,s2
+   real,pointer,dimension(:,:,:) :: facexData,faceyData
    real :: x0,y0,r,xcell,ycell
    real :: x1,y1,r1
 
    integer :: i,j
 
 
-   s => ph_facex(IBMF_VAR,:,:)
-   s2 => ph_facey(IBMF_VAR,:,:)
+   facexData => ph_facex
+   faceyData => ph_facey
 
-   s = 0.0
-   s2 = 0.0
+   facexData(IBMF_VAR,:,:) = 0.0
+   faceyData(IBMF_VAR,:,:) = 0.0
 
    ibm_x0 = -0.2
    !ibm_x0 = 0.0
@@ -51,7 +51,7 @@ subroutine IBM_init()
 
      end if
 
-     s(i,j) = ibm_r0 - sqrt((xcell-ibm_x0)**2+(ycell-ibm_y0)**2)
+     facexData(IBMF_VAR,i,j) = ibm_r0 - sqrt((xcell-ibm_x0)**2+(ycell-ibm_y0)**2)
 
      end do
 
@@ -80,7 +80,7 @@ subroutine IBM_init()
 
     end if
 
-    s2(i,j) = ibm_r0 - sqrt((xcell-ibm_x0)**2+(ycell-ibm_y0)**2)
+    faceyData(IBMF_VAR,i,j) = ibm_r0 - sqrt((xcell-ibm_x0)**2+(ycell-ibm_y0)**2)
 
     end do
    end do
@@ -97,7 +97,7 @@ subroutine IBM_init()
 
    ibm_omega = 1.0
 
-   nullify(s)
-   nullify(s2)
+   nullify(facexData)
+   nullify(faceyData)
 
 end subroutine IBM_init

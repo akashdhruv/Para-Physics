@@ -16,7 +16,7 @@ subroutine Multiphase_solver(tstep,solnX)
 
     real,intent(out) :: solnX
     real :: ycell
-    real, pointer, dimension(:,:) :: s,pf,thco,cprs
+    real, pointer, dimension(:,:,:) :: solnData
     integer :: j,i
 
     ! _________Analaytical position of interface - Stefan Problem____!
@@ -26,10 +26,7 @@ subroutine Multiphase_solver(tstep,solnX)
 
     !______________________________End_______________________________!
 
-    s => ph_center(DFUN_VAR,:,:)
-    pf => ph_center(PFUN_VAR,:,:)
-    thco => ph_center(THCO_VAR,:,:)
-    cprs => ph_center(CPRS_VAR,:,:) 
+    solnData => ph_center
 
     !_________Distance Function calculation - Stefan Problem_________!
  
@@ -46,29 +43,17 @@ subroutine Multiphase_solver(tstep,solnX)
 
     !  end if
 
-    !  s(:,j) = ycell - solnX
+    !  solnData(DFUN_VAR,:,j) = ycell - solnX
 
     !end do
 
     !______________________________End_______________________________!
 
-   call mph_FillVars(s,pf,thco,cprs,mph_thco1,mph_thco2,mph_cp1,mph_cp2)
+    call mph_FillVars(solnData(DFUN_VAR,:,:),solnData(PFUN_VAR,:,:),&
+                      solnData(THCO_VAR,:,:),solnData(CPRS_VAR,:,:),&
+                      mph_thco1,mph_thco2,mph_cp1,mph_cp2)   
 
-   call MPI_applyBC(s)
-   call MPI_applyBC(pf)
-   call MPI_applyBC(thco)
-   call MPI_applyBC(cprs)
-
-   call MPI_physicalBC_dfun(s)
-   call MPI_physicalBC_dfun(pf)
-   call MPI_physicalBC_dfun(thco)
-   call MPI_physicalBC_dfun(cprs)
-    
-   nullify(s)
-   nullify(pf)
-   nullify(thco)
-   nullify(cprs)
-
-
+    nullify(solnData)  
+ 
 end subroutine Multiphase_solver
 

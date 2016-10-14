@@ -13,7 +13,7 @@ subroutine HeatAD_init()
 
    implicit none
 
-   real,pointer,dimension(:,:) :: T,s
+   real,pointer,dimension(:,:,:) :: solnData
    integer :: j,i
    real :: solnX
    real :: solnY
@@ -23,24 +23,22 @@ subroutine HeatAD_init()
    ht_Nu = 0.332*(ht_Pr**0.33)/(ins_inRe**0.5)
    ht_src = 100.0
 
-   T => ph_center(TEMP_VAR,:,:)
-   s => ph_center(DFUN_VAR,:,:)
+   solnData => ph_center
 
-   T = 313.0
+   solnData(TEMP_VAR,:,:) = 313.0
 
    !do j=1,Nyb+2
    !  do i=1,Nxb+2
 
-   !     if(s(i,j) .ge. 0.0) then
+   !     if(solnData(DFUN_VAR,i,j) .ge. 0.0) then
 
-   !          T(i,j) = 400.00
+   !          solnData(TEMP_VAR,i,j) = 400.00
 
    !      end if
 
    !  end do
    !end do
 
-   nullify(T)
-   nullify(s)
+   nullify(solnData)
 
 end subroutine HeatAD_init
