@@ -22,10 +22,12 @@ subroutine Multiphase_init()
    solnData(THCO_VAR,:,:) = 0.0
    solnData(CPRS_VAR,:,:) = 0.0
 
-   mph_x0 = -0.2
+   !mph_x0 = -0.2
    !mph_x0 = 0.0
+   mph_x0 = -5.0
    mph_y0 =  0.0
-   mph_r0 =  0.05
+   mph_r0 = 0.5
+   !mph_r0 =  0.05
    !mph_r0 = 0.1
 
    do j=1,Nyb+2

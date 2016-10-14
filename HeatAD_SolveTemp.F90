@@ -15,7 +15,8 @@ subroutine HeatAD_SolveTemp(tstep,T,u,v,s,pf,thco,cp)
       
       integer, intent(in) :: tstep
       real, intent(inout), dimension(:,:) :: T,u,v,s,pf,thco,cp
-      real, allocatable, dimension(:,:) :: T_old
+      !real, allocatable, dimension(:,:) :: T_old
+      real, dimension(Nxb+2,Nyb+2) :: T_old
 
       integer :: i,j,ii,jj
 
@@ -36,7 +37,7 @@ subroutine HeatAD_SolveTemp(tstep,T,u,v,s,pf,thco,cp)
 
       tol = 0.01
 
-      allocate(T_old(Nxb+2,Nyb+2))
+      !allocate(T_old(Nxb+2,Nyb+2))
 
       Tsat = 373.13
 
@@ -497,6 +498,6 @@ subroutine HeatAD_SolveTemp(tstep,T,u,v,s,pf,thco,cp)
 
 #endif
 
-  deallocate(T_old)
+  !deallocate(T_old)
 
 end subroutine HeatAD_SolveTemp

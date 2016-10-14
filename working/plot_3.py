@@ -7,8 +7,9 @@ d=4
 M=50+1
 N=40+1
 
-r=0.05
+#r=0.05
 #r=0.1
+r=0.5
 
 X=np.zeros((N*d,M*k),dtype=float)
 Y=np.zeros((N*d,M*k),dtype=float)
@@ -71,7 +72,8 @@ y_circle2 = np.concatenate([y_c,-np.fliplr([y_c[:-1]])[0]])
 #x_circle2 = x_circle.copy()
 #y_circle2 = y_circle.copy()
 
-x_circle = x_circle-0.2
+#x_circle = x_circle-0.2
+x_circle = x_circle-5.0
 x_circle2= x_circle2-0.10
 
 plt.figure()

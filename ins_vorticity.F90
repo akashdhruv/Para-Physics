@@ -14,12 +14,13 @@ subroutine ins_vorticity(tstep,w,u,v,s)
     real, intent(inout), dimension(:,:) :: w,u,v,s
     real :: u_conv,v_conv,u_plus,u_mins,v_plus,v_mins
     real :: wx_plus,wx_mins,wy_plus,wy_mins
-    real, allocatable,dimension(:,:) :: w_old
+    !real, allocatable,dimension(:,:) :: w_old
+    real, dimension(Nxb+2,Nyb+2) :: w_old
     integer :: i,j
     real :: w_res1
     real :: w_sat,th,tol,wij
 
-    allocate(w_old(Nxb+2,Nyb+2))
+    !allocate(w_old(Nxb+2,Nyb+2))
 
     w_old = w
     
@@ -145,6 +146,6 @@ subroutine ins_vorticity(tstep,w,u,v,s)
      call MPI_CollectResiduals(ins_w_res,w_res1,1)
      ins_w_res = sqrt(w_res1/((nblockx*nblocky)*(Nxb+2)*(Nyb+2))) 
 
-     deallocate(w_old)
+     !deallocate(w_old)
 
 end subroutine ins_vorticity
