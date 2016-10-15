@@ -50,6 +50,8 @@
 <p align="center">
   <img src="./images/Image_1.png" width="700"/>
 </p>
- 
+<p aling="center">
+  Conjugate heat transfer between solid cylinder and air, using immersed boundary and level set method.
+</p> 
 ### Author - Akash V. Dhruv  
 ### License - Refer LICENSE.md
