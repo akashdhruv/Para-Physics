@@ -48,8 +48,7 @@
 ### Solver capabilities
 
 <p align="center">
-  <img src="./images/Image_1.png" width="350"/>
-  <img src="./images/Image_2.png" width="350"/>
+  <img src="./images/Image_1.png" width="700"/>
 </p>
  
 ### Author - Akash V. Dhruv  
