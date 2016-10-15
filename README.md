@@ -7,7 +7,7 @@
   3. Immersed boundary module is working.
   4. Conjugate Heat Transfer is in beta.
   5. AMR module not yet implemented.
-  6. Multiphase module is still in beta.
+  6. Multiphase module is in beta.
 
 ### Execution instructions
 
