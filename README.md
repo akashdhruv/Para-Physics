@@ -48,17 +48,21 @@
 ### Solver capabilities
 
 <p align="center">
-  <img src="./images/Image_1.png" width="700"/>
+  <img src="./images/Image_3.png" width="350"/>
+  <img src="./images/Image_4.png" width="350"/>
 </p>
 <p align="center">
-  Fig 1. Conjugate heat transfer between solid cylinder and air, using immersed boundary and level set method.
+  Fig 1. Velocity Streamlines of the air flow around a solid cylinder and temperature distribution demonstarting Conjugate Heat Transfer
+  (using immersed boundary and level set methods)
 </p>
 
 <p align="center">
-  <img src="./images/Image_2.png" width="350"/>
+  <img src="./images/Image_6.png" width="350"/>
+  <img src="./images/Image_7.png" width="350"/>
+  <img src="./images/Image_8.png" width="350"/>
 </p>
 <p align="center">
-  Fig 2. Conductive heat transfer between two phases using a level set function
+  Fig 2. Velocity Streamlines and Pressure and Temperature Contours for Lid Driven Cavity flow (Re = 1000)
 </p>
  
 ### Author - Akash V. Dhruv  
