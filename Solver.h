@@ -39,21 +39,21 @@ _______________________Grid Parameters___________________________
 #define MAX_BLOCKS 80
 
 
-#define Nxb 200
-#define Nyb 100
+#define Nxb 50
+#define Nyb 40
 
 
-#define D_xmin -10.0
-#define D_ymin -5.0
+#define D_xmin -0.5
+#define D_ymin -0.5
 
 
-#define D_xmax  10.0
-#define D_ymax  5.0
+#define D_xmax  0.5
+#define D_ymax  0.5
 
 #define TIME_END 60.0
 
-#define nblockx 4
-#define nblocky 4
+#define nblockx 2
+#define nblocky 2
 
 #define MaxIt 1500
 
@@ -82,7 +82,7 @@ _______________________Grid Parameters___________________________
 _______________________Defining Flow Type_____________________
 #endif
 
-#define FLOW 2
+#define FLOW 1
 
 #if FLOW == 1
 #define LID_DRIVEN_FLOW
@@ -144,7 +144,7 @@ _____________________Only Poisson On/Off_____________________
 ___________________Immersed Boundary On/Off________________
 #endif
 
-#define IB 1
+#define IB 0
 
 #if IB == 1
 #define IBM
@@ -157,4 +157,13 @@ _________________OpenMP threads per MPI rank_______________
 #endif
 
 #define NTHREADS 2
+
+#if 0
+__________________Data Operation Parameters________________
+#endif
+
+#define SUM_DATA 1
+#define MIN_DATA 2
+#define MAX_DATA 3
+
 

@@ -1,9 +1,11 @@
-subroutine MPIsolver_finalize()
+subroutine MPIsolver_finalize(sim_Complete)
 
       !$ use omp_lib
       use MPI_data
 
       implicit none
+
+      logical,intent(in) :: sim_Complete
 
       include "mpif.h"
 
@@ -15,8 +17,7 @@ subroutine MPIsolver_finalize()
 
       exec_time = (finish - start) 
 
-      !print *,"Execution Time = ",exec_time," seconds"
-      print '("Execution time: ",f20.10," seconds")',exec_time
+      if (sim_Complete) print '("Execution time: ",f20.10," seconds")',exec_time
 
       call MPI_FINALIZE(ierr)
 

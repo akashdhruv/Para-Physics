@@ -22,13 +22,20 @@ subroutine Multiphase_init()
    solnData(THCO_VAR,:,:) = 0.0
    solnData(CPRS_VAR,:,:) = 0.0
 
-   !mph_x0 = -0.2
-   !mph_x0 = 0.0
-   mph_x0 = -5.0
+   !___Vorticity Test__!
+   mph_x0 = -0.2
    mph_y0 =  0.0
-   mph_r0 = 0.5
-   !mph_r0 =  0.05
+   mph_r0 =  0.05
+
+   !___Multiphase Test__!
+   !mph_x0 = 0.0
+   !mph_y0 = 0.0
    !mph_r0 = 0.1
+
+   !___Conjugate Heat Test_!
+   !mph_x0 = -5.0
+   !mph_y0 =  0.0
+   !mph_r0 = 0.5
 
    do j=1,Nyb+2
 
@@ -62,14 +69,24 @@ subroutine Multiphase_init()
 
     end do
 
-   mph_rho1 = 0.597
-   mph_rho2 = 958.4
+   !mph_rho1 = 0.597
+   !mph_rho2 = 958.4
 
-   mph_thco1 = 0.025
-   mph_thco2 = 0.679
+   !mph_thco1 = 0.025
+   !mph_thco2 = 0.679
 
-   mph_cp1 = 2030.0*mph_rho1
-   mph_cp2 = 4216.0*mph_rho2
+   !mph_cp1 = 2030.0*mph_rho1
+   !mph_cp2 = 4216.0*mph_rho2
+
+   mph_thco2 = 1.0
+   mph_rho2 = 1.0
+   mph_cp2 = 1.0*mph_rho2
+   mph_vis2 = 1.0
+
+   mph_thco1 = 1.2
+   mph_rho1 = 1.0
+   mph_cp1 = 1.0*mph_rho1
+   mph_vis1 = 1.0
 
    nullify(solnData)
 

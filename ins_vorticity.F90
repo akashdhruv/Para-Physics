@@ -143,7 +143,7 @@ subroutine ins_vorticity(tstep,w,u,v,s)
           ins_w_res = ins_w_res + sum((w(:,i)-w_old(:,i))**2)
      enddo
 
-     call MPI_CollectResiduals(ins_w_res,w_res1,1)
+     call MPI_CollectResiduals(ins_w_res,w_res1,SUM_DATA)
      ins_w_res = sqrt(w_res1/((nblockx*nblocky)*(Nxb+2)*(Nyb+2))) 
 
      !deallocate(w_old)

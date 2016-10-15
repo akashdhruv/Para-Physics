@@ -2,14 +2,14 @@ subroutine MPI_applyBC(u_ex)
 
 #include "Solver.h"
 
-       use MPI_data
+      use MPI_data
 
-       implicit none
+      implicit none
 
-       include "mpif.h"
+      include "mpif.h"
 
-       real, dimension(:,:), intent(inout) :: u_ex
-       integer :: status(MPI_STATUS_SIZE)
+      real, dimension(:,:), intent(inout) :: u_ex
+      integer :: status(MPI_STATUS_SIZE)
 
       if (x_procs > 1) then
         
@@ -57,9 +57,7 @@ subroutine MPI_applyBC(u_ex)
 
      end if
 
-     call MPI_BARRIER(solver_comm,ierr)
- 
-       !! Second dimension !!
+     !! Second dimension !!
 
      if (y_procs > 1) then
 
@@ -110,5 +108,5 @@ subroutine MPI_applyBC(u_ex)
   
     call MPI_BARRIER(solver_comm,ierr)
 
-end subroutine
+end subroutine MPI_applyBC
 

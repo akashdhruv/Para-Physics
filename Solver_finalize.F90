@@ -6,6 +6,6 @@ subroutine Solver_finalize
       implicit none
 
       call Grid_finalize()
-      call MPIsolver_finalize()
+      call MPIsolver_finalize(.true.)
 
 end subroutine Solver_finalize

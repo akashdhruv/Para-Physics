@@ -87,10 +87,17 @@ subroutine Solver_evolve
 
           solnData => ph_center
 
-          df = ((solnData(DFUN_VAR,1:Nxb+1,1:Nyb+1)+solnData(DFUN_VAR,2:Nxb+2,1:Nyb+1))/2 + (solnData(DFUN_VAR,1:Nxb+1,2:Nyb+2)+solnData(DFUN_VAR,2:Nxb+2,2:Nyb+2))/2)/2
-          th = ((solnData(THCO_VAR,1:Nxb+1,1:Nyb+1)+solnData(THCO_VAR,2:Nxb+2,1:Nyb+1))/2 + (solnData(THCO_VAR,1:Nxb+1,2:Nyb+2)+solnData(THCO_VAR,2:Nxb+2,2:Nyb+2))/2)/2
-          tt = ((solnData(TEMP_VAR,1:Nxb+1,1:Nyb+1)+solnData(TEMP_VAR,2:Nxb+2,1:Nyb+1))/2 + (solnData(TEMP_VAR,1:Nxb+1,2:Nyb+2)+solnData(TEMP_VAR,2:Nxb+2,2:Nyb+2))/2)/2
-          pf = ((solnData(PFUN_VAR,1:Nxb+1,1:Nyb+1)+solnData(PFUN_VAR,2:Nxb+2,1:Nyb+1))/2 + (solnData(PFUN_VAR,1:Nxb+1,2:Nyb+2)+solnData(PFUN_VAR,2:Nxb+2,2:Nyb+2))/2)/2
+          df = ((solnData(DFUN_VAR,1:Nxb+1,1:Nyb+1)+solnData(DFUN_VAR,2:Nxb+2,1:Nyb+1))/2 + &
+                (solnData(DFUN_VAR,1:Nxb+1,2:Nyb+2)+solnData(DFUN_VAR,2:Nxb+2,2:Nyb+2))/2)/2
+
+          th = ((solnData(THCO_VAR,1:Nxb+1,1:Nyb+1)+solnData(THCO_VAR,2:Nxb+2,1:Nyb+1))/2 + &
+                (solnData(THCO_VAR,1:Nxb+1,2:Nyb+2)+solnData(THCO_VAR,2:Nxb+2,2:Nyb+2))/2)/2
+
+          tt = ((solnData(TEMP_VAR,1:Nxb+1,1:Nyb+1)+solnData(TEMP_VAR,2:Nxb+2,1:Nyb+1))/2 + &
+                (solnData(TEMP_VAR,1:Nxb+1,2:Nyb+2)+solnData(TEMP_VAR,2:Nxb+2,2:Nyb+2))/2)/2
+
+          pf = ((solnData(PFUN_VAR,1:Nxb+1,1:Nyb+1)+solnData(PFUN_VAR,2:Nxb+2,1:Nyb+1))/2 + &
+                (solnData(PFUN_VAR,1:Nxb+1,2:Nyb+2)+solnData(PFUN_VAR,2:Nxb+2,2:Nyb+2))/2)/2
 
           nullify(solnData)
 
@@ -101,7 +108,7 @@ subroutine Solver_evolve
 
 #ifdef INS_DEBUG
 
-       if(mod(tstep,10) == 0) then
+       if(mod(tstep,700) == 0) then
    
           facexData => ph_facex
           faceyData => ph_facey
@@ -124,6 +131,7 @@ subroutine Solver_evolve
           nullify(facexData)
           nullify(faceyData)
 
+          !call IO_write(gr_x,gr_dy,uu,vv,pp,tt,myid)
           call IO_write(gr_x,gr_y,uu,vv,ww,tt,myid)
 
         end if
@@ -144,20 +152,31 @@ subroutine Solver_evolve
   
 #ifdef INS 
     uu = (facexData(VELC_VAR,1:Nxb+1,1:Nyb+1)+facexData(VELC_VAR,1:Nxb+1,2:Nyb+2))/2
+
     vv = (faceyData(VELC_VAR,1:Nxb+1,1:Nyb+1)+faceyData(VELC_VAR,2:Nxb+2,1:Nyb+1))/2
+
     pp = ((solnData(PRES_VAR,1:Nxb+1,1:Nyb+1)+solnData(PRES_VAR,2:Nxb+2,1:Nyb+1))/2 + &
           (solnData(PRES_VAR,1:Nxb+1,2:Nyb+2)+solnData(PRES_VAR,2:Nxb+2,2:Nyb+2))/2)/2
+
     tt = ((solnData(TEMP_VAR,1:Nxb+1,1:Nyb+1)+solnData(TEMP_VAR,2:Nxb+2,1:Nyb+1))/2 + &
           (solnData(TEMP_VAR,1:Nxb+1,2:Nyb+2)+solnData(TEMP_VAR,2:Nxb+2,2:Nyb+2))/2)/2
+
     ww = ((solnData(VORT_VAR,1:Nxb+1,1:Nyb+1)+solnData(VORT_VAR,2:Nxb+2,1:Nyb+1))/2 + &
           (solnData(VORT_VAR,1:Nxb+1,2:Nyb+2)+solnData(VORT_VAR,2:Nxb+2,2:Nyb+2))/2)/2
 #endif
 
 #ifdef MULTIPHASE
-    df = ((solnData(DFUN_VAR,1:Nxb+1,1:Nyb+1)+solnData(DFUN_VAR,2:Nxb+2,1:Nyb+1))/2 + (solnData(DFUN_VAR,1:Nxb+1,2:Nyb+2)+solnData(DFUN_VAR,2:Nxb+2,2:Nyb+2))/2)/2
-    th = ((solnData(THCO_VAR,1:Nxb+1,1:Nyb+1)+solnData(THCO_VAR,2:Nxb+2,1:Nyb+1))/2 + (solnData(THCO_VAR,1:Nxb+1,2:Nyb+2)+solnData(THCO_VAR,2:Nxb+2,2:Nyb+2))/2)/2
-    cp = ((solnData(CPRS_VAR,1:Nxb+1,1:Nyb+1)+solnData(CPRS_VAR,2:Nxb+2,1:Nyb+1))/2 + (solnData(CPRS_VAR,1:Nxb+1,2:Nyb+2)+solnData(CPRS_VAR,2:Nxb+2,2:Nyb+2))/2)/2
-    pf = ((solnData(PFUN_VAR,1:Nxb+1,1:Nyb+1)+solnData(PFUN_VAR,2:Nxb+2,1:Nyb+1))/2 + (solnData(PFUN_VAR,1:Nxb+1,2:Nyb+2)+solnData(PFUN_VAR,2:Nxb+2,2:Nyb+2))/2)/2
+    df = ((solnData(DFUN_VAR,1:Nxb+1,1:Nyb+1)+solnData(DFUN_VAR,2:Nxb+2,1:Nyb+1))/2 + &
+          (solnData(DFUN_VAR,1:Nxb+1,2:Nyb+2)+solnData(DFUN_VAR,2:Nxb+2,2:Nyb+2))/2)/2
+
+    th = ((solnData(THCO_VAR,1:Nxb+1,1:Nyb+1)+solnData(THCO_VAR,2:Nxb+2,1:Nyb+1))/2 + &
+          (solnData(THCO_VAR,1:Nxb+1,2:Nyb+2)+solnData(THCO_VAR,2:Nxb+2,2:Nyb+2))/2)/2
+
+    cp = ((solnData(CPRS_VAR,1:Nxb+1,1:Nyb+1)+solnData(CPRS_VAR,2:Nxb+2,1:Nyb+1))/2 + &
+          (solnData(CPRS_VAR,1:Nxb+1,2:Nyb+2)+solnData(CPRS_VAR,2:Nxb+2,2:Nyb+2))/2)/2
+
+    pf = ((solnData(PFUN_VAR,1:Nxb+1,1:Nyb+1)+solnData(PFUN_VAR,2:Nxb+2,1:Nyb+1))/2 + &
+          (solnData(PFUN_VAR,1:Nxb+1,2:Nyb+2)+solnData(PFUN_VAR,2:Nxb+2,2:Nyb+2))/2)/2
 #endif
 
 #ifdef ONLY_POISSON
@@ -169,7 +188,8 @@ subroutine Solver_evolve
     nullify(solnData)
 
 #ifdef INS
-    call IO_write(gr_x,gr_y,uu,vv,ww,tt,myid)
+    call IO_write(gr_x,gr_y,uu,vv,pp,tt,myid)
+    !call IO_write(gr_x,gr_y,uu,vv,ww,tt,myid)
 #endif
 
 #ifdef MULTIPHASE

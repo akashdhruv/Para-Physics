@@ -26,17 +26,30 @@ subroutine MPIsolver_init()
     blockCount = ((nblockx*nblocky)/procs)
     checkSumMPI = blockCount*procs
 
-    if (checkSumMPI /= nblockx*nblocky) then
-       
+    if(procs /= nblockx*nblocky) then
+
         call MPI_FINALIZE(ierr)
 
-        if (myid == 0) then 
-        print *,"RUNTIME ERROR: The number blocks should be greater than and exactly divisible by total number of MPI processes."
+        if (myid == 0) then
+        print *,"RUNTIME ERROR: The number of MPI processes must be equal to the total number of blocks."
         end if
 
         call exit(status)
 
     end if
+
+
+    !if (checkSumMPI /= nblockx*nblocky) then
+       
+    !    call MPI_FINALIZE(ierr)
+
+    !    if (myid == 0) then 
+    !    print *,"RUNTIME ERROR: The number blocks should be greater than and exactly divisible by total number of MPI processes."
+    !    end if
+
+    !    call exit(status)
+
+    !end if
 
     blockID(1:blockCount) = (/(I,I=1,blockCount)/)
  

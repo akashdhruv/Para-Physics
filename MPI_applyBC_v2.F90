@@ -1,4 +1,4 @@
-subroutine MPI_applyBC(u_ex)
+subroutine MPI_applyBC_v2(u_ex)
 
 #include "Solver.h"
 
@@ -98,5 +98,5 @@ subroutine MPI_applyBC(u_ex)
 
        end if            
 
-end subroutine
+end subroutine MPI_applyBC_v2
 

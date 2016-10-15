@@ -131,8 +131,8 @@ subroutine ins_momentum(tstep,p_counter,p,u,v,s,s2)
                                   -((1/(gr_dx))*(u(2:Nxb+1,2:Nyb+1)-u(1:Nxb,2:Nyb+1)))))
 
 
-       call MPI_CollectResiduals(maxdiv,ins_maxdiv,3)
-       call MPI_CollectResiduals(mindiv,ins_mindiv,2)
+       call MPI_CollectResiduals(maxdiv,ins_maxdiv,MAX_DATA)
+       call MPI_CollectResiduals(mindiv,ins_mindiv,MIN_DATA)
 
        ! Residuals
 
@@ -140,14 +140,14 @@ subroutine ins_momentum(tstep,p_counter,p,u,v,s,s2)
           ins_u_res = ins_u_res + sum((u(:,i)-u_old(:,i))**2)
        enddo
 
-       call MPI_CollectResiduals(ins_u_res,u_res1,1)
+       call MPI_CollectResiduals(ins_u_res,u_res1,SUM_DATA)
        ins_u_res = sqrt(u_res1/((nblockx*nblocky)*(Nxb+2)*(Nyb+2)))
 
        do i=1,Nyb+1
           ins_v_res = ins_v_res + sum((v(:,i)-v_old(:,i))**2)
        enddo
 
-       call MPI_CollectResiduals(ins_v_res,v_res1,1)
+       call MPI_CollectResiduals(ins_v_res,v_res1,SUM_DATA)
        ins_v_res = sqrt(v_res1/((nblockx*nblocky)*(Nxb+2)*(Nyb+2)))
 
 

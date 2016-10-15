@@ -10,8 +10,9 @@ module MPI_interface
     end interface
 
     interface 
-          subroutine MPIsolver_finalize()
+          subroutine MPIsolver_finalize(sim_Complete)
           implicit none
+          logical, intent(in) :: sim_Complete
           end subroutine MPIsolver_finalize
     end interface
 
@@ -20,6 +21,13 @@ module MPI_interface
           implicit none
           real, dimension(:,:),intent(inout) :: u_ex
           end subroutine MPI_applyBC
+    end interface
+
+    interface
+          subroutine MPI_applyBC_v2(u_ex)
+          implicit none
+          real, dimension(:,:),intent(inout) :: u_ex
+          end subroutine MPI_applyBC_v2
     end interface
 
     interface 
@@ -70,7 +78,7 @@ module MPI_interface
         implicit none
         real, dimension(:,:), intent(inout) :: u_ex,v_ex
         integer,intent(in) :: aDIM
-        end subroutine
+        end subroutine MPI_periodicBC
    end interface
 
 end module MPI_interface
