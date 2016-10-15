@@ -20,13 +20,37 @@
         mpirun -n [number_of_procs] ./Solver 
      ~~~
 
-  5. Note that the total number of MPI processes must be equal to the total number of blocks (nblockx X nblocky) defined in Solver.h
+  4. Note that the total number of MPI processes must be equal to the total number of blocks (nblockx X nblocky) defined in Solver.h
 
-  4. To plot results, edit the python file (plot.py) to match your grid size and simply type (make sure k = nblockx and d = nblocky)
+  5. You can also optimize Poisson solver by multi-threading using OpenMP on each MPI process. The number of threads are specified 
+     in Solver.h
+
+  6. To plot results, edit the python file (plot.py) to match your grid size and simply type (make sure k = nblockx and d = nblocky)
 
      ~~~terminal
         python plot.py
      ~~~ 
 
+### Software outline
+
+  1. The header file Solver.h handles simulation parameters like number of grid points per block, total number of blocks, module on/off, etc.
+
+  2. The main program file is Solver.F90, which calls the functions Solver_init, Solver_evolve and Solver_finalize, which in turn calls
+     module specific subroutines (module_init, module_solver, module_finalize).
+
+  3. The best way to understand the code is to start with Solver.F90 and follow function calls one by one.
+
+  4. All Grid data is stored in separate multi-dimensional arrays for cell-centers and faces located in the module, physicaldata.F90
+
+  5. Module specific data is stored in files named module_data.F90. The interface for a given module, module_interface.F90 contains function
+     definitions.
+
+### Solver capabilities
+
+<p align="center">
+  <img src="your_relative_path_here" width="350"/>
+  <img src="your_relative_path_here_number_2_large_name" width="350"/>
+</p>
+ 
 ### Author - Akash V. Dhruv  
 ### License - Refer LICENSE.md
