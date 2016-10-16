@@ -68,7 +68,8 @@
 </p>
 
 <p align="center">
-  <img src="./images/Image_8.png" width="700"/>
+  <img src="./images/Image_8.png" width="350"/>
+  <img src="./images/Image_9.png" width="350"/>
 </p>
 
 <p align="center">
