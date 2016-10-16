@@ -47,16 +47,34 @@
 
 ### Solver capabilities
 
+#### CASE 1 
+##### Air flow over a solid cylinder with Conjugate Heat Transfer (CHT) for Re = 500 using immersed boundary and level set methods
+##### Grid - 800 x 400
+##### 4 x 4 MPI processes
+##### 2 OpenMP threads per process
+
+<p align="center">
+  <img src="./images/Image_1.png" width="700">
+</p>
+
+<p align="center">
+  Figure 1. Conjugate Heat Transfer between solid cylinder and air, Re=500, t=10.0 s. 
+</p>
+
 <p align="center">
   <img src="./images/Image_3.png" width="700"/>
   <img src="./images/Image_4.png" width="700"/>
 </p>
 
 <p align="center">
-  Figure 1. Velocity Streamlines of the air flow around a solid cylinder and temperature distribution demonstrating Conjugate Heat Transfer 
-  (using immersed boundary and level set methods) 
-  (Grid 800 x 400) (4 x 4 MPI processes) (2 OpenMP threads per process).
+  Figure 2. Velocity Streamlines and Temperature Contours, Re = 500, t = 30.0 s. 
 </p>
+
+#### CASE 2
+##### Lid Driven Cavity Flow, Re = 1000
+##### Grid - 100 x 80
+##### 2 x 2 MPI processes
+##### 4 OpenMP threads per process
 
 <p align="center">
   <img src="./images/Image_5.png" width="700"/>
@@ -65,16 +83,7 @@
 </p>
 
 <p align="center">
-  Figure 2. Velocity Streamlines and Pressure and Temperature Contours for Lid Driven Cavity flow (Re = 1000) 
-  (Grid 100 x 80) (2 x 2 MPI processes) (4 OpenMP threads per process).
-</p>
-
-<p align="center">
-  <img src="./images/Image_1.png" width="700">
-</p>
-
-<p align="center">
-  Figure 3. Conjugate Heat Transfer between solid cylinder and air before reaching steady state (Fig 2).
+  Figure 4. Velocity Streamlines and Pressure and Temperature Contours for Lid Driven Cavity flow, Re = 1000.
 </p>
 
 ### Author - Akash V. Dhruv  
