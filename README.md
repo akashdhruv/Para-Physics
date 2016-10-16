@@ -51,29 +51,21 @@
 ##### (Grid - 800 x 400) (4 x 4 MPI processes) (2 OpenMP threads per process)
 
 <p align="center">
-  <img src="./images/Image_1.png" width="700">
-</p>
-
-<p align="center">
-  Figure 1. Conjugate Heat Transfer between solid cylinder and air, Re=500, t=10.0 s. 
-</p>
-
-<p align="center">
   <img src="./images/Image_3.png" width="700"/>
   <img src="./images/Image_4.png" width="700"/>
 </p>
 
 <p align="center">
-  Figure 2. Velocity Streamlines and Temperature Contours, Re = 500, t = 30.0 s. 
+  Figure 1. Velocity Streamlines and Temperature Contours, Re = 500, t = 30.0 s. 
 </p>
 
 <p align="center">
-  <img src="./images/Image_8.png" width="350"/>
-  <img src="./images/Image_9.png" width="350"/>
+  <img src="./images/Image_8.png" width="450"/>
+  <img src="./images/Image_9.png" width="450"/>
 </p>
 
 <p align="center">
-  Figure 3. Vorticity Contours, Re = 500, t=60.0 s
+  Figure 2. Vorticity Contours, Re = 500, t=60.0 s
 </p>
 
 #### CASE 2 - Lid Driven Cavity Flow, Re = 1000
@@ -86,7 +78,7 @@
 </p>
 
 <p align="center">
-  Figure 4. Velocity Streamlines and Pressure and Temperature Contours for Lid Driven Cavity flow, Re = 1000.
+  Figure 3. Velocity Streamlines and Pressure and Temperature Contours for Lid Driven Cavity flow, Re = 1000.
 </p>
 
 ### Author - Akash V. Dhruv  
