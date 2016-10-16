@@ -48,10 +48,7 @@
 ### Solver capabilities
 
 #### CASE 1 
-##### Air flow over a solid cylinder with Conjugate Heat Transfer (CHT) for Re = 500 using immersed boundary and level set methods
-##### Grid - 800 x 400
-##### 4 x 4 MPI processes
-##### 2 OpenMP threads per process
+##### Air flow over a solid cylinder with Conjugate Heat Transfer (CHT) for Re = 500 using immersed boundary and level set methods (Grid - 800 x 400) (4 x 4 MPI processes) (2 OpenMP threads per process)
 
 <p align="center">
   <img src="./images/Image_1.png" width="700">
@@ -71,10 +68,7 @@
 </p>
 
 #### CASE 2
-##### Lid Driven Cavity Flow, Re = 1000
-##### Grid - 100 x 80
-##### 2 x 2 MPI processes
-##### 4 OpenMP threads per process
+##### Lid Driven Cavity Flow, Re = 1000 (Grid - 100 x 80) (2 x 2 MPI processes) (4 OpenMP threads per process)
 
 <p align="center">
   <img src="./images/Image_5.png" width="700"/>
