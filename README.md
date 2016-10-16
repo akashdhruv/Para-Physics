@@ -48,21 +48,22 @@
 ### Solver capabilities
 
 <p align="center">
-  <img src="./images/Image_3.png" width="900"/>
-  <img src="./images/Image_4.png" width="1000"/>
+  <img src="./images/Image_3.png" width="700"/>
+  <img src="./images/Image_4.png" width="700"/>
 </p>
 <p align="center">
   Fig 1. Velocity Streamlines of the air flow around a solid cylinder and temperature distribution demonstarting Conjugate Heat Transfer
-  (using immersed boundary and level set methods)
+  (Grid 800 x 400) (4 x 4 MPI processes) (2 OpenMP threads per process) (using immersed boundary and level set methods)
 </p>
 
 <p align="center">
-  <img src="./images/Image_5.png" width="900"/>
-  <img src="./images/Image_6.png" width="1000"/>
-  <img src="./images/Image_7.png" width="1000"/>
+  <img src="./images/Image_5.png" width="700"/>
+  <img src="./images/Image_6.png" width="700"/>
+  <img src="./images/Image_7.png" width="700"/>
 </p>
 <p align="center">
   Fig 2. Velocity Streamlines and Pressure and Temperature Contours for Lid Driven Cavity flow (Re = 1000)
+  (Grid 100 x 80) (2 x 2 MPI processes) (4 OpenMP threads per process)
 </p>
  
 ### Author - Akash V. Dhruv  
