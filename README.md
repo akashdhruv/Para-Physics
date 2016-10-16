@@ -53,15 +53,9 @@
 </p>
 
 <p align="center">
-  Figure 1. Velocity Streamlines of the air flow around a solid cylinder and temperature distribution demonstrating Conjugate Heat Transfer.
-</p>
-
-<p align="center">  
-  (using immersed boundary and level set methods)
-</p>
-
-<p align="center">  
-  (Grid 800 x 400) (4 x 4 MPI processes) (2 OpenMP threads per process)
+  Figure 1. Velocity Streamlines of the air flow around a solid cylinder and temperature distribution demonstrating Conjugate Heat Transfer 
+  (using immersed boundary and level set methods) 
+  (Grid 800 x 400) (4 x 4 MPI processes) (2 OpenMP threads per process).
 </p>
 
 <p align="center">
@@ -71,14 +65,11 @@
 </p>
 
 <p align="center">
-  Figure 2. Velocity Streamlines and Pressure and Temperature Contours for Lid Driven Cavity flow (Re = 1000).
+  Figure 2. Velocity Streamlines and Pressure and Temperature Contours for Lid Driven Cavity flow (Re = 1000) 
+  (Grid 100 x 80) (2 x 2 MPI processes) (4 OpenMP threads per process).
 </p>
 
-<p align="center">  
-  (Grid 100 x 80) (2 x 2 MPI processes) (4 OpenMP threads per process)
-</p>
-
-<p align="center"> 
+<p align="center">
   <img src="./images/Image_1.png" width="700">
 </p>
 
