@@ -81,5 +81,16 @@
   Figure 3. Velocity Streamlines and Pressure and Temperature Contours for Lid Driven Cavity flow, Re = 1000.
 </p>
 
+#### CASE 3 - Conjugate Heat Transfer between fluid and multiple immersed boundaries, Re = 500
+##### (Grid - 800 x 400) (4 x 4 MPI processes) (2 OpenMP threads per process)
+
+<p align="center">
+  <img src="./images/Image_10.png" width="700"/>
+</p>
+
+<p aling="center">
+  Figure 4. Conjugate Heat Transfer between air and three solid cylinders, Re = 500, t=20 s.
+</p>
+
 ### Author - Akash V. Dhruv  
 ### License - Refer LICENSE.md
