@@ -89,7 +89,7 @@
 </p>
 
 <p align="center">
-  Figure 4. Conjugate Heat Transfer between air and three solid cylinders, Re = 500, t=20 s.
+  Figure 4. Conjugate Heat Transfer between air and three solid cylinders, Re = 500, t=25 s.
 </p>
 
 ### Author - Akash V. Dhruv  
