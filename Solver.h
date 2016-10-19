@@ -39,8 +39,8 @@ _______________________Grid Parameters___________________________
 #define MAX_BLOCKS 80
 
 
-#define Nxb 50
-#define Nyb 40
+#define Nxb 120
+#define Nyb 120
 
 
 #define D_xmin -0.5
@@ -52,8 +52,8 @@ _______________________Grid Parameters___________________________
 
 #define TIME_END 60.0
 
-#define nblockx 2
-#define nblocky 2
+#define nblockx 1
+#define nblocky 1
 
 #define MaxIt 1500
 
@@ -156,7 +156,7 @@ ___________________Immersed Boundary On/Off________________
 _________________OpenMP threads per MPI rank_______________
 #endif
 
-#define NTHREADS 2
+#define NTHREADS 1
 
 #if 0
 __________________Data Operation Parameters________________

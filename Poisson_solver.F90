@@ -40,7 +40,9 @@ subroutine Poisson_solver(ps_RHS,ps,ps_res,ps_counter,ps_quant)
   !$OMP PARALLEL PRIVATE(i,j,thread_id,ii,jj) DEFAULT(NONE) NUM_THREADS(NTHREADS) &
   !$OMP SHARED(ps_old,gr_dy,gr_dx,ps_RHS,ps,ps_res,ps_counter,ps_res1,ps_quant,dr_tile)
 
+#if NTHREADS > 1
   thread_id = OMP_GET_THREAD_NUM()
+#endif
 
   do while(ps_counter<MaxIt)
 
@@ -133,7 +135,7 @@ subroutine Poisson_solver(ps_RHS,ps,ps_res,ps_counter,ps_quant)
    
      !$OMP BARRIER
 
-     if( (ps_res .lt. 0.000001 ) .and. (ps_res .ne. 0) ) exit
+     if( (ps_res < 0.000001 ) .and. (ps_res .ne. 0) ) exit
 
   end do
 

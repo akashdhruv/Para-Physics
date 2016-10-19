@@ -41,6 +41,6 @@ subroutine MPI_physicalBC_temp(t_ex)
 
        end if
 
-       call MPI_BARRIER(solver_comm,ierr)
+       !call MPI_BARRIER(solver_comm,ierr)
    
 end subroutine MPI_physicalBC_temp

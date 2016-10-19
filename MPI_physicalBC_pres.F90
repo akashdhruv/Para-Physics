@@ -42,7 +42,7 @@ subroutine MPI_physicalBC_pres(p_ex)
 
        end if
 
-       call MPI_BARRIER(solver_comm,ierr)
+       !call MPI_BARRIER(solver_comm,ierr)
    
        mask = .false.
 
@@ -76,7 +76,7 @@ subroutine MPI_physicalBC_pres(p_ex)
 
        end if
 
-       call MPI_BARRIER(solver_comm,ierr)
+       !call MPI_BARRIER(solver_comm,ierr)
 
        mask = .false.
    
@@ -109,7 +109,7 @@ subroutine MPI_physicalBC_pres(p_ex)
 
        end if
 
-       call MPI_BARRIER(solver_comm,ierr)
+       !call MPI_BARRIER(solver_comm,ierr)
  
        mask = .false.
 
@@ -142,7 +142,7 @@ subroutine MPI_physicalBC_pres(p_ex)
 
        end if
 
-       call MPI_BARRIER(solver_comm,ierr)
+       !call MPI_BARRIER(solver_comm,ierr)
 
        mask = .false.
 

@@ -150,6 +150,6 @@ subroutine MPI_physicalBC_vel(u_ex,v_ex)
 
 #endif
 
-       call MPI_BARRIER(solver_comm,ierr)
+       !call MPI_BARRIER(solver_comm,ierr)
 
 end subroutine MPI_physicalBC_vel

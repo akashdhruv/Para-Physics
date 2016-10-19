@@ -1,23 +1,24 @@
 #MPI_PATH = /usr/local
 #MPI_PATH = /usr
 MPI_PATH = /opt/mpich2-1.4.1p1/
-HYPRE_PATH    = /usr/local/hypre
+#HYPRE_PATH    = /usr/local/hypre
 #PGI_PATH = /opt/pgi/osx86-64/2016
+#MPI_PATH = /usr/lib64/mpich 
 
 MPIFF = $(MPI_PATH)/bin/mpif90
 #MPIFF = mpiifort
 #FF = ifort
 #MPIFF = $(PGI_PATH)/bin/pgf90
 
-LIB_HYPRE = -L${HYPRE_PATH}/lib -lHYPRE
+#LIB_HYPRE = -L${HYPRE_PATH}/lib -lHYPRE
 
-#FFLAGS = -c
-FFLAGS = -fopenmp -c
+FFLAGS = -c
+#FFLAGS = -fopenmp -c
 #FFLAGS = -qopenmp -c 
 #FFLAGS = -Mmpi=mpich -c
 
-#EXEFLAGS = -o
-EXEFLAGS = -fopenmp -o
+EXEFLAGS = -o
+#EXEFLAGS = -fopenmp -o
 #EXEFLAGS = -qopenmp -o
 #EXEFLAGS = -Mmpi=mpich -o
 

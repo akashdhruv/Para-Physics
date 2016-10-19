@@ -124,11 +124,11 @@ subroutine ins_momentum(tstep,p_counter,p,u,v,s,s2)
        maxdiv = -10.**(10.)
        mindiv = 10.**(10.)
 
-       maxdiv = max(maxdiv,maxval(-((1/(gr_dy))*(v(2:Nxb+1,2:Nyb+1)-v(2:Nxb+1,1:Nyb)))&
-                                  -((1/(gr_dx))*(u(2:Nxb+1,2:Nyb+1)-u(1:Nxb,2:Nyb+1)))))
+       maxdiv = max(maxdiv,maxval(((1/(gr_dy))*(v(2:Nxb+1,2:Nyb+1)-v(2:Nxb+1,1:Nyb)))&
+                                  +((1/(gr_dx))*(u(2:Nxb+1,2:Nyb+1)-u(1:Nxb,2:Nyb+1)))))
 
-       mindiv = min(mindiv,minval(-((1/(gr_dy))*(v(2:Nxb+1,2:Nyb+1)-v(2:Nxb+1,1:Nyb)))&
-                                  -((1/(gr_dx))*(u(2:Nxb+1,2:Nyb+1)-u(1:Nxb,2:Nyb+1)))))
+       mindiv = min(mindiv,minval(((1/(gr_dy))*(v(2:Nxb+1,2:Nyb+1)-v(2:Nxb+1,1:Nyb)))&
+                                  +((1/(gr_dx))*(u(2:Nxb+1,2:Nyb+1)-u(1:Nxb,2:Nyb+1)))))
 
 
        call MPI_CollectResiduals(maxdiv,ins_maxdiv,MAX_DATA)

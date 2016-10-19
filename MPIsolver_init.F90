@@ -57,7 +57,7 @@ subroutine MPIsolver_init()
 
     !__________________________End________________________!
 
-    call MPI_BARRIER(solver_comm,ierr)
+    !call MPI_BARRIER(solver_comm,ierr)
 
     call MPI_COMM_SPLIT(solver_comm,myid/nblockx,myid,x_comm,ierr)
     call MPI_COMM_SPLIT(solver_comm,mod(myid,nblockx),myid,y_comm,ierr)
@@ -69,6 +69,7 @@ subroutine MPIsolver_init()
     call MPI_COMM_size(y_comm,y_procs,ierr)
 
     !call cpu_time(start)
-    start = omp_get_wtime()
+    !start = omp_get_wtime()
+    start = MPI_Wtime()
 
 end subroutine MPIsolver_init 

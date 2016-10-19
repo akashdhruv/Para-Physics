@@ -61,6 +61,6 @@ subroutine MPI_periodicBC(u_ex,v_ex,aDIM)
     
       end select
 
-      call MPI_BARRIER(solver_comm,ierr)
+      !call MPI_BARRIER(solver_comm,ierr)
 
 end subroutine MPI_periodicBC
