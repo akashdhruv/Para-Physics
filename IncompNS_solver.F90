@@ -20,9 +20,9 @@ subroutine IncompNS_solver(tstep,p_counter)
                       facexData(VELC_VAR,:,:),faceyData(VELC_VAR,:,:),&
                       facexData(IBMF_VAR,:,:),faceyData(IBMF_VAR,:,:))
 
-    !call ins_vorticity(tstep,solnData(VORT_VAR,:,:),&
-    !                   facexData(VELC_VAR,:,:),faceyData(VELC_VAR,:,:),&
-    !                   solnData(DFUN_VAR,:,:))
+    call ins_vorticity(tstep,solnData(VORT_VAR,:,:),&
+                       facexData(VELC_VAR,:,:),faceyData(VELC_VAR,:,:),&
+                       solnData(DFUN_VAR,:,:))
 
 
     nullify(solnData)

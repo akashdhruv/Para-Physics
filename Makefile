@@ -12,13 +12,13 @@ MPIFF = $(MPI_PATH)/bin/mpif90
 
 #LIB_HYPRE = -L${HYPRE_PATH}/lib -lHYPRE
 
-FFLAGS = -c
-#FFLAGS = -fopenmp -c
+#FFLAGS = -c
+FFLAGS = -fopenmp -c
 #FFLAGS = -qopenmp -c 
 #FFLAGS = -Mmpi=mpich -c
 
-EXEFLAGS = -o
-#EXEFLAGS = -fopenmp -o
+#EXEFLAGS = -o
+EXEFLAGS = -fopenmp -o
 #EXEFLAGS = -qopenmp -o
 #EXEFLAGS = -Mmpi=mpich -o
 
