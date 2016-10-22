@@ -23,12 +23,12 @@ subroutine IBM_init()
    faceyData(IBMF_VAR,:,:) = 0.0
 
    !ibm_x0 = -0.2
-   !ibm_x0 = 0.0
-   ibm_x0 = -5.0
+   ibm_x0 = 0.0
+   !ibm_x0 = -5.0
    ibm_y0 =  0.0
-   ibm_r0 = 0.5
+   !ibm_r0 = 0.5
    !ibm_r0 =  0.05
-   !ibm_r0 = 0.1
+   ibm_r0 = 0.125
 
    do j=1,Nyb+2
 

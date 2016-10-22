@@ -2,8 +2,7 @@ subroutine Solver_evolve
 
 #include "Solver.h"
 
-!#define INS_DEBUG
-!#define MULTIPHASE_DEBUG
+#define SOLVER_DEBUG
 
     use IncompNS_interface, only: IncompNS_solver
     use HeatAD_interface, only: HeatAD_solver
@@ -64,51 +63,15 @@ subroutine Solver_evolve
 ! call FOR Poisson_analytical GOES HERE
 #endif
 
-#ifdef SINGLEPHASE
-
        if (mod(tstep,5) == 0 .and. myid == 0) then
           call IO_display(ins_u_res,ins_v_res,ins_w_res,ins_p_res,ht_T_res,p_counter,tstep*dr_dt,ins_maxdiv,ins_mindiv)
        endif
 
-       ! IO_display_v3 for Only_Poisson
+       if((ins_u_res .lt. 0.0000001) .and. (ins_u_res .ne. 0).and. (ins_v_res .lt. 0.0000001) .and. (ins_v_res .ne. 0) ) exit
 
-#endif
+#ifdef SOLVER_DEBUG
 
-#ifdef MULTIPHASE
-
-       if (mod(tstep,50) == 0 .and. myid == 0) then
-          call IO_display_v2(tstep*dr_dt,solnX,ht_T_res)
-       end if
-
-#endif
-
-#ifdef MULTIPHASE_DEBUG
-       if(mod(tstep,100000) == 0) then
-
-          solnData => ph_center
-
-          df = ((solnData(DFUN_VAR,1:Nxb+1,1:Nyb+1)+solnData(DFUN_VAR,2:Nxb+2,1:Nyb+1))/2 + &
-                (solnData(DFUN_VAR,1:Nxb+1,2:Nyb+2)+solnData(DFUN_VAR,2:Nxb+2,2:Nyb+2))/2)/2
-
-          th = ((solnData(THCO_VAR,1:Nxb+1,1:Nyb+1)+solnData(THCO_VAR,2:Nxb+2,1:Nyb+1))/2 + &
-                (solnData(THCO_VAR,1:Nxb+1,2:Nyb+2)+solnData(THCO_VAR,2:Nxb+2,2:Nyb+2))/2)/2
-
-          tt = ((solnData(TEMP_VAR,1:Nxb+1,1:Nyb+1)+solnData(TEMP_VAR,2:Nxb+2,1:Nyb+1))/2 + &
-                (solnData(TEMP_VAR,1:Nxb+1,2:Nyb+2)+solnData(TEMP_VAR,2:Nxb+2,2:Nyb+2))/2)/2
-
-          pf = ((solnData(PFUN_VAR,1:Nxb+1,1:Nyb+1)+solnData(PFUN_VAR,2:Nxb+2,1:Nyb+1))/2 + &
-                (solnData(PFUN_VAR,1:Nxb+1,2:Nyb+2)+solnData(PFUN_VAR,2:Nxb+2,2:Nyb+2))/2)/2
-
-          nullify(solnData)
-
-          call IO_write(gr_x,gr_y,df,pf,th,tt,myid)
-
-       end if
-#endif
-
-#ifdef INS_DEBUG
-
-       if(mod(tstep,700) == 0) then
+       if(mod(tstep,10) == 0) then
    
           facexData => ph_facex
           faceyData => ph_facey
@@ -136,12 +99,8 @@ subroutine Solver_evolve
 
         end if
 #endif
-
-#ifdef INS
-       if((ins_u_res .lt. 0.0000001) .and. (ins_u_res .ne. 0).and. (ins_v_res .lt. 0.0000001) .and. (ins_v_res .ne. 0) ) exit
-#endif
-
-       tstep = tstep +1
+        
+        tstep = tstep +1
 
     end do
 
@@ -149,8 +108,6 @@ subroutine Solver_evolve
     faceyData => ph_facey
     solnData => ph_center
 
-  
-#ifdef INS 
     uu = (facexData(VELC_VAR,1:Nxb+1,1:Nyb+1)+facexData(VELC_VAR,1:Nxb+1,2:Nyb+2))/2
 
     vv = (faceyData(VELC_VAR,1:Nxb+1,1:Nyb+1)+faceyData(VELC_VAR,2:Nxb+2,1:Nyb+1))/2
@@ -163,42 +120,12 @@ subroutine Solver_evolve
 
     ww = ((solnData(VORT_VAR,1:Nxb+1,1:Nyb+1)+solnData(VORT_VAR,2:Nxb+2,1:Nyb+1))/2 + &
           (solnData(VORT_VAR,1:Nxb+1,2:Nyb+2)+solnData(VORT_VAR,2:Nxb+2,2:Nyb+2))/2)/2
-#endif
-
-#ifdef MULTIPHASE
-    df = ((solnData(DFUN_VAR,1:Nxb+1,1:Nyb+1)+solnData(DFUN_VAR,2:Nxb+2,1:Nyb+1))/2 + &
-          (solnData(DFUN_VAR,1:Nxb+1,2:Nyb+2)+solnData(DFUN_VAR,2:Nxb+2,2:Nyb+2))/2)/2
-
-    th = ((solnData(THCO_VAR,1:Nxb+1,1:Nyb+1)+solnData(THCO_VAR,2:Nxb+2,1:Nyb+1))/2 + &
-          (solnData(THCO_VAR,1:Nxb+1,2:Nyb+2)+solnData(THCO_VAR,2:Nxb+2,2:Nyb+2))/2)/2
-
-    cp = ((solnData(CPRS_VAR,1:Nxb+1,1:Nyb+1)+solnData(CPRS_VAR,2:Nxb+2,1:Nyb+1))/2 + &
-          (solnData(CPRS_VAR,1:Nxb+1,2:Nyb+2)+solnData(CPRS_VAR,2:Nxb+2,2:Nyb+2))/2)/2
-
-    pf = ((solnData(PFUN_VAR,1:Nxb+1,1:Nyb+1)+solnData(PFUN_VAR,2:Nxb+2,1:Nyb+1))/2 + &
-          (solnData(PFUN_VAR,1:Nxb+1,2:Nyb+2)+solnData(PFUN_VAR,2:Nxb+2,2:Nyb+2))/2)/2
-#endif
-
-#ifdef ONLY_POISSON
-! Post processing goes here
-#endif
 
     nullify(facexData)
     nullify(faceyData)
     nullify(solnData)
 
-#ifdef INS
     call IO_write(gr_x,gr_y,uu,vv,pp,tt,myid)
-    !call IO_write(gr_x,gr_y,uu,vv,ww,tt,myid)
-#endif
-
-#ifdef MULTIPHASE
-    call IO_write(gr_x,gr_y,df,pf,th,tt,myid) 
-#endif
-
-#ifdef ONLY_POISSON
-! IO_write call goes here
-#endif
 
    !deallocate(uu,vv,pp,tt,df,pf,th,cp,ww)
 

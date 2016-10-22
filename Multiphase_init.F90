@@ -9,28 +9,33 @@ subroutine Multiphase_init()
 
    implicit none
 
-   real,pointer,dimension(:,:,:) :: solnData
+   real,pointer,dimension(:,:,:) :: solnData,facexData,faceyData
    real :: xcell,ycell
    real :: min_s,max_s,all_min_s,all_max_s
 
    integer :: i,j
 
    solnData => ph_center
+   facexData => ph_facex
+   faceyData => ph_facey
 
    solnData(DFUN_VAR,:,:) = 0.0
    solnData(PFUN_VAR,:,:) = 0.0
    solnData(THCO_VAR,:,:) = 0.0
    solnData(CPRS_VAR,:,:) = 0.0
+   solnData(VISC_VAR,:,:) = 1.0
+   facexData(RHOF_VAR,:,:) = 1.0
+   faceyData(ALPH_VAR,:,:) = 1.0
 
    !___Vorticity Test__!
-   mph_x0 = -0.2
-   mph_y0 =  0.0
-   mph_r0 =  0.05
+   !mph_x0 = -0.2
+   !mph_y0 =  0.0
+   !mph_r0 =  0.05
 
    !___Multiphase Test__!
-   !mph_x0 = 0.0
-   !mph_y0 = 0.0
-   !mph_r0 = 0.1
+   mph_x0 = 0.0
+   mph_y0 = 0.0
+   mph_r0 = 0.125
 
    !___Conjugate Heat Test_!
    !mph_x0 = -5.0
@@ -87,7 +92,10 @@ subroutine Multiphase_init()
    mph_rho1 = 1.0
    mph_cp1 = 1.0*mph_rho1
    mph_vis1 = 1.0
+   mph_beta = 0.0002
 
    nullify(solnData)
+   nullify(facexData)
+   nullify(faceyData)
 
 end subroutine Multiphase_init

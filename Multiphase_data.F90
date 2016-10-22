@@ -12,7 +12,7 @@ module Multiphase_data
   real, save :: mph_min_s
   real, save :: mph_vis1
   real, save :: mph_vis2
-
+  real, save :: mph_beta
   real, save :: mph_x0,mph_y0,mph_r0
 
 end module Multiphase_data

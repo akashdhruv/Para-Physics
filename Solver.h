@@ -43,12 +43,12 @@ _______________________Grid Parameters___________________________
 #define Nyb 40
 
 
-#define D_xmin -0.5
-#define D_ymin -0.5
+#define D_xmin -0.50
+#define D_ymin -0.50
 
 
-#define D_xmax  0.5
-#define D_ymax  0.5
+#define D_xmax  0.50
+#define D_ymax  0.50
 
 #define TIME_END 60.0
 
@@ -67,15 +67,18 @@ _______________________Grid Parameters___________________________
 #define NRMX_VAR 7
 #define NRMY_VAR 8
 #define VORT_VAR 9
+#define VISC_VAR 10
 
-#define CENT_VAR 9
+#define CENT_VAR 10
 
 #define VELC_VAR 1
 #define IBMF_VAR 2
 #define NMXF_VAR 3
 #define NMYF_VAR 4
+#define RHOF_VAR 5
+#define ALPH_VAR 6
 
-#define FACE_VAR 4
+#define FACE_VAR 6
 
 
 #if 0
@@ -100,7 +103,7 @@ _______________________Defining Flow Type_____________________
 _______________________Multiphase On/Off_____________________
 #endif
 
-#define MPH 0
+#define MPH 1
 
 #if MPH == 1
 #define MULTIPHASE
@@ -144,7 +147,7 @@ _____________________Only Poisson On/Off_____________________
 ___________________Immersed Boundary On/Off________________
 #endif
 
-#define IB 0
+#define IB 1
 
 #if IB == 1
 #define IBM

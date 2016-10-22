@@ -19,10 +19,11 @@ implicit none
   end interface
 
   interface
-    subroutine mph_FillVars(s,pf,thco,cprs,thco1,thco2,cp1,cp2)
+    subroutine mph_FillVars(s,pf,thco,cprs,visc,rhox,rhoy,alpx,alpy,T,beta)
     implicit none
-    real, intent(inout), dimension(Nxb+2,Nyb+2) :: s,pf,thco,cprs
-    real, intent(in) :: thco1,thco2,cp1,cp2
+    real, intent(inout), dimension(Nxb+2,Nyb+2) :: s,pf,thco,cprs,visc,rhox,rhoy,alpx,alpy
+    real, intent(in), dimension(Nxb+2,Nyb+2) :: T
+    real, intent(in) :: beta
     end subroutine mph_FillVars
   end interface
 
