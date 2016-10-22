@@ -1,6 +1,6 @@
-MPI_PATH = /usr/local
+#MPI_PATH = /usr/local
 #MPI_PATH = /usr
-#MPI_PATH = /opt/mpich2-1.4.1p1/
+MPI_PATH = /opt/mpich2-1.4.1p1/
 #HYPRE_PATH    = /usr/local/hypre
 #PGI_PATH = /opt/pgi/osx86-64/2016
 #MPI_PATH = /usr/lib64/mpich 
