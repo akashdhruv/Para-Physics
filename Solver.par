@@ -1,0 +1,28 @@
+# Parameters
+
+D_xmin = -0.5
+D_xmax =  0.5
+
+D_ymin = -0.5
+D_ymax =  0.5
+
+TIME_END = 60.0
+
+nblockx = 2
+nblocky = 2
+
+MaxIt = 1500
+
+POISSON_SOLVER = "jacobi"
+
+TEMP_SOLVER = "central"
+
+FLOW_TYPE = "1"
+
+mph = ".false."
+ins = ".true."
+energy = ".true."
+ibm = ".true."
+
+NTHREADS = 2
+
