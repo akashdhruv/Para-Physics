@@ -21,7 +21,7 @@ subroutine Solver_evolve
     integer :: tstep,p_counter
 
     !real, allocatable,  dimension(:,:) :: uu,vv,pp,tt,df,pf,th,cp,ww
-    real, dimension(Nxb+1,Nyb+1) :: uu,vv,pp,tt,df,pf,th,cp,ww
+    real, dimension(Nxb+1,Nyb+1) :: uu,vv,pp,tt,ww,rx,ry,vs,ax,ay
 
     real, pointer, dimension(:,:,:) :: facexData,faceyData
     real, pointer, dimension(:,:,:) :: solnData
@@ -90,12 +90,15 @@ subroutine Solver_evolve
           ww = ((solnData(VORT_VAR,1:Nxb+1,1:Nyb+1)+solnData(VORT_VAR,2:Nxb+2,1:Nyb+1))/2 &
                +(solnData(VORT_VAR,1:Nxb+1,2:Nyb+2)+solnData(VORT_VAR,2:Nxb+2,2:Nyb+2))/2)/2
 
+          vs = ((solnData(VISC_VAR,1:Nxb+1,1:Nyb+1)+solnData(VISC_VAR,2:Nxb+2,1:Nyb+1))/2 &
+               +(solnData(VISC_VAR,1:Nxb+1,2:Nyb+2)+solnData(VISC_VAR,2:Nxb+2,2:Nyb+2))/2)/2
+
           nullify(solnData)
           nullify(facexData)
           nullify(faceyData)
 
           !call IO_write(gr_x,gr_dy,uu,vv,pp,tt,myid)
-          call IO_write(gr_x,gr_y,uu,vv,ww,tt,myid)
+          call IO_write(gr_x,gr_y,uu,vv,vs,tt,myid)
 
         end if
 #endif

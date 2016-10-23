@@ -68,8 +68,9 @@ _______________________Grid Parameters___________________________
 #define NRMY_VAR 8
 #define VORT_VAR 9
 #define VISC_VAR 10
+#define TOLD_VAR 11
 
-#define CENT_VAR 10
+#define CENT_VAR 11
 
 #define VELC_VAR 1
 #define IBMF_VAR 2

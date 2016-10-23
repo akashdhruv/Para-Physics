@@ -1,34 +1,49 @@
-subroutine mph_FillVars(s,pf,thco,cprs,visc,rhox,rhoy,alpx,alpy,T,beta)
+subroutine mph_FillVars(s,pf,thco,cprs,visc,rhox,rhoy,alpx,alpy,T,T_old,beta)
 
 #include "Solver.h"
 
+    use MPI_interface, ONLY: MPI_applyBC,MPI_physicalBC_dfun
+
     implicit none
     real,intent(inout),dimension(Nxb+2,Nyb+2) :: s,pf,thco,cprs,visc,rhox,rhoy,alpx,alpy
-    real,intent(in),dimension(Nxb+2,Nyb+2) :: T
+    real,intent(in),dimension(Nxb+2,Nyb+2) :: T,T_old
     real,intent(in) :: beta
 
     integer :: i,j
 
-    do j=1,Nyb+2
-     do i=1,Nxb+2
+    do j=2,Nyb+1
+     do i=2,Nxb+1
 
-    !  pf(i,j) = 0.
+         visc(i,j) = visc(i,j)*((T(i,j)/T_old(i,j))**0.7)
 
-    !  if(s(i,j) .ge. 0.) then
+         rhox(i,j) = rhox(i,j)/(1+beta*((T(i,j)+T(i+1,j))*0.5-&
+                                         (T_old(i,j)+T_old(i+1,j))*0.5))
 
-    !      pf(i,j) = 1.
-    !      thco(i,j) = thco1/thco2
-    !      cprs(i,j) = cp1/cp2
+         rhoy(i,j) = rhoy(i,j)/(1+beta*((T(i,j)+T(i,j+1))*0.5-&
+                                        (T_old(i,j)+T_old(i,j+1))*0.5))
+
      
-    !  else 
 
-    !      thco(i,j) = thco2/thco2
-    !      cprs(i,j) = cp2/cp2
+         alpx(i,j) = alpx(i,j)
 
-    !  end if
+         alpy(i,j) = alpy(i,j)
+
 
      end do
     end do
+
+    call MPI_applyBC(visc)
+    call MPI_applyBC(rhox)
+    call MPI_applyBC(rhoy)
+    call MPI_applyBC(alpx)
+    call MPI_applyBC(alpy)
+
+
+    call MPI_physicalBC_dfun(visc)
+    call MPI_physicalBC_dfun(rhox)
+    call MPI_physicalBC_dfun(rhoy)
+    call MPI_physicalBC_dfun(alpx)
+    call MPI_physicalBC_dfun(alpy)
 
 
 end subroutine mph_FillVars

@@ -26,6 +26,7 @@ subroutine HeatAD_init()
    solnData => ph_center
 
    solnData(TEMP_VAR,:,:) = 313.0
+   solnData(TOLD_VAR,:,:) = 313.0
 
    !do j=1,Nyb+2
    !  do i=1,Nxb+2

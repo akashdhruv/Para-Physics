@@ -28,7 +28,8 @@ subroutine Multiphase_solver(tstep,solnX)
                       solnData(VISC_VAR,:,:),&
                       facexData(RHOF_VAR,:,:),faceyData(RHOF_VAR,:,:),&
                       facexData(ALPH_VAR,:,:),faceyData(ALPH_VAR,:,:),&
-                      solnData(TEMP_VAR,:,:),mph_beta)
+                      solnData(TEMP_VAR,:,:),solnData(TOLD_VAR,:,:),&
+                      mph_beta)
 
 
     nullify(solnData)  

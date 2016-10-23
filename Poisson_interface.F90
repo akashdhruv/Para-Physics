@@ -16,6 +16,17 @@ module Poisson_interface
        end interface
 
        interface
+             subroutine Poisson_solver_VC(ps_RHS,ps,ps_rx,ps_ry,ps_res,ps_counter,ps_quant)
+             implicit none
+             real, dimension(:,:), intent(in) :: ps_RHS
+             real, dimension(:,:), intent(inout) :: ps,ps_rx,ps_ry
+             real, intent(out) :: ps_res
+             integer, intent(out) :: ps_counter
+             integer, intent(in) :: ps_quant
+             end subroutine Poisson_solver_VC
+       end interface
+
+       interface
              subroutine Poisson_direct
              implicit none
              end subroutine

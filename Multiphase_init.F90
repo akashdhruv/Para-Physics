@@ -19,12 +19,14 @@ subroutine Multiphase_init()
    facexData => ph_facex
    faceyData => ph_facey
 
-   solnData(DFUN_VAR,:,:) = 0.0
-   solnData(PFUN_VAR,:,:) = 0.0
-   solnData(THCO_VAR,:,:) = 0.0
-   solnData(CPRS_VAR,:,:) = 0.0
-   solnData(VISC_VAR,:,:) = 1.0
+   solnData(DFUN_VAR,:,:)  = 0.0
+   solnData(PFUN_VAR,:,:)  = 0.0
+   solnData(THCO_VAR,:,:)  = 0.0
+   solnData(CPRS_VAR,:,:)  = 0.0
+   solnData(VISC_VAR,:,:)  = 1.0
    facexData(RHOF_VAR,:,:) = 1.0
+   faceyData(RHOF_VAR,:,:) = 1.0
+   facexData(ALPH_VAR,:,:) = 1.0
    faceyData(ALPH_VAR,:,:) = 1.0
 
    !___Vorticity Test__!

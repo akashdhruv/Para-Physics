@@ -1,4 +1,4 @@
-subroutine heat_tempSolver(tstep,T,u,v,s,pf,thco,cp)
+subroutine heat_tempSolver(tstep,T,u,v,ax,ay,s,pf,thco,cp)
 
 #include "Solver.h"
 
@@ -14,7 +14,7 @@ subroutine heat_tempSolver(tstep,T,u,v,s,pf,thco,cp)
       implicit none
       
       integer, intent(in) :: tstep
-      real, intent(inout), dimension(:,:) :: T,u,v,s,pf,thco,cp
+      real, intent(inout), dimension(:,:) :: T,u,v,ax,ay,s,pf,thco,cp
       !real, allocatable, dimension(:,:) :: T_old
       real, dimension(Nxb+2,Nyb+2) :: T_old
 
@@ -64,7 +64,7 @@ subroutine heat_tempSolver(tstep,T,u,v,s,pf,thco,cp)
   !$OMP v_plus,v_mins,Tx_plus,Tx_mins,Ty_plus,Ty_mins,ii,jj,th,Tipj,Timj,Txx,Tyy,Tsat,&
   !$OMP Tij,Tijp,Tijm,alphax_plus,alphay_plus,alphax_mins,alphay_mins,alpha_interface) &
   !$OMP NUM_THREADS(NTHREADS) &
-  !$OMP SHARED(T,T_old,dr_dt,gr_dy,gr_dx,ht_Pr,ins_inRe,u,v,dr_tile,s,tol,thco,cp,ht_Nu,ibm_cp1,ibm_thco1)
+  !$OMP SHARED(T,ax,ay,T_old,dr_dt,gr_dy,gr_dx,ht_Pr,ins_inRe,u,v,dr_tile,s,tol,thco,cp,ht_Nu,ibm_cp1,ibm_thco1)
 
   Tsat = 400.00
 
@@ -194,10 +194,17 @@ subroutine heat_tempSolver(tstep,T,u,v,s,pf,thco,cp)
                        -((dr_dt))*(v_plus*(Tij-Ty_mins)/gr_dy + v_mins*(Ty_plus-Tij)/gr_dy)
 
     else
-    T(i,j) = T_old(i,j)+((dr_dt*ins_inRe)/(ht_Pr*gr_dx*gr_dx))*(Tx_plus+Tx_mins-2*Tij)&
-                       +((dr_dt*ins_inRe)/(ht_Pr*gr_dy*gr_dy))*(Ty_plus+Ty_mins-2*Tij)&
+
+    !T(i,j) = T_old(i,j)+((dr_dt*ins_inRe)/(ht_Pr*gr_dx*gr_dx))*(Tx_plus+Tx_mins-2*Tij)&
+    !                   +((dr_dt*ins_inRe)/(ht_Pr*gr_dy*gr_dy))*(Ty_plus+Ty_mins-2*Tij)&
+    !                   -((dr_dt))*(u_plus*(Tij-Tx_mins)/gr_dx + u_mins*(Tx_plus-Tij)/gr_dx)&
+    !                   -((dr_dt))*(v_plus*(Tij-Ty_mins)/gr_dy + v_mins*(Ty_plus-Tij)/gr_dy)
+
+    T(i,j) = T_old(i,j)+dr_dt*(ax(i,j)*(ins_inRe/ht_Pr)*(Tx_plus-Tij)/gr_dx - ax(i-1,j)*(ins_inRe/ht_Pr)*(Tij-Tx_mins)/gr_dx)/gr_dx&
+                       +dr_dt*(ay(i,j)*(ins_inRe/ht_Pr)*(Ty_plus-Tij)/gr_dy - ay(i,j-1)*(ins_inRe/ht_Pr)*(Tij-Ty_mins)/gr_dy)/gr_dy&
                        -((dr_dt))*(u_plus*(Tij-Tx_mins)/gr_dx + u_mins*(Tx_plus-Tij)/gr_dx)&
                        -((dr_dt))*(v_plus*(Tij-Ty_mins)/gr_dy + v_mins*(Ty_plus-Tij)/gr_dy)
+
 
     end if
 

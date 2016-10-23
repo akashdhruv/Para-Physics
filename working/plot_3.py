@@ -105,6 +105,7 @@ plt.fill(x_circle,y_circle,'w')
 #plt.fill(x_circle2,y_circle2,'w')
 plt.xlabel('X')
 plt.ylabel('Y')
+plt.colorbar()
 plt.axis('equal') 
 
 plt.figure()
