@@ -104,7 +104,7 @@ _______________________Defining Flow Type_____________________
 _______________________Multiphase On/Off_____________________
 #endif
 
-#define MPH 1
+#define MPH 0
 
 #if MPH == 1
 #define MULTIPHASE
@@ -148,7 +148,7 @@ _____________________Only Poisson On/Off_____________________
 ___________________Immersed Boundary On/Off________________
 #endif
 
-#define IB 1
+#define IB 0
 
 #if IB == 1
 #define IBM
