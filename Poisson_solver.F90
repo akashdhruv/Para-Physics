@@ -5,10 +5,13 @@ subroutine Poisson_solver(ps_RHS,ps,ps_res,ps_counter,ps_quant)
   use MPI_data
   use MPI_interface, ONLY: MPI_applyBC, MPI_CollectResiduals, MPI_physicalBC_pres
   use Driver_data, ONLY: dr_tile
+  use IncompNS_data, ONLY: ins_timePoisson
 
 #include "Solver.h"
                 
   implicit none
+
+  include "mpif.h"
 
   real, dimension(:,:), intent(in) :: ps_RHS
 
@@ -28,9 +31,13 @@ subroutine Poisson_solver(ps_RHS,ps,ps_res,ps_counter,ps_quant)
   integer, intent(out) :: ps_counter
   integer :: i,j,thread_id,ii,jj
 
+  double precision :: poisson_start, poisson_finish
+
   thread_id = 0
   ps_old = 0
   ps_counter = 0
+
+  poisson_start = MPI_Wtime()
 
   !allocate(ps_old(Nxb+2,Nyb+2))
   !allocate(ps_new(Nxb+2,Nyb+2))
@@ -142,6 +149,10 @@ subroutine Poisson_solver(ps_RHS,ps,ps_res,ps_counter,ps_quant)
   !$OMP END PARALLEL
 
   !DIR$ END OFFLOAD
+
+  poisson_finish = MPI_Wtime()
+
+  ins_timePoisson = ins_timePoisson + (poisson_finish - poisson_start) 
 
   !deallocate(ps_old,ps_new)
 

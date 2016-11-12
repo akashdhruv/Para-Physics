@@ -2,6 +2,7 @@ subroutine MPIsolver_finalize(sim_Complete)
 
       !$ use omp_lib
       use MPI_data
+      use IncompNS_data, only: ins_timePoisson
 
       implicit none
 
@@ -19,6 +20,8 @@ subroutine MPIsolver_finalize(sim_Complete)
       exec_time = (finish - start) 
 
       if (sim_Complete) print '("Execution time: ",f20.10," seconds")',exec_time
+
+      print '("Poisson time:   ",f20.10," seconds")',ins_timePoisson
 
       call MPI_FINALIZE(ierr)
 

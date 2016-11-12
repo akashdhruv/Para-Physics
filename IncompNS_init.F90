@@ -28,5 +28,6 @@ subroutine IncompNS_init()
       !ins_cfl   = 0.001
       ins_sigma = 0.01
       ins_cfl   = 0.15
+      ins_timePoisson = 0.0
 
 end subroutine IncompNS_init

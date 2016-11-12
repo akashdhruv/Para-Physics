@@ -55,6 +55,8 @@ subroutine Poisson_solver_VC(ps_RHS,ps,ps_rx,ps_ry,ps_res,ps_counter,ps_quant)
      
      !$OMP BARRIER
 
+#ifdef POISSON_SOLVER_GS
+
      !$OMP DO COLLAPSE(2) SCHEDULE(STATIC)
  
      !do jj=2,Nyb+1,dr_tile
@@ -76,6 +78,32 @@ subroutine Poisson_solver_VC(ps_RHS,ps,ps_rx,ps_ry,ps_res,ps_counter,ps_quant)
      !end do
 
      !$OMP END DO
+#endif
+
+#ifdef POISSON_SOLVER_GSOR
+
+     !$OMP DO COLLAPSE(2) SCHEDULE(STATIC)
+
+     !do jj=2,Nyb+1,dr_tile
+     !do ii=2,Nxb+1,dr_tile
+     !do j=jj,jj+dr_tile-1
+        !do i=ii,ii+dr_tile-1
+     do j=2,Nyb+1
+        do i=2,Nxb+1
+
+           ps(i,j)=((ps_old(i,j+1)/(ps_ry(i,j)*gr_dy*gr_dy))+(ps(i,j-1)/(ps_ry(i,j-1)*gr_dy*gr_dy))&
+                   +(ps_old(i+1,j)/(ps_rx(i,j)*gr_dx*gr_dx))+(ps(i-1,j)/(ps_rx(i-1,j)*gr_dx*gr_dx))&
+                   +ps_RHS(i-1,j-1))&
+                   *(1/((1/(ps_rx(i,j)*gr_dx*gr_dx))+(1/(ps_ry(i,j)*gr_dy*gr_dy))+&
+                        (1/(ps_rx(i-1,j)*gr_dx*gr_dx))+(1/(ps_ry(i,j-1)*gr_dy*gr_dy))))*omega + (1-omega)*ps(i,j)
+
+        end do
+     end do
+     !end do
+     !end do
+
+     !$OMP END DO
+#endif
 
      ! Pressure BC
 
