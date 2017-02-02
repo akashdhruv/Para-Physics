@@ -27,6 +27,7 @@ subroutine ins_momentum_VD(tstep,p_counter,p,u,v,visc,rho1x,rho1y,rho2x,rho2y,s,
        real :: u_res1, v_res1, maxdiv, mindiv
        integer :: i,j
        real, intent(inout), dimension(:,:) :: u,v,visc,rho1x,rho1y,rho2x,rho2y,p,s,s2
+       real, dimension(Nxb+2,Nyb+2) :: rhox,rhoy
 
        !allocate(C1(Nxb,Nyb))
        !allocate(G1(Nxb,Nyb))
@@ -59,9 +60,9 @@ subroutine ins_momentum_VD(tstep,p_counter,p,u,v,visc,rho1x,rho1y,rho2x,rho2y,s,
        ! Predictor Step
 
        call Convective_U_VD(u,v,gr_dx,gr_dy,C1)
-       call Diffusive_U_VD(u,visc,rho1x,gr_dx,gr_dy,ins_inRe,D1)
+       call Diffusive_U_VD(u,visc,rho1x,rho2x,gr_dx,gr_dy,ins_inRe,D1)
 
-       G1 = C1 + D1
+       G1 = C1 + D1 + ins_gravX
 
        if (tstep == 0) then
 
@@ -75,9 +76,9 @@ subroutine ins_momentum_VD(tstep,p_counter,p,u,v,visc,rho1x,rho1y,rho2x,rho2y,s,
 
 
        call Convective_V_VD(u,v,gr_dx,gr_dy,C2)
-       call Diffusive_V_VD(v,visc,rho1y,gr_dx,gr_dy,ins_inRe,D2)
+       call Diffusive_V_VD(v,visc,rho1y,rho2y,gr_dx,gr_dy,ins_inRe,D2)
 
-       G2 = C2 + D2
+       G2 = C2 + D2 + ins_gravY
 
        if (tstep == 0) then
 
@@ -106,7 +107,10 @@ subroutine ins_momentum_VD(tstep,p_counter,p,u,v,visc,rho1x,rho1y,rho2x,rho2y,s,
        p_RHS = -((1/(gr_dy*dr_dt))*(vt(2:Nxb+1,2:Nyb+1)-vt(2:Nxb+1,1:Nyb)))&
                -((1/(gr_dx*dr_dt))*(ut(2:Nxb+1,2:Nyb+1)-ut(1:Nxb,2:Nyb+1)))
 
-       call Poisson_solver_VC(p_RHS,p,rho1x,rho1y,ins_p_res,p_counter,PRES_VAR)
+       rhox = 1./(rho1x+rho2x)
+       rhoy = 1./(rho1y+rho2y)
+
+       call Poisson_solver_VC(p_RHS,p,rhox,rhoy,ins_p_res,p_counter,PRES_VAR)
 
        ! Corrector Step
 
@@ -238,14 +242,14 @@ subroutine Convective_V_VD(ut,vt,dx,dy,C2)
 end subroutine Convective_V_VD
 
 !! DIFFUSIVE U !!
-subroutine Diffusive_U_VD(ut,visc,rho,dx,dy,inRe,D1)
+subroutine Diffusive_U_VD(ut,visc,rho1x,rho2x,dx,dy,inRe,D1)
 
 #include "Solver.h"
 
       implicit none
 
       real,dimension(Nxb+2,Nyb+2), intent(in) :: ut
-      real,dimension(Nxb+2,Nyb+2), intent(in) :: visc,rho
+      real,dimension(Nxb+2,Nyb+2), intent(in) :: visc,rho1x,rho2x
       real, intent(in) :: dx
       real, intent(in) :: dy
 
@@ -291,21 +295,21 @@ subroutine Diffusive_U_VD(ut,visc,rho,dx,dy,inRe,D1)
       D1 = (txxp-txxm)/dx + &
            (tyyp-tyym)/dy
 
-      D1 = D1/rho(2:Nxb+1,2:Nyb+1)
+      D1 = D1*(rho1x(2:Nxb+1,2:Nyb+1)+rho2x(2:Nxb+1,2:Nyb+1))
 
       !deallocate(uP,uN,uS,uE,uW)
 
 end subroutine Diffusive_U_VD
 
 !! DIFFUSIVE V !!
-subroutine Diffusive_V_VD(vt,visc,rho,dx,dy,inRe,D2)
+subroutine Diffusive_V_VD(vt,visc,rho1y,rho2y,dx,dy,inRe,D2)
 
 #include "Solver.h"
 
       implicit none
 
       real,dimension(Nxb+2,Nyb+2), intent(in) :: vt
-      real,dimension(Nxb+2,Nyb+2), intent(in) :: visc,rho
+      real,dimension(Nxb+2,Nyb+2), intent(in) :: visc,rho1y,rho2y
 
       real, intent(in) :: dx
       real, intent(in) :: dy
@@ -348,7 +352,7 @@ subroutine Diffusive_V_VD(vt,visc,rho,dx,dy,inRe,D2)
       D2 = (txxp-txxm)/dx + &
            (tyyp-tyym)/dy
 
-      D2 = D2/rho(2:Nxb+1,2:Nyb+1)
+      D2 = D2*(rho1y(2:Nxb+1,2:Nyb+1)+rho2y(2:Nxb+1,2:Nyb+1))
   
       !deallocate(vP,vE,vW,vN,vS)
 

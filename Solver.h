@@ -50,7 +50,7 @@ _______________________Grid Parameters___________________________
 #define D_xmax  0.5
 #define D_ymax  0.5
 
-#define TIME_END 50.0
+#define TIME_END 60.0
 
 #define nblockx 2
 #define nblocky 2
