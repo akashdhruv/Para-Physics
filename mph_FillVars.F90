@@ -1,4 +1,4 @@
-subroutine mph_FillVars(s,pf,crv,thco,cprs,visc,rho1x,rho1y,rho2x,rho2y,al1x,al1y,al2x,al2y,nrmx,nrmy,T,T_old,beta)
+subroutine mph_FillVars(s,pf,crv,thco,cprs,visc,rho1x,rho1y,rho2x,rho2y,al1x,al1y,al2x,al2y,nrmx,nrmy,smhv,smrh)
 
 #include "Solver.h"
 
@@ -7,12 +7,11 @@ subroutine mph_FillVars(s,pf,crv,thco,cprs,visc,rho1x,rho1y,rho2x,rho2y,al1x,al1
     use Grid_data, ONLY: gr_dx,gr_dy
 
     implicit none
-    real,intent(inout),dimension(Nxb+2,Nyb+2) :: s,pf,thco,cprs,visc,crv,rho1x,rho1y,&
-                                                 rho2x,rho2y,al1x,al1y,al2x,al2y,nrmx,nrmy
+    real,intent(inout),dimension(Nxb+2,Nyb+2) :: pf,thco,cprs,visc,crv,rho1x,rho1y,&
+                                                 rho2x,rho2y,al1x,al1y,al2x,al2y,nrmx,nrmy,smhv,smrh
                                                             
 
-    real,intent(in),dimension(Nxb+2,Nyb+2) :: T,T_old
-    real,intent(in) :: beta
+    real, intent(in), dimension(:,:) :: s
 
     integer :: i,j
 
@@ -21,6 +20,8 @@ subroutine mph_FillVars(s,pf,crv,thco,cprs,visc,rho1x,rho1y,rho2x,rho2y,al1x,al1
             rMagN,rMagE,rMagS,rMagW
 
     real :: a1,a2
+
+    double precision :: sp
 
     real, parameter :: eps = 1E-13
 
@@ -67,8 +68,8 @@ subroutine mph_FillVars(s,pf,crv,thco,cprs,visc,rho1x,rho1y,rho2x,rho2y,al1x,al1
 
 
 
-    do j=2,Nyb+1
-     do i=2,Nxb+1
+    do j=1,Nyb+2
+     do i=1,Nxb+2
 
          pf(i,j) = 0.
 
@@ -142,13 +143,19 @@ subroutine mph_FillVars(s,pf,crv,thco,cprs,visc,rho1x,rho1y,rho2x,rho2y,al1x,al1
                           + ((s(2:Nxb+1,3:Nyb+2) - s(2:Nxb+1,1:Nyb))/2./gr_dy)**2 )
 
 
+    sp=1.d0*min(gr_dx,gr_dy)
+
+    smhv =  (1.d0 + derf(s/sp))/2.d0
+
+    smrh =  (mph_rho2/mph_rho2) + (mph_rho1/mph_rho2 - mph_rho2/mph_rho2) * smhv
+
     call MPI_applyBC(visc)
     call MPI_applyBC(rho1x)
     call MPI_applyBC(rho1y)
     call MPI_applyBC(rho2x)
     call MPI_applyBC(rho2y)
     call MPI_applyBC(al1x)
-    call MPI_applyBC(al2y)
+    call MPI_applyBC(al1y)
     call MPI_applyBC(al2x)
     call MPI_applyBC(al2y)
     call MPI_applyBC(thco)
@@ -157,12 +164,13 @@ subroutine mph_FillVars(s,pf,crv,thco,cprs,visc,rho1x,rho1y,rho2x,rho2y,al1x,al1
     call MPI_applyBC(nrmx)
     call MPI_applyBC(nrmy)
     call MPI_applyBC(crv)
+    call MPI_applyBC(smrh)
 
     call MPI_physicalBC_dfun(visc)
     call MPI_physicalBC_dfun(rho1x)
     call MPI_physicalBC_dfun(rho1y)
     call MPI_physicalBC_dfun(al1x)
-    call MPI_physicalBC_dfun(al2y)
+    call MPI_physicalBC_dfun(al1y)
     call MPI_physicalBC_dfun(rho2x)
     call MPI_physicalBC_dfun(rho2y)
     call MPI_physicalBC_dfun(al2x)
@@ -173,6 +181,7 @@ subroutine mph_FillVars(s,pf,crv,thco,cprs,visc,rho1x,rho1y,rho2x,rho2y,al1x,al1
     call MPI_physicalBC_dfun(nrmx)
     call MPI_physicalBC_dfun(nrmy)
     call MPI_physicalBC_dfun(crv)
+    call MPI_physicalBC_dfun(smrh)
 
 
 end subroutine mph_FillVars

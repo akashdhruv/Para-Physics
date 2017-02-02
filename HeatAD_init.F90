@@ -19,15 +19,16 @@ subroutine HeatAD_init()
    real :: solnY
    real :: ycell
 
-   ht_Pr = 9.4
+   ht_Pr = 1.0
    ht_Nu = 0.332*(ht_Pr**0.33)/(ins_inRe**0.5)
-   ht_src = 100.0
+   ht_src = 0.0
    ht_St = 0.06373
 
 
    solnData => ph_center
 
-   solnData(TEMP_VAR,:,:) = 1.0
+   solnData(TEMP_VAR,:,:) = 0.0
+   solnData(TOLD_VAR,:,:) = 0.0
 
    do j=1,Nyb+2
      do i=1,Nxb+2

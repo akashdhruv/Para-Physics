@@ -28,7 +28,7 @@ subroutine IBM_init()
    ibm_y0 =  0.0
    !ibm_r0 = 0.5
    !ibm_r0 =  0.05
-   ibm_r0 = 0.125
+   ibm_r0 = 0.005
 
    do j=1,Nyb+2
 
@@ -92,7 +92,7 @@ subroutine IBM_init()
    ibm_cp2 = 1.0*ibm_rho2
    ibm_vis2 = 1.0
 
-   ibm_thco1 = 1.2
+   ibm_thco1 = 1.0
    ibm_rho1 = 1.0
    ibm_cp1 = 1.0*ibm_rho1
    ibm_vis1 = 1.0

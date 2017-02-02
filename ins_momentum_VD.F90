@@ -1,4 +1,4 @@
-subroutine ins_momentum_VD(tstep,p_counter,p,u,v,visc,rho1x,rho1y,rho2x,rho2y,s,s2)
+subroutine ins_momentum_VD(tstep,p_counter,p,u,v,visc,rho1x,rho1y,rho2x,rho2y,s,s2,sigp,sigx,sigy)
 
        use Poisson_interface, ONLY: Poisson_solver_VC            
        use Grid_data
@@ -26,7 +26,7 @@ subroutine ins_momentum_VD(tstep,p_counter,p,u,v,visc,rho1x,rho1y,rho2x,rho2y,s,
        real, dimension(Nxb,Nyb) :: C1,G1,D1,C2,G2,D2,p_RHS
        real :: u_res1, v_res1, maxdiv, mindiv
        integer :: i,j
-       real, intent(inout), dimension(:,:) :: u,v,visc,rho1x,rho1y,rho2x,rho2y,p,s,s2
+       real, intent(inout), dimension(:,:) :: u,v,visc,rho1x,rho1y,rho2x,rho2y,p,s,s2,sigp,sigx,sigy
        real, dimension(Nxb+2,Nyb+2) :: rhox,rhoy
 
        !allocate(C1(Nxb,Nyb))
@@ -105,7 +105,8 @@ subroutine ins_momentum_VD(tstep,p_counter,p,u,v,visc,rho1x,rho1y,rho2x,rho2y,s,
        ! Poisson Solver
 
        p_RHS = -((1/(gr_dy*dr_dt))*(vt(2:Nxb+1,2:Nyb+1)-vt(2:Nxb+1,1:Nyb)))&
-               -((1/(gr_dx*dr_dt))*(ut(2:Nxb+1,2:Nyb+1)-ut(1:Nxb,2:Nyb+1)))
+               -((1/(gr_dx*dr_dt))*(ut(2:Nxb+1,2:Nyb+1)-ut(1:Nxb,2:Nyb+1)))&
+               -sigp(2:Nxb+1,2:Nyb+1)
 
        rhox = 1./(rho1x+rho2x)
        rhoy = 1./(rho1y+rho2y)
@@ -114,8 +115,13 @@ subroutine ins_momentum_VD(tstep,p_counter,p,u,v,visc,rho1x,rho1y,rho2x,rho2y,s,
 
        ! Corrector Step
 
-       u(2:Nxb+1,2:Nyb+1) = ut(2:Nxb+1,2:Nyb+1) - (dr_dt/gr_dx)*(p(3:Nxb+2,2:Nyb+1)-p(2:Nxb+1,2:Nyb+1))
-       v(2:Nxb+1,2:Nyb+1) = vt(2:Nxb+1,2:Nyb+1) - (dr_dt/gr_dy)*(p(2:Nxb+1,3:Nyb+2)-p(2:Nxb+1,2:Nyb+1))
+       u(2:Nxb+1,2:Nyb+1) = ut(2:Nxb+1,2:Nyb+1) - (dr_dt/gr_dx)*(rho1x(2:Nxb+1,2:Nyb+1)+rho2x(2:Nxb+1,2:Nyb+1))*&
+                                                  (p(3:Nxb+2,2:Nyb+1)-p(2:Nxb+1,2:Nyb+1))&
+                                                  +dr_dt*sigx(2:Nxb+1,2:Nyb+1)
+
+       v(2:Nxb+1,2:Nyb+1) = vt(2:Nxb+1,2:Nyb+1) - (dr_dt/gr_dy)*(rho1y(2:Nxb+1,2:Nyb+1)+rho2y(2:Nxb+1,2:Nyb+1))*&
+                                                  (p(2:Nxb+1,3:Nyb+2)-p(2:Nxb+1,2:Nyb+1))&
+                                                  +dr_dt*sigy(2:Nxb+1,2:Nyb+1)
 
        ! Boundary Conditions
 

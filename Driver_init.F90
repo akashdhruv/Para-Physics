@@ -57,7 +57,10 @@ subroutine Driver_init()
 
 #endif
 
+      !dr_dt = 1.0e-6
+
       dr_nt = dr_t/dr_dt
+      !dr_nt = 0
  
       !dr_tile = (Nyb)/(ceiling((Nyb)/40.)*NTHREADS)
       dr_tile = (Nyb)/NTHREADS

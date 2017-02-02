@@ -21,9 +21,17 @@ subroutine Multiphase_init()
 
    solnData(DFUN_VAR,:,:)  = 0.0
    solnData(PFUN_VAR,:,:)  = 0.0
+   solnData(NRMX_VAR,:,:)  = 0.0
+   solnData(NRMY_VAR,:,:)  = 0.0
+   solnData(VISC_VAR,:,:)  = 0.0
    solnData(THCO_VAR,:,:)  = 0.0
    solnData(CPRS_VAR,:,:)  = 0.0
-   solnData(VISC_VAR,:,:)  = 0.0
+   solnData(SMHV_VAR,:,:)  = 0.0
+   solnData(SMRH_VAR,:,:)  = 0.0
+   solnData(SIGP_VAR,:,:)  = 0.0
+   solnData(CURV_VAR,:,:)  = 0.0
+   solnData(MDOT_VAR,:,:)  = 0.0
+
    facexData(RH1F_VAR,:,:) = 0.0
    faceyData(RH1F_VAR,:,:) = 0.0
    facexData(RH2F_VAR,:,:) = 0.0
@@ -32,6 +40,11 @@ subroutine Multiphase_init()
    faceyData(AL1F_VAR,:,:) = 0.0
    facexData(AL2F_VAR,:,:) = 0.0
    faceyData(AL2F_VAR,:,:) = 0.0
+   facexData(SIGM_VAR,:,:) = 0.0
+   faceyData(SIGM_VAR,:,:) = 0.0
+   facexData(VELI_VAR,:,:) = 0.0
+   faceyData(VELI_VAR,:,:) = 0.0
+
 
    !___Vorticity Test__!
    !mph_x0 = -0.2
@@ -74,27 +87,19 @@ subroutine Multiphase_init()
 
          end if
 
-              solnData(DFUN_VAR,i,j) = mph_r0 - sqrt((xcell-mph_x0)**2+(ycell-mph_y0)**2)
+              !solnData(DFUN_VAR,i,j) = mph_r0 - sqrt((xcell-mph_x0)**2+(ycell-mph_y0)**2)
+              solnData(DFUN_VAR,i,j) = 1.0 - (sqrt((xcell-mph_x0)**2+(ycell-mph_y0)**2)/mph_r0)
 
       end do
 
     end do
 
-   !mph_rho1 = 0.597
-   !mph_rho2 = 958.4
-
-   !mph_thco1 = 0.025
-   !mph_thco2 = 0.679
-
-   !mph_cp1 = 2030.0*mph_rho1
-   !mph_cp2 = 4216.0*mph_rho2
-
    mph_thco2 = 1.0
-   mph_rho2 = 1.0
+   mph_rho2 = 2.0
    mph_cp2 = 1.0*mph_rho2
    mph_vis2 = 1.0
 
-   mph_thco1 = 1.2
+   mph_thco1 = 1.0
    mph_rho1 = 1.0
    mph_cp1 = 1.0*mph_rho1
    mph_vis1 = 1.0

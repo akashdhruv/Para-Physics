@@ -28,13 +28,15 @@ subroutine IncompNS_solver(tstep,p_counter)
                          solnData(VISC_VAR,:,:),&
                          facexData(RH1F_VAR,:,:),faceyData(RH1F_VAR,:,:),&                                       
                          facexData(RH2F_VAR,:,:),faceyData(RH2F_VAR,:,:),&
-                         facexData(IBMF_VAR,:,:),faceyData(IBMF_VAR,:,:))
+                         facexData(IBMF_VAR,:,:),faceyData(IBMF_VAR,:,:),&
+                         solnData(SIGP_VAR,:,:),&
+                         facexData(SIGM_VAR,:,:),faceyData(SIGM_VAR,:,:))
 
 #endif
 
-    call ins_vorticity(tstep,solnData(VORT_VAR,:,:),&
-                       facexData(VELC_VAR,:,:),faceyData(VELC_VAR,:,:),&
-                       solnData(DFUN_VAR,:,:))
+    !call ins_vorticity(tstep,solnData(VORT_VAR,:,:),&
+    !                   facexData(VELC_VAR,:,:),faceyData(VELC_VAR,:,:),&
+    !                   solnData(DFUN_VAR,:,:))
 
 
     nullify(solnData)

@@ -2,7 +2,7 @@ subroutine Solver_evolve
 
 #include "Solver.h"
 
-#define SOLVER_DEBUG
+!#define SOLVER_DEBUG
 
     use IncompNS_interface, only: IncompNS_solver
     use HeatAD_interface, only: HeatAD_solver
@@ -84,21 +84,31 @@ subroutine Solver_evolve
           pp = ((solnData(PRES_VAR,1:Nxb+1,1:Nyb+1)+solnData(PRES_VAR,2:Nxb+2,1:Nyb+1))/2 &
                +(solnData(PRES_VAR,1:Nxb+1,2:Nyb+2)+solnData(PRES_VAR,2:Nxb+2,2:Nyb+2))/2)/2
 
-          tt = ((solnData(TEMP_VAR,1:Nxb+1,1:Nyb+1)+solnData(TEMP_VAR,2:Nxb+2,1:Nyb+1))/2 &
-               +(solnData(TEMP_VAR,1:Nxb+1,2:Nyb+2)+solnData(TEMP_VAR,2:Nxb+2,2:Nyb+2))/2)/2
+          tt = ((solnData(SMRH_VAR,1:Nxb+1,1:Nyb+1)+solnData(SMRH_VAR,2:Nxb+2,1:Nyb+1))/2 &
+               +(solnData(SMRH_VAR,1:Nxb+1,2:Nyb+2)+solnData(SMRH_VAR,2:Nxb+2,2:Nyb+2))/2)/2
 
-          ww = ((solnData(VORT_VAR,1:Nxb+1,1:Nyb+1)+solnData(VORT_VAR,2:Nxb+2,1:Nyb+1))/2 &
-               +(solnData(VORT_VAR,1:Nxb+1,2:Nyb+2)+solnData(VORT_VAR,2:Nxb+2,2:Nyb+2))/2)/2
+          ww = (facexData(SIGM_VAR,1:Nxb+1,1:Nyb+1)+facexData(SIGM_VAR,1:Nxb+1,2:Nyb+2))/2
 
-          vs = ((solnData(VISC_VAR,1:Nxb+1,1:Nyb+1)+solnData(VISC_VAR,2:Nxb+2,1:Nyb+1))/2 &
-               +(solnData(VISC_VAR,1:Nxb+1,2:Nyb+2)+solnData(VISC_VAR,2:Nxb+2,2:Nyb+2))/2)/2
+          vs = (faceyData(SIGM_VAR,1:Nxb+1,1:Nyb+1)+faceyData(SIGM_VAR,2:Nxb+2,1:Nyb+1))/2
+
+          !ww = (facexData(RH1F_VAR,1:Nxb+1,1:Nyb+1)+facexData(RH1F_VAR,1:Nxb+1,2:Nyb+2)+&
+          !      facexData(RH2F_VAR,1:Nxb+1,1:Nyb+1)+facexData(RH2F_VAR,1:Nxb+1,2:Nyb+2))/2
+
+          !vs = (faceyData(RH1F_VAR,1:Nxb+1,1:Nyb+1)+faceyData(RH1F_VAR,2:Nxb+2,1:Nyb+1)+&
+          !      faceyData(RH2F_VAR,1:Nxb+1,1:Nyb+1)+faceyData(RH2F_VAR,2:Nxb+2,1:Nyb+1))/2
+
+          !ww = ((solnData(SMRH_VAR,1:Nxb+1,1:Nyb+1)+solnData(SMRH_VAR,2:Nxb+2,1:Nyb+1))/2 &
+          !     +(solnData(SMRH_VAR,1:Nxb+1,2:Nyb+2)+solnData(SMRH_VAR,2:Nxb+2,2:Nyb+2))/2)/2
+
+          !vs = ((solnData(VISC_VAR,1:Nxb+1,1:Nyb+1)+solnData(VISC_VAR,2:Nxb+2,1:Nyb+1))/2 &
+          !     +(solnData(VISC_VAR,1:Nxb+1,2:Nyb+2)+solnData(VISC_VAR,2:Nxb+2,2:Nyb+2))/2)/2
 
           nullify(solnData)
           nullify(facexData)
           nullify(faceyData)
 
-          !call IO_write(gr_x,gr_dy,uu,vv,pp,tt,myid)
-          call IO_write(gr_x,gr_y,uu,vv,vs,tt,myid)
+          !call IO_write(gr_x,gr_y,uu,vv,pp,tt,myid)
+          call IO_write(gr_x,gr_y,ww,vs,pp,tt,myid)
 
         end if
 #endif

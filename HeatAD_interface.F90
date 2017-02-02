@@ -16,10 +16,10 @@ module HeatAD_interface
      end interface
 
      interface
-         subroutine heat_tempSolver(tstep,T,u,v,a1x,a1y,a2x,a2y,s,pf,thco,cp)
+         subroutine heat_tempSolver(tstep,T,T_old,mdot,smrh,u,v,a1x,a1y,a2x,a2y,s,pf,thco,cp)
          implicit none
          integer, intent(in) :: tstep
-         real, intent(inout), dimension(:,:) :: T,u,v,a1x,a1y,s,pf,thco,cp,a2x,a2y
+         real, intent(inout), dimension(:,:) :: T,u,v,a1x,a1y,s,pf,thco,cp,a2x,a2y,T_old,mdot,smrh
          end subroutine heat_tempSolver
      end interface
 

@@ -1,4 +1,4 @@
-subroutine heat_tempSolver(tstep,T,u,v,a1x,a1y,a2x,a2y,s,pf,thco,cp)
+subroutine heat_tempSolver(tstep,T,T_old,mdot,smrh,u,v,a1x,a1y,a2x,a2y,s,pf,thco,cp)
 
 #include "Solver.h"
 
@@ -14,9 +14,9 @@ subroutine heat_tempSolver(tstep,T,u,v,a1x,a1y,a2x,a2y,s,pf,thco,cp)
       implicit none
       
       integer, intent(in) :: tstep
-      real, intent(inout), dimension(:,:) :: T,u,v,a1x,a1y,s,pf,thco,cp,a2x,a2y
+      real, intent(inout), dimension(:,:) :: T,T_old,mdot,smrh,u,v,a1x,a1y,s,pf,thco,cp,a2x,a2y
       !real, allocatable, dimension(:,:) :: T_old
-      real, dimension(Nxb+2,Nyb+2) :: T_old
+      !real, dimension(Nxb+2,Nyb+2) :: T_old
 
       integer :: i,j,ii,jj
 
@@ -41,7 +41,7 @@ subroutine heat_tempSolver(tstep,T,u,v,a1x,a1y,a2x,a2y,s,pf,thco,cp)
 
       Tsat = 0.0
 
-      T_old = T
+      !T_old = T
 
 #ifdef TEMP_SOLVER_CENTRAL
 

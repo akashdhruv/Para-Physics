@@ -16,7 +16,8 @@ subroutine HeatAD_solver(tstep)
 
    solnData(TOLD_VAR,:,:) = solnData(TEMP_VAR,:,:) 
 
-   call heat_tempSolver(tstep,solnData(TEMP_VAR,:,:),&
+   call heat_tempSolver(tstep,solnData(TEMP_VAR,:,:),solnData(TOLD_VAR,:,:),&
+                         solnData(MDOT_VAR,:,:),solnData(SMRH_VAR,:,:),&
                          facexData(VELC_VAR,:,:),faceyData(VELC_VAR,:,:),&
                          facexData(AL1F_VAR,:,:),faceyData(AL1F_VAR,:,:),&
                          facexData(AL2F_VAR,:,:),faceyData(AL2F_VAR,:,:),&

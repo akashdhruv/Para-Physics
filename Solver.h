@@ -2,7 +2,7 @@
 _____________Defining Poisson Solver Parameters_________________
 #endif
 
-#define POIS_SOLVER 2
+#define POIS_SOLVER 3
 
 #if POIS_SOLVER == 1
 #define POISSON_SOLVER_JACOBI
@@ -39,16 +39,16 @@ _______________________Grid Parameters___________________________
 #define MAX_BLOCKS 80
 
 
-#define Nxb 50
-#define Nyb 40
+#define Nxb 20
+#define Nyb 20
 
 
-#define D_xmin -0.5
-#define D_ymin -0.5
+#define D_xmin -1.0
+#define D_ymin -1.0
 
 
-#define D_xmax  0.5
-#define D_ymax  0.5
+#define D_xmax  1.0
+#define D_ymax  1.0
 
 #define TIME_END 60.0
 
@@ -72,20 +72,21 @@ _______________________Grid Parameters___________________________
 #define CURV_VAR 12
 #define SIGP_VAR 13
 #define MDOT_VAR 14
+#define SMRH_VAR 15
+#define SMHV_VAR 16
 
-#define CENT_VAR 14
+#define CENT_VAR 16
 
 #define VELC_VAR 1
 #define IBMF_VAR 2
-#define NMXF_VAR 3
-#define NMYF_VAR 4
-#define RH1F_VAR 5
-#define RH2F_VAR 6
-#define AL1F_VAR 7
-#define AL2F_VAR 8
-#define SIGM_VAR 9
+#define RH1F_VAR 3
+#define RH2F_VAR 4
+#define AL1F_VAR 5
+#define AL2F_VAR 6
+#define SIGM_VAR 7
+#define VELI_VAR 8
 
-#define FACE_VAR 9
+#define FACE_VAR 8
 
 
 #if 0

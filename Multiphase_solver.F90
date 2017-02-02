@@ -6,7 +6,9 @@ subroutine Multiphase_solver(tstep,solnX)
     use Multiphase_data, only: mph_thco1, mph_cp1, mph_thco2, mph_cp2,mph_beta
     use physicaldata
     use Grid_data
-    use Multiphase_interface , only: mph_FillVars, mph_PressureJumps
+    use Multiphase_interface , only: mph_FillVars, mph_PressureJumps,&
+                                     mph_getInterfaceVelocity    
+
     use MPI_interface, only: MPI_applyBC,MPI_physicalBC_dfun
 
     implicit none
@@ -23,13 +25,19 @@ subroutine Multiphase_solver(tstep,solnX)
     facexData => ph_facex
     faceyData => ph_facey
 
-    !if(tstep > 0) then 
+    if(tstep > 0) then 
+
+        call mph_getInterfaceVelocity(facexData(VELC_VAR,:,:),faceyData(VELC_VAR,:,:),&
+                                      faceyData(VELI_VAR,:,:),faceyData(VELI_VAR,:,:),&
+                                      solnData(SMRH_VAR,:,:),solnData(MDOT_VAR,:,:),&
+                                      solnData(NRMX_VAR,:,:),solnData(NRMY_VAR,:,:))
 
     !   call mph_advect 
     !   call mph_redistance
 
 
-    !end if
+    end if
+
 
     call mph_FillVars(solnData(DFUN_VAR,:,:),solnData(PFUN_VAR,:,:),&
                       solnData(CURV_VAR,:,:),&
@@ -40,10 +48,8 @@ subroutine Multiphase_solver(tstep,solnX)
                       facexData(AL1F_VAR,:,:),faceyData(AL1F_VAR,:,:),&
                       facexData(AL2F_VAR,:,:),faceyData(AL2F_VAR,:,:),&
                       solnData(NRMX_VAR,:,:),solnData(NRMY_VAR,:,:),&
-                      solnData(TEMP_VAR,:,:),solnData(TOLD_VAR,:,:),&
-                      mph_beta)
-
-
+                      solnData(SMHV_VAR,:,:),solnData(SMRH_VAR,:,:))
+                      
     call mph_PressureJumps(solnData(DFUN_VAR,:,:),solnData(PFUN_VAR,:,:),&
                            solnData(CURV_VAR,:,:),&
                            facexData(RH1F_VAR,:,:),faceyData(RH1F_VAR,:,:),&
@@ -51,6 +57,7 @@ subroutine Multiphase_solver(tstep,solnX)
                            solnData(SIGP_VAR,:,:),&
                            facexData(SIGM_VAR,:,:),faceyData(SIGM_VAR,:,:),&
                            solnData(MDOT_VAR,:,:))
+
 
     nullify(solnData)  
     nullify(facexData)
