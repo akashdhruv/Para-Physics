@@ -1,49 +1,178 @@
-subroutine mph_FillVars(s,pf,thco,cprs,visc,rhox,rhoy,alpx,alpy,T,T_old,beta)
+subroutine mph_FillVars(s,pf,crv,thco,cprs,visc,rho1x,rho1y,rho2x,rho2y,al1x,al1y,al2x,al2y,nrmx,nrmy,T,T_old,beta)
 
 #include "Solver.h"
 
     use MPI_interface, ONLY: MPI_applyBC,MPI_physicalBC_dfun
+    use Multiphase_data
+    use Grid_data, ONLY: gr_dx,gr_dy
 
     implicit none
-    real,intent(inout),dimension(Nxb+2,Nyb+2) :: s,pf,thco,cprs,visc,rhox,rhoy,alpx,alpy
+    real,intent(inout),dimension(Nxb+2,Nyb+2) :: s,pf,thco,cprs,visc,crv,rho1x,rho1y,&
+                                                 rho2x,rho2y,al1x,al1y,al2x,al2y,nrmx,nrmy
+                                                            
+
     real,intent(in),dimension(Nxb+2,Nyb+2) :: T,T_old
     real,intent(in) :: beta
 
     integer :: i,j
 
+    real :: rPhiXN,rPhiXE,rPhiXS,rPhiXW, &
+            rPhiYN,rPhiYE,rPhiYS,rPhiYW, &
+            rMagN,rMagE,rMagS,rMagW
+
+    real :: a1,a2
+
+    real, parameter :: eps = 1E-13
+
+
+     mph_crmx = 0.
+     mph_crmn = 0.
+
+     crv = 0.
+     do j = 2,Nyb+1
+       do i = 2,Nxb+1
+
+              !----------------------------------------------------
+              !- kpd - 2 phi gradients per face method
+              !----------------------------------------------------
+              !        X - Location
+
+              rPhiXE = 1./gr_dx*(s(i+1,j)-s(i,j)  )
+              rPhiXW = 1./gr_dx*(s(i,j)  -s(i-1,j))
+              rPhiXN = 1./4./gr_dx * ( (s(i+1,j+1) - s(i-1,j+1)) &
+                                  + (s(i+1,j)   - s(i-1,j)  ) )
+              rPhiXS = 1./4./gr_dx * ( (s(i+1,j)   - s(i-1,j)  ) &
+                                  + (s(i+1,j-1) - s(i-1,j-1)) )
+             !        Y - Location
+              rPhiYN = 1./gr_dy*(s(i,j+1)-s(i,j)  )
+              rPhiYS = 1./gr_dy*(s(i,j)  -s(i,j-1))
+              rPhiYE = 1./4./gr_dy * ( (s(i+1,j+1) - s(i+1,j-1)) &
+                                  + (s(i,j+1)   - s(i,j-1)  ) )
+              rPhiYW = 1./4./gr_dy * ( (s(i,j+1)   - s(i,j-1)  ) &
+                                  + (s(i-1,j+1) - s(i-1,j-1)) )
+              !----------------------------------------------------
+
+              rMagE = sqrt( rPhiXE**2. + rPhiYE**2. ) + eps
+              rMagW = sqrt( rPhiXW**2. + rPhiYW**2. ) + eps
+              rMagN = sqrt( rPhiXN**2. + rPhiYN**2. ) + eps
+              rMagS = sqrt( rPhiXS**2. + rPhiYS**2. ) + eps
+
+
+              crv(i,j) = 1./gr_dx * (rPhiXE/rMagE - rPhiXW/rMagW) &
+                         + 1./gr_dy * (rPhiYN/rMagN - rPhiYS/rMagS)
+              !----------------------------------------------------
+
+        end do
+     end do
+
+
+
     do j=2,Nyb+1
      do i=2,Nxb+1
 
-         visc(i,j) = visc(i,j)*((T(i,j)/T_old(i,j))**0.7)
+         pf(i,j) = 0.
 
-         rhox(i,j) = rhox(i,j)/(1+beta*((T(i,j)+T(i+1,j))*0.5-&
-                                         (T_old(i,j)+T_old(i+1,j))*0.5))
+         if(s(i,j) .ge. 0.) then
 
-         rhoy(i,j) = rhoy(i,j)/(1+beta*((T(i,j)+T(i,j+1))*0.5-&
-                                        (T_old(i,j)+T_old(i,j+1))*0.5))
+               pf(i,j)    = 1.
+               visc(i,j) = mph_vis1/mph_vis2
+               thco(i,j) = mph_thco1/mph_thco2
+               cprs(i,j) = mph_cp1/mph_cp2
+       
+         else
 
-     
+               pf(i,j)    = 0. 
+               visc(i,j) = mph_vis2/mph_vis2
+               thco(i,j) = mph_thco2/mph_thco2
+               cprs(i,j) = mph_cp2/mph_cp2   
 
-         alpx(i,j) = alpx(i,j)
-
-         alpy(i,j) = alpy(i,j)
-
+         end if
 
      end do
     end do
 
-    call MPI_applyBC(visc)
-    call MPI_applyBC(rhox)
-    call MPI_applyBC(rhoy)
-    call MPI_applyBC(alpx)
-    call MPI_applyBC(alpy)
+    rho1x = 0.
+    rho2x = 0.
+    al1x  = 0.
+    al2x  = 0.
 
+    do j = 2,Nyb+1
+      do i = 2,Nxb+1
+
+         a1 = (pf(i-1,j) + pf(i,j)) / 2.
+         a2 = pf(i-1,j)  /abs(pf(i-1,j)  +eps) * &
+              pf(i,j)/abs(pf(i,j)+eps)
+
+         rho1x(i,j) = a1*a2/(mph_rho1/mph_rho2)
+         rho2x(i,j) = (1. - a1*a2)/(mph_rho2/mph_rho2)
+
+         al1x(i,j) = a1*a2/((mph_thco1/mph_cp1)/(mph_thco2/mph_cp2))
+         al2x(i,j) = (1. - a1*a2)/((mph_thco2/mph_cp2)/(mph_thco2/mph_cp2))
+
+      end do
+    end do
+
+    rho1y = 0.
+    rho2y = 0.
+    al1y  = 0.
+    al2y  = 0.
+
+    do j = 2,Nyb+1
+       do i = 2,Nxb+1
+
+         a1 = (pf(i,j-1) + pf(i,j)) / 2.
+         a2 = pf(i,j-1)  /abs(pf(i,j-1)  +eps) * &
+                pf(i,j)/abs(pf(i,j)+eps)
+
+         rho1y(i,j) = a1*a2/(mph_rho1/mph_rho2)
+         rho2y(i,j) = (1. - a1*a2)/(mph_rho2/mph_rho2)
+
+         al1y(i,j) = a1*a2/((mph_thco1/mph_cp1)/(mph_thco2/mph_cp2))
+         al2y(i,j) = (1. - a1*a2)/((mph_thco2/mph_cp2)/(mph_thco2/mph_cp2))
+
+       end do
+    end do
+
+    nrmx(2:Nxb+1,2:Nyb+1) = ((s(3:Nxb+2,2:Nyb+1) - s(1:Nxb,2:Nyb+1))/2./gr_dx)/ &
+                       sqrt(((s(3:Nxb+2,2:Nyb+1) - s(1:Nxb,2:Nyb+1))/2./gr_dx)**2 &
+                          + ((s(2:Nxb+1,3:Nyb+2) - s(2:Nxb+1,1:Nyb))/2./gr_dy)**2 )
+
+    nrmy(2:Nxb+1,2:Nyb+1) = ((s(2:Nxb+1,3:Nyb+2) - s(2:Nxb+1,1:Nyb))/2./gr_dy)/ &
+                       sqrt(((s(3:Nxb+2,2:Nyb+1) - s(1:Nxb,2:Nyb+1))/2./gr_dx)**2 &
+                          + ((s(2:Nxb+1,3:Nyb+2) - s(2:Nxb+1,1:Nyb))/2./gr_dy)**2 )
+
+
+    call MPI_applyBC(visc)
+    call MPI_applyBC(rho1x)
+    call MPI_applyBC(rho1y)
+    call MPI_applyBC(rho2x)
+    call MPI_applyBC(rho2y)
+    call MPI_applyBC(al1x)
+    call MPI_applyBC(al2y)
+    call MPI_applyBC(al2x)
+    call MPI_applyBC(al2y)
+    call MPI_applyBC(thco)
+    call MPI_applyBC(cprs)
+    call MPI_applyBC(pf)
+    call MPI_applyBC(nrmx)
+    call MPI_applyBC(nrmy)
+    call MPI_applyBC(crv)
 
     call MPI_physicalBC_dfun(visc)
-    call MPI_physicalBC_dfun(rhox)
-    call MPI_physicalBC_dfun(rhoy)
-    call MPI_physicalBC_dfun(alpx)
-    call MPI_physicalBC_dfun(alpy)
+    call MPI_physicalBC_dfun(rho1x)
+    call MPI_physicalBC_dfun(rho1y)
+    call MPI_physicalBC_dfun(al1x)
+    call MPI_physicalBC_dfun(al2y)
+    call MPI_physicalBC_dfun(rho2x)
+    call MPI_physicalBC_dfun(rho2y)
+    call MPI_physicalBC_dfun(al2x)
+    call MPI_physicalBC_dfun(al2y)
+    call MPI_physicalBC_dfun(thco)
+    call MPI_physicalBC_dfun(cprs)
+    call MPI_physicalBC_dfun(pf)
+    call MPI_physicalBC_dfun(nrmx)
+    call MPI_physicalBC_dfun(nrmy)
+    call MPI_physicalBC_dfun(crv)
 
 
 end subroutine mph_FillVars

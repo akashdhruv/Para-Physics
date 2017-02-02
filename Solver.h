@@ -43,14 +43,14 @@ _______________________Grid Parameters___________________________
 #define Nyb 40
 
 
-#define D_xmin -0.50
-#define D_ymin -0.50
+#define D_xmin -0.5
+#define D_ymin -0.5
 
 
-#define D_xmax  0.50
-#define D_ymax  0.50
+#define D_xmax  0.5
+#define D_ymax  0.5
 
-#define TIME_END 60.0
+#define TIME_END 50.0
 
 #define nblockx 2
 #define nblocky 2
@@ -69,17 +69,23 @@ _______________________Grid Parameters___________________________
 #define VORT_VAR 9
 #define VISC_VAR 10
 #define TOLD_VAR 11
+#define CURV_VAR 12
+#define SIGP_VAR 13
+#define MDOT_VAR 14
 
-#define CENT_VAR 11
+#define CENT_VAR 14
 
 #define VELC_VAR 1
 #define IBMF_VAR 2
 #define NMXF_VAR 3
 #define NMYF_VAR 4
-#define RHOF_VAR 5
-#define ALPH_VAR 6
+#define RH1F_VAR 5
+#define RH2F_VAR 6
+#define AL1F_VAR 7
+#define AL2F_VAR 8
+#define SIGM_VAR 9
 
-#define FACE_VAR 6
+#define FACE_VAR 9
 
 
 #if 0

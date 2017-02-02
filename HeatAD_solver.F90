@@ -18,7 +18,8 @@ subroutine HeatAD_solver(tstep)
 
    call heat_tempSolver(tstep,solnData(TEMP_VAR,:,:),&
                          facexData(VELC_VAR,:,:),faceyData(VELC_VAR,:,:),&
-                         facexData(ALPH_VAR,:,:),faceyData(ALPH_VAR,:,:),&
+                         facexData(AL1F_VAR,:,:),faceyData(AL1F_VAR,:,:),&
+                         facexData(AL2F_VAR,:,:),faceyData(AL2F_VAR,:,:),&
                          solnData(DFUN_VAR,:,:),solnData(PFUN_VAR,:,:),&
                          solnData(THCO_VAR,:,:),solnData(CPRS_VAR,:,:))
 

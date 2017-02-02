@@ -1,4 +1,4 @@
-subroutine ins_momentum_VD(tstep,p_counter,p,u,v,visc,rhox,rhoy,s,s2)
+subroutine ins_momentum_VD(tstep,p_counter,p,u,v,visc,rho1x,rho1y,rho2x,rho2y,s,s2)
 
        use Poisson_interface, ONLY: Poisson_solver_VC            
        use Grid_data
@@ -26,7 +26,7 @@ subroutine ins_momentum_VD(tstep,p_counter,p,u,v,visc,rhox,rhoy,s,s2)
        real, dimension(Nxb,Nyb) :: C1,G1,D1,C2,G2,D2,p_RHS
        real :: u_res1, v_res1, maxdiv, mindiv
        integer :: i,j
-       real, intent(inout), dimension(:,:) :: u,v,visc,rhox,rhoy,p,s,s2
+       real, intent(inout), dimension(:,:) :: u,v,visc,rho1x,rho1y,rho2x,rho2y,p,s,s2
 
        !allocate(C1(Nxb,Nyb))
        !allocate(G1(Nxb,Nyb))
@@ -59,7 +59,7 @@ subroutine ins_momentum_VD(tstep,p_counter,p,u,v,visc,rhox,rhoy,s,s2)
        ! Predictor Step
 
        call Convective_U_VD(u,v,gr_dx,gr_dy,C1)
-       call Diffusive_U_VD(u,visc,rhox,gr_dx,gr_dy,ins_inRe,D1)
+       call Diffusive_U_VD(u,visc,rho1x,gr_dx,gr_dy,ins_inRe,D1)
 
        G1 = C1 + D1
 
@@ -75,7 +75,7 @@ subroutine ins_momentum_VD(tstep,p_counter,p,u,v,visc,rhox,rhoy,s,s2)
 
 
        call Convective_V_VD(u,v,gr_dx,gr_dy,C2)
-       call Diffusive_V_VD(v,visc,rhoy,gr_dx,gr_dy,ins_inRe,D2)
+       call Diffusive_V_VD(v,visc,rho1y,gr_dx,gr_dy,ins_inRe,D2)
 
        G2 = C2 + D2
 
@@ -106,7 +106,7 @@ subroutine ins_momentum_VD(tstep,p_counter,p,u,v,visc,rhox,rhoy,s,s2)
        p_RHS = -((1/(gr_dy*dr_dt))*(vt(2:Nxb+1,2:Nyb+1)-vt(2:Nxb+1,1:Nyb)))&
                -((1/(gr_dx*dr_dt))*(ut(2:Nxb+1,2:Nyb+1)-ut(1:Nxb,2:Nyb+1)))
 
-       call Poisson_solver_VC(p_RHS,p,rhox,rhoy,ins_p_res,p_counter,PRES_VAR)
+       call Poisson_solver_VC(p_RHS,p,rho1x,rho1y,ins_p_res,p_counter,PRES_VAR)
 
        ! Corrector Step
 

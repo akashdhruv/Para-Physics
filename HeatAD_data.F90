@@ -6,5 +6,6 @@ module HeatAD_data
    real, save :: ht_Bi
    real, save :: ht_T_res
    real, save :: ht_src
+   real, save :: ht_St
 
 end module HeatAD_data

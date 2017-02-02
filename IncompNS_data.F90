@@ -14,5 +14,6 @@ module IncompNS_data
     real, save :: ins_Qin,ins_Qout,ins_convvel
     real, save :: ins_maxU
     double precision, save :: ins_timePoisson
+    real, save :: ins_gravX,ins_gravY,ins_gravZ
 
 end module IncompNS_data

@@ -14,5 +14,7 @@ module Multiphase_data
   real, save :: mph_vis2
   real, save :: mph_beta
   real, save :: mph_x0,mph_y0,mph_r0
+  real, save :: mph_crmx,mph_crmn
+  real, save :: mph_sten
 
 end module Multiphase_data

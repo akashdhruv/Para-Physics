@@ -21,7 +21,7 @@ subroutine IncompNS_init()
       nullify(facexData)
       nullify(faceyData)
       
-      ins_inRe  = 0.001
+      ins_inRe  = 0.0046
       !ins_sigma = 0.0001
       !ins_cfl   = 0.0001
       !ins_sigma = 0.001
@@ -29,5 +29,10 @@ subroutine IncompNS_init()
       ins_sigma = 0.01
       ins_cfl   = 0.15
       ins_timePoisson = 0.0
+
+
+      ins_gravX = 0.0
+      ins_gravY = 0.0
+      ins_gravZ = 0.0
 
 end subroutine IncompNS_init

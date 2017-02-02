@@ -143,7 +143,7 @@ subroutine MPI_physicalBC_vel(u_ex,v_ex)
        if ( y_id == nblocky-1) then
 
            !v_ex(:,Nyb+1)=v_ex(:,Nyb)
-           v_ex(:,Nyb+2)=v_ex(:,Ny+1)
+           v_ex(:,Nyb+2)=v_ex(:,Nyb+1)
            u_ex(:,Nyb+2)=u_ex(:,Nyb+1)
 
        end if

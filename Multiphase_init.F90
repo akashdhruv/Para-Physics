@@ -23,11 +23,15 @@ subroutine Multiphase_init()
    solnData(PFUN_VAR,:,:)  = 0.0
    solnData(THCO_VAR,:,:)  = 0.0
    solnData(CPRS_VAR,:,:)  = 0.0
-   solnData(VISC_VAR,:,:)  = 1.0
-   facexData(RHOF_VAR,:,:) = 1.0
-   faceyData(RHOF_VAR,:,:) = 1.0
-   facexData(ALPH_VAR,:,:) = 1.0
-   faceyData(ALPH_VAR,:,:) = 1.0
+   solnData(VISC_VAR,:,:)  = 0.0
+   facexData(RH1F_VAR,:,:) = 0.0
+   faceyData(RH1F_VAR,:,:) = 0.0
+   facexData(RH2F_VAR,:,:) = 0.0
+   faceyData(RH2F_VAR,:,:) = 0.0
+   facexData(AL1F_VAR,:,:) = 0.0
+   faceyData(AL1F_VAR,:,:) = 0.0
+   facexData(AL2F_VAR,:,:) = 0.0
+   faceyData(AL2F_VAR,:,:) = 0.0
 
    !___Vorticity Test__!
    !mph_x0 = -0.2
@@ -37,7 +41,7 @@ subroutine Multiphase_init()
    !___Multiphase Test__!
    mph_x0 = 0.0
    mph_y0 = 0.0
-   mph_r0 = 0.125
+   mph_r0 = 0.005
 
    !___Conjugate Heat Test_!
    !mph_x0 = -5.0
@@ -95,6 +99,8 @@ subroutine Multiphase_init()
    mph_cp1 = 1.0*mph_rho1
    mph_vis1 = 1.0
    mph_beta = 0.0002
+
+   mph_sten = 1.0
 
    nullify(solnData)
    nullify(facexData)
