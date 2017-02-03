@@ -30,8 +30,8 @@ subroutine mph_PressureJumps(s,pf,crv,rho1x,rho1y,rho2x,rho2y,w,sigx,sigy,mdot)
         sigy = 0.
         w = 0.
 
-        do j = 2,Nyb+1
-           do i = 2,Nxb+1
+        do j = 1,Nyb+1
+           do i = 1,Nxb+1
 
               if(pf(i,j).eq.0..and.pf(i+1,j).eq.1.) then
 

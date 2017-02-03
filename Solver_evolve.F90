@@ -2,7 +2,7 @@ subroutine Solver_evolve
 
 #include "Solver.h"
 
-!#define SOLVER_DEBUG
+#define SOLVER_DEBUG
 
     use IncompNS_interface, only: IncompNS_solver
     use HeatAD_interface, only: HeatAD_solver
@@ -138,7 +138,7 @@ subroutine Solver_evolve
     nullify(faceyData)
     nullify(solnData)
 
-    call IO_write(gr_x,gr_y,uu,vv,pp,tt,myid)
+    !call IO_write(gr_x,gr_y,uu,vv,pp,tt,myid)
 
    !deallocate(uu,vv,pp,tt,df,pf,th,cp,ww)
 

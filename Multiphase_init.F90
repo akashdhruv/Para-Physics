@@ -95,7 +95,7 @@ subroutine Multiphase_init()
     end do
 
    mph_thco2 = 1.0
-   mph_rho2 = 2.0
+   mph_rho2 = 20.0
    mph_cp2 = 1.0*mph_rho2
    mph_vis2 = 1.0
 
