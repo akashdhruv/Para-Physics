@@ -2,7 +2,7 @@
 _____________Defining Poisson Solver Parameters_________________
 #endif
 
-#define POIS_SOLVER 3
+#define POIS_SOLVER 2
 
 #if POIS_SOLVER == 1
 #define POISSON_SOLVER_JACOBI

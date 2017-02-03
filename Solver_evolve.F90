@@ -107,8 +107,8 @@ subroutine Solver_evolve
           nullify(facexData)
           nullify(faceyData)
 
-          !call IO_write(gr_x,gr_y,uu,vv,pp,tt,myid)
-          call IO_write(gr_x,gr_y,ww,vs,pp,tt,myid)
+          call IO_write(gr_x,gr_y,uu,vv,pp,tt,myid)
+          !call IO_write(gr_x,gr_y,ww,vs,pp,tt,myid)
 
         end if
 #endif
