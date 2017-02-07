@@ -84,23 +84,23 @@ subroutine Solver_evolve
           pp = ((solnData(PRES_VAR,1:Nxb+1,1:Nyb+1)+solnData(PRES_VAR,2:Nxb+2,1:Nyb+1))/2 &
                +(solnData(PRES_VAR,1:Nxb+1,2:Nyb+2)+solnData(PRES_VAR,2:Nxb+2,2:Nyb+2))/2)/2
 
-          tt = ((solnData(SMRH_VAR,1:Nxb+1,1:Nyb+1)+solnData(SMRH_VAR,2:Nxb+2,1:Nyb+1))/2 &
-               +(solnData(SMRH_VAR,1:Nxb+1,2:Nyb+2)+solnData(SMRH_VAR,2:Nxb+2,2:Nyb+2))/2)/2
+          tt = ((solnData(TEMP_VAR,1:Nxb+1,1:Nyb+1)+solnData(TEMP_VAR,2:Nxb+2,1:Nyb+1))/2 &
+               +(solnData(TEMP_VAR,1:Nxb+1,2:Nyb+2)+solnData(TEMP_VAR,2:Nxb+2,2:Nyb+2))/2)/2
 
-          ww = (facexData(SIGM_VAR,1:Nxb+1,1:Nyb+1)+facexData(SIGM_VAR,1:Nxb+1,2:Nyb+2))/2
+          !ww = (facexData(SIGM_VAR,1:Nxb+1,1:Nyb+1)+facexData(SIGM_VAR,1:Nxb+1,2:Nyb+2))/2
 
-          vs = (faceyData(SIGM_VAR,1:Nxb+1,1:Nyb+1)+faceyData(SIGM_VAR,2:Nxb+2,1:Nyb+1))/2
+          !vs = (faceyData(SIGM_VAR,1:Nxb+1,1:Nyb+1)+faceyData(SIGM_VAR,2:Nxb+2,1:Nyb+1))/2
 
-          !ww = (facexData(RH1F_VAR,1:Nxb+1,1:Nyb+1)+facexData(RH1F_VAR,1:Nxb+1,2:Nyb+2)+&
-          !      facexData(RH2F_VAR,1:Nxb+1,1:Nyb+1)+facexData(RH2F_VAR,1:Nxb+1,2:Nyb+2))/2
+          ww = (facexData(RH1F_VAR,1:Nxb+1,1:Nyb+1)+facexData(RH1F_VAR,1:Nxb+1,2:Nyb+2)+&
+                facexData(RH2F_VAR,1:Nxb+1,1:Nyb+1)+facexData(RH2F_VAR,1:Nxb+1,2:Nyb+2))/2
 
-          !vs = (faceyData(RH1F_VAR,1:Nxb+1,1:Nyb+1)+faceyData(RH1F_VAR,2:Nxb+2,1:Nyb+1)+&
-          !      faceyData(RH2F_VAR,1:Nxb+1,1:Nyb+1)+faceyData(RH2F_VAR,2:Nxb+2,1:Nyb+1))/2
+          vs = (faceyData(RH1F_VAR,1:Nxb+1,1:Nyb+1)+faceyData(RH1F_VAR,2:Nxb+2,1:Nyb+1)+&
+                faceyData(RH2F_VAR,1:Nxb+1,1:Nyb+1)+faceyData(RH2F_VAR,2:Nxb+2,1:Nyb+1))/2
 
           !ww = ((solnData(SMRH_VAR,1:Nxb+1,1:Nyb+1)+solnData(SMRH_VAR,2:Nxb+2,1:Nyb+1))/2 &
           !     +(solnData(SMRH_VAR,1:Nxb+1,2:Nyb+2)+solnData(SMRH_VAR,2:Nxb+2,2:Nyb+2))/2)/2
 
-          !vs = ((solnData(VISC_VAR,1:Nxb+1,1:Nyb+1)+solnData(VISC_VAR,2:Nxb+2,1:Nyb+1))/2 &
+          !pp = ((solnData(VISC_VAR,1:Nxb+1,1:Nyb+1)+solnData(VISC_VAR,2:Nxb+2,1:Nyb+1))/2 &
           !     +(solnData(VISC_VAR,1:Nxb+1,2:Nyb+2)+solnData(VISC_VAR,2:Nxb+2,2:Nyb+2))/2)/2
 
           nullify(solnData)
@@ -138,7 +138,7 @@ subroutine Solver_evolve
     nullify(faceyData)
     nullify(solnData)
 
-    !call IO_write(gr_x,gr_y,uu,vv,pp,tt,myid)
+    call IO_write(gr_x,gr_y,uu,vv,pp,tt,myid)
 
    !deallocate(uu,vv,pp,tt,df,pf,th,cp,ww)
 

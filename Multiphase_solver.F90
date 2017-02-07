@@ -7,7 +7,8 @@ subroutine Multiphase_solver(tstep,solnX)
     use physicaldata
     use Grid_data
     use Multiphase_interface , only: mph_FillVars, mph_PressureJumps,&
-                                     mph_getInterfaceVelocity    
+                                     mph_getInterfaceVelocity,&
+                                     mph_FillVars_ibm    
 
     use MPI_interface, only: MPI_applyBC,MPI_physicalBC_dfun
 
@@ -24,6 +25,19 @@ subroutine Multiphase_solver(tstep,solnX)
     solnData => ph_center
     facexData => ph_facex
     faceyData => ph_facey
+
+
+#ifdef IBM
+
+     call mph_FillVars_ibm(solnData(DFUN_VAR,:,:),solnData(PFUN_VAR,:,:),&
+                           solnData(THCO_VAR,:,:),solnData(CPRS_VAR,:,:),&
+                           solnData(VISC_VAR,:,:),&
+                           facexData(RH2F_VAR,:,:),faceyData(RH2F_VAR,:,:),&
+                           facexData(AL2F_VAR,:,:),faceyData(AL2F_VAR,:,:),&
+                           solnData(TEMP_VAR,:,:),solnData(TOLD_VAR,:,:),&
+                           mph_beta)
+
+#else
 
     if(tstep > 0) then 
 
@@ -57,7 +71,7 @@ subroutine Multiphase_solver(tstep,solnX)
                            solnData(SIGP_VAR,:,:),&
                            facexData(SIGM_VAR,:,:),faceyData(SIGM_VAR,:,:),&
                            solnData(MDOT_VAR,:,:))
-
+#endif
 
     nullify(solnData)  
     nullify(facexData)

@@ -61,7 +61,7 @@ subroutine ins_momentum(tstep,p_counter,p,u,v,s,s2)
        call Convective_U(u,v,gr_dx,gr_dy,C1)
        call Diffusive_U(u,gr_dx,gr_dy,ins_inRe,D1)
 
-       G1 = C1 + D1
+       G1 = C1 + D1 + ins_gravX
 
        if (tstep == 0) then
 
@@ -77,7 +77,7 @@ subroutine ins_momentum(tstep,p_counter,p,u,v,s,s2)
        call Convective_V(u,v,gr_dx,gr_dy,C2)
        call Diffusive_V(v,gr_dx,gr_dy,ins_inRe,D2)
 
-       G2 = C2 + D2
+       G2 = C2 + D2 + ins_gravY
 
        if (tstep == 0) then
 

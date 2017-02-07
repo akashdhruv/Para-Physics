@@ -15,6 +15,17 @@ subroutine IBM_init()
 
    integer :: i,j
 
+   ibm_thco2 = 1.0
+   ibm_rho2 = 1.0
+   ibm_cp2 = 1.0*ibm_rho2
+   ibm_vis2 = 1.0
+
+   ibm_thco1 = 1.0
+   ibm_rho1 = 1.0
+   ibm_cp1 = 1.0*ibm_rho1
+   ibm_vis1 = 1.0
+
+   ibm_omega = 1.0
 
    facexData => ph_facex
    faceyData => ph_facey
@@ -22,13 +33,9 @@ subroutine IBM_init()
    facexData(IBMF_VAR,:,:) = 0.0
    faceyData(IBMF_VAR,:,:) = 0.0
 
-   !ibm_x0 = -0.2
    ibm_x0 = 0.0
-   !ibm_x0 = -5.0
-   ibm_y0 =  0.0
-   !ibm_r0 = 0.5
-   !ibm_r0 =  0.05
-   ibm_r0 = 0.005
+   ibm_y0 = 0.0
+   ibm_r0 = 0.125
 
    do j=1,Nyb+2
 
@@ -86,18 +93,6 @@ subroutine IBM_init()
 
     end do
    end do
-
-   ibm_thco2 = 1.0
-   ibm_rho2 = 1.0
-   ibm_cp2 = 1.0*ibm_rho2
-   ibm_vis2 = 1.0
-
-   ibm_thco1 = 1.0
-   ibm_rho1 = 1.0
-   ibm_cp1 = 1.0*ibm_rho1
-   ibm_vis1 = 1.0
-
-   ibm_omega = 1.0
 
    nullify(facexData)
    nullify(faceyData)

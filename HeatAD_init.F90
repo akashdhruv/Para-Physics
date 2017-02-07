@@ -22,25 +22,12 @@ subroutine HeatAD_init()
    ht_Pr = 1.0
    ht_Nu = 0.332*(ht_Pr**0.33)/(ins_inRe**0.5)
    ht_src = 0.0
-   ht_St = 0.06373
-
+   ht_St = 1.0
 
    solnData => ph_center
 
    solnData(TEMP_VAR,:,:) = 0.0
    solnData(TOLD_VAR,:,:) = 0.0
-
-   do j=1,Nyb+2
-     do i=1,Nxb+2
-
-        if(solnData(DFUN_VAR,i,j) .ge. 0.0) then
-
-             solnData(TEMP_VAR,i,j) = 0.0
-
-         end if
-
-     end do
-   end do
 
    nullify(solnData)
 

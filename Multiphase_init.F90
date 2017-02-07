@@ -15,6 +15,19 @@ subroutine Multiphase_init()
 
    integer :: i,j
 
+   mph_thco2 = 1.0
+   mph_rho2 = 1.0
+   mph_cp2 = 1.0*mph_rho2
+   mph_vis2 = 1.0
+
+   mph_thco1 = 1.0
+   mph_rho1 = 1.0
+   mph_cp1 = 1.0*mph_rho1
+   mph_vis1 = 1.0
+
+   mph_beta = 1.0
+   mph_sten = 1.0
+
    solnData => ph_center
    facexData => ph_facex
    faceyData => ph_facey
@@ -23,9 +36,9 @@ subroutine Multiphase_init()
    solnData(PFUN_VAR,:,:)  = 0.0
    solnData(NRMX_VAR,:,:)  = 0.0
    solnData(NRMY_VAR,:,:)  = 0.0
-   solnData(VISC_VAR,:,:)  = 0.0
-   solnData(THCO_VAR,:,:)  = 0.0
-   solnData(CPRS_VAR,:,:)  = 0.0
+   solnData(VISC_VAR,:,:)  = mph_vis2
+   solnData(THCO_VAR,:,:)  = mph_thco2
+   solnData(CPRS_VAR,:,:)  = mph_cp2
    solnData(SMHV_VAR,:,:)  = 0.0
    solnData(SMRH_VAR,:,:)  = 0.0
    solnData(SIGP_VAR,:,:)  = 0.0
@@ -34,12 +47,12 @@ subroutine Multiphase_init()
 
    facexData(RH1F_VAR,:,:) = 0.0
    faceyData(RH1F_VAR,:,:) = 0.0
-   facexData(RH2F_VAR,:,:) = 0.0
-   faceyData(RH2F_VAR,:,:) = 0.0
+   facexData(RH2F_VAR,:,:) = 1./mph_rho2
+   faceyData(RH2F_VAR,:,:) = 1./mph_rho2
    facexData(AL1F_VAR,:,:) = 0.0
    faceyData(AL1F_VAR,:,:) = 0.0
-   facexData(AL2F_VAR,:,:) = 0.0
-   faceyData(AL2F_VAR,:,:) = 0.0
+   facexData(AL2F_VAR,:,:) = mph_thco2/mph_cp2
+   faceyData(AL2F_VAR,:,:) = mph_thco2/mph_cp2
    facexData(SIGM_VAR,:,:) = 0.0
    faceyData(SIGM_VAR,:,:) = 0.0
    facexData(VELI_VAR,:,:) = 0.0
@@ -54,7 +67,7 @@ subroutine Multiphase_init()
    !___Multiphase Test__!
    mph_x0 = 0.0
    mph_y0 = 0.0
-   mph_r0 = 0.005
+   mph_r0 = 0.125
 
    !___Conjugate Heat Test_!
    !mph_x0 = -5.0
@@ -93,19 +106,6 @@ subroutine Multiphase_init()
       end do
 
     end do
-
-   mph_thco2 = 1.0
-   mph_rho2 = 20.0
-   mph_cp2 = 1.0*mph_rho2
-   mph_vis2 = 1.0
-
-   mph_thco1 = 1.0
-   mph_rho1 = 1.0
-   mph_cp1 = 1.0*mph_rho1
-   mph_vis1 = 1.0
-   mph_beta = 0.0002
-
-   mph_sten = 1.0
 
    nullify(solnData)
    nullify(facexData)

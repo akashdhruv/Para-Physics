@@ -4,8 +4,8 @@ import numpy as np
 k=2
 d=2
 
-M=50+1
-N=40+1
+M=20+1
+N=20+1
 
 #r=0.05
 r=0.125
@@ -80,12 +80,12 @@ plt.figure()
 plt.title('Resultant Velocity')
 plt.contourf(X,Y,np.sqrt(U**2+V**2),density=20)
 #plt.contourf(X,Y,U,density=20)
-#plt.quiver(X,Y,U,V)
+plt.quiver(X,Y,U,V)
 plt.plot(X[:,0],Y[:,0],'k')
 plt.plot(X[:,-1],Y[:,-1],'k')
 plt.plot(X[0,:],Y[0,:],'k')
 plt.plot(X[-1,:],Y[-1,:],'k')
-#plt.fill(x_circle,y_circle,'w')
+plt.fill(x_circle,y_circle,'w')
 #plt.fill(x_circle2,y_circle2,'w')
 #plt.plot(X,Y,'g')
 #plt.plot(X.T,Y.T,'g')
@@ -101,7 +101,7 @@ plt.plot(X[:,0],Y[:,0],'k')
 plt.plot(X[:,-1],Y[:,-1],'k')
 plt.plot(X[0,:],Y[0,:],'k')
 plt.plot(X[-1,:],Y[-1,:],'k')
-#plt.fill(x_circle,y_circle,'w')
+plt.fill(x_circle,y_circle,'w')
 #plt.fill(x_circle2,y_circle2,'w')
 plt.xlabel('X')
 plt.ylabel('Y')
@@ -116,7 +116,8 @@ plt.plot(X[:,0],Y[:,0],'k')
 plt.plot(X[:,-1],Y[:,-1],'k')
 plt.plot(X[0,:],Y[0,:],'k')
 plt.plot(X[-1,:],Y[-1,:],'k')
-#plt.plot(x_circle,y_circle,'k')
+plt.plot(x_circle,y_circle,'k')
+plt.colorbar()
 #plt.plot(x_circle2,y_circle2,'k')
 #plt.plot(X,Y,'g')
 #plt.plot(X.T,Y.T,'g')

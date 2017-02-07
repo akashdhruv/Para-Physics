@@ -23,4 +23,20 @@ module HeatAD_interface
          end subroutine heat_tempSolver
      end interface
 
+     interface
+         subroutine heat_tempSolver_ibm(tstep,T,T_old,mdot,smrh,u,v,a1x,a1y,a2x,a2y,s,pf,thco,cp)
+         implicit none
+         integer, intent(in) :: tstep
+         real, intent(inout), dimension(:,:) :: T,u,v,a1x,a1y,s,pf,thco,cp,a2x,a2y,T_old,mdot,smrh
+         end subroutine heat_tempSolver_ibm
+     end interface
+
+     interface
+         subroutine heat_tempSolver_mph(tstep,T,T_old,mdot,smrh,u,v,a1x,a1y,a2x,a2y,s,pf,thco,cp)
+         implicit none
+         integer, intent(in) :: tstep
+         real, intent(inout), dimension(:,:) :: T,u,v,a1x,a1y,s,pf,thco,cp,a2x,a2y,T_old,mdot,smrh
+         end subroutine heat_tempSolver_mph
+     end interface
+
 end module HeatAD_interface
