@@ -21,7 +21,7 @@ subroutine Driver_init()
       facexData => ph_facex
       faceyData => ph_facey
 
-      dr_t  = TIME_END
+      dr_t   = TIME_END
 
       dx_min = gr_dx
       dy_min = gr_dy
@@ -38,11 +38,23 @@ subroutine Driver_init()
 
       dt_cfl = ins_cfl*min(gr_dx,gr_dy)
 
-      dt_sig  = (1./max(1.0,(mph_vis1/mph_vis2)/(mph_rho1/mph_rho2)))*ins_sigma*(min(dx_min,dy_min)**2)/ins_inRe
+      dt_g = ins_sigma*sqrt((abs(ins_gravX)/dx_min)+(abs(ins_gravY)/dy_min))
 
+#ifdef SINGLEPHASE
+
+      dt_sig  = ins_sigma*(min(dx_min,dy_min)**2)/ins_inRe
+   
 #ifdef ENERGY
-      dt_temp = ht_Pr*(1./max(1.0,(mph_thco1/mph_cp1)/(mph_thco2/mph_cp2)))*ins_sigma*(min(dx_min,dy_min)**2)/ins_inRe
+      dt_temp = ht_Pr*ins_sigma*(min(dx_min,dy_min)**2)/ins_inRe
 #endif
+
+      dr_dt = min(dt_cfl,dt_sig)
+
+      !dr_dt = 1./(1./dt_cfl + 1./dt_sig + &
+      !        sqrt((1./(dt_sig+dt_cfl))**2)+4*(dt_g**2))
+
+#endif
+
 
 #ifdef MULTIPHASE
      
@@ -55,17 +67,17 @@ subroutine Driver_init()
 
       !____________________End_______________________!
 
-      dt_s = ins_sigma*sqrt((1+(mph_rho1/mph_rho2))/(pi*mph_sten))*0.5*min(dx_min**(3./2.),dy_min**(3./2.))
+      dt_s    = ins_sigma*sqrt((1+(mph_rho1/mph_rho2))/(pi*mph_sten))*0.5*min(dx_min**(3./2.),dy_min**(3./2.))
+      dt_sig  = (1./max(1.0,(mph_vis1/mph_vis2)/(mph_rho1/mph_rho2)))*ins_sigma*(min(dx_min,dy_min)**2)/ins_inRe
 
+#ifdef ENERGY
+      dt_temp = ht_Pr*(1./max(1.0,(mph_thco1/mph_cp1)/(mph_thco2/mph_cp2)))*ins_sigma*(min(dx_min,dy_min)**2)/ins_inRe
 #endif
 
-      dt_g = ins_sigma*sqrt((abs(ins_gravX)/dx_min)+(abs(ins_gravY)/dy_min))
-   
       dr_dt =  1./(1./dt_cfl + 1./min(dt_sig,dt_temp) + &
        sqrt((1./(min(dt_sig,dt_temp)+dt_cfl))**2 + &
            4*(dt_g**2)+4*((1./dt_s)**2)))
-
-      !dr_dt = min(dt_cfl,dt_sig,dt_temp)
+#endif
 
       dr_nt = dr_t/dr_dt
 

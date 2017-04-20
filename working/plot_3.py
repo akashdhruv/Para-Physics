@@ -8,8 +8,8 @@ M=50+1
 N=50+1
 
 #r=0.05
-r=1.0
-#r=0.5
+#r=1.0
+r=0.5
 
 X=np.zeros((N*d,M*k),dtype=float)
 Y=np.zeros((N*d,M*k),dtype=float)
@@ -96,7 +96,7 @@ plt.axis('equal')
 plt.figure()
 plt.title('Pressure')
 #plt.title('Vorticity')
-plt.contourf(X,Y,P,density=5)
+plt.contourf(X,Y,V,density=5)
 plt.plot(X[:,0],Y[:,0],'k')
 plt.plot(X[:,-1],Y[:,-1],'k')
 plt.plot(X[0,:],Y[0,:],'k')

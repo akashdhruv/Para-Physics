@@ -43,12 +43,12 @@ _______________________Grid Parameters___________________________
 #define Nyb 50
 
 
-#define D_xmin -5.0
-#define D_ymin -5.0
+#define D_xmin -2.5
+#define D_ymin -2.5
 
 
-#define D_xmax  10.0
-#define D_ymax  5.0
+#define D_xmax  5.0
+#define D_ymax  2.5
 
 #define TIME_END 60.00
 
@@ -110,7 +110,7 @@ _______________________Defining Flow Type_____________________
 _______________________Multiphase On/Off_____________________
 #endif
 
-#define MPH 1
+#define MPH 0
 
 #if MPH == 1
 #define MULTIPHASE
@@ -134,7 +134,7 @@ ______________________Navier Stokes On/Off___________________
 _________________________Energy On/Off______________________
 #endif
 
-#define HEAT 1
+#define HEAT 0
 
 #if HEAT == 1
 #define ENERGY

@@ -67,7 +67,7 @@ subroutine Multiphase_init()
    !___Multiphase Test__!
    mph_x0 = 0.0
    mph_y0 = 0.0
-   mph_r0 = 1.0
+   mph_r0 = 0.5
 
    !___Conjugate Heat Test_!
    !mph_x0 = -5.0

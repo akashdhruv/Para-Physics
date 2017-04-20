@@ -6,5 +6,6 @@ module Driver_data
     real, save :: dr_dt
     integer, save :: dr_nt
     integer, save :: dr_tile
+    real, save :: dr_dt_old
  
 end module Driver_data

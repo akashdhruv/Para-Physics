@@ -24,7 +24,7 @@ subroutine ins_momentum(tstep,p_counter,p,u,v,s,s2)
 
        real, dimension(Nxb+2,Nyb+2) :: ut,vt,u_old,v_old
        real, dimension(Nxb,Nyb) :: C1,G1,D1,C2,G2,D2,p_RHS
-       real :: u_res1, v_res1, maxdiv, mindiv
+       real :: u_res1, v_res1, maxdiv, mindiv,umax,umin,vmax,vmin
        integer :: i,j
        real, intent(inout), dimension(:,:) :: u, v, p, s, s2
 
@@ -131,8 +131,20 @@ subroutine ins_momentum(tstep,p_counter,p,u,v,s,s2)
                                   +((1/(gr_dx))*(u(2:Nxb+1,2:Nyb+1)-u(1:Nxb,2:Nyb+1)))))
 
 
+       umax = maxval(u)
+       umin = minval(u)
+
+       vmax = maxval(v)
+       vmin = minval(v)
+
        call MPI_CollectResiduals(maxdiv,ins_maxdiv,MAX_DATA)
        call MPI_CollectResiduals(mindiv,ins_mindiv,MIN_DATA)
+
+       call MPI_CollectResiduals(umax,ins_umaxmin(1),MAX_DATA)
+       call MPI_CollectResiduals(umin,ins_umaxmin(2),MIN_DATA)
+
+       call MPI_CollectResiduals(vmax,ins_vmaxmin(1),MAX_DATA)
+       call MPI_CollectResiduals(vmin,ins_vmaxmin(2),MIN_DATA)
 
        ! Residuals
 

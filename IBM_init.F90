@@ -35,7 +35,7 @@ subroutine IBM_init()
 
    ibm_x0 = 0.0
    ibm_y0 = 0.0
-   ibm_r0 = 1.0
+   ibm_r0 = 0.5
 
    do j=1,Nyb+2
 

@@ -15,6 +15,7 @@ subroutine Solver_evolve
     use IO_interface, only: IO_display, IO_write, IO_display_v2
     use Multiphase_interface, only:Multiphase_solver
     use IBM_interface, only: IBM_solver
+    use Driver_interface, only:Driver_init
 
     implicit none
 
@@ -38,10 +39,12 @@ subroutine Solver_evolve
     !allocate(cp(Nxb+1,Nyb+1))
     !allocate(ww(Nxb+1,Nyb+1))
   
-    tstep = 0
+    tstep     = 0
+    dr_dt_old = gr_dx
 
     do while(tstep<=dr_nt) 
 
+       !call Driver_init()
 
 #ifdef MULTIPHASE
        call Multiphase_solver(tstep,solnX,.FALSE.)
@@ -68,7 +71,8 @@ subroutine Solver_evolve
 #endif
 
        if (mod(tstep,20) == 0 .and. myid == 0) then
-          call IO_display(ins_u_res,ins_v_res,ins_w_res,ins_p_res,ht_T_res,p_counter,tstep*dr_dt,ins_maxdiv,ins_mindiv)
+          call IO_display(ins_u_res,ins_v_res,ins_w_res,ins_p_res,ht_T_res,p_counter,tstep*dr_dt,ins_maxdiv,ins_mindiv,&
+                          ins_umaxmin,ins_vmaxmin)
        endif
 
        if((ins_u_res .lt. 0.0000001) .and. (ins_u_res .ne. 0).and. (ins_v_res .lt. 0.0000001) .and. (ins_v_res .ne. 0) ) exit
@@ -88,8 +92,8 @@ subroutine Solver_evolve
           pp = ((solnData(PRES_VAR,1:Nxb+1,1:Nyb+1)+solnData(PRES_VAR,2:Nxb+2,1:Nyb+1))/2 &
                +(solnData(PRES_VAR,1:Nxb+1,2:Nyb+2)+solnData(PRES_VAR,2:Nxb+2,2:Nyb+2))/2)/2
 
-          tt = ((solnData(TEMP_VAR,1:Nxb+1,1:Nyb+1)+solnData(TEMP_VAR,2:Nxb+2,1:Nyb+1))/2 &
-               +(solnData(TEMP_VAR,1:Nxb+1,2:Nyb+2)+solnData(TEMP_VAR,2:Nxb+2,2:Nyb+2))/2)/2
+          !tt = ((solnData(TEMP_VAR,1:Nxb+1,1:Nyb+1)+solnData(TEMP_VAR,2:Nxb+2,1:Nyb+1))/2 &
+          !     +(solnData(TEMP_VAR,1:Nxb+1,2:Nyb+2)+solnData(TEMP_VAR,2:Nxb+2,2:Nyb+2))/2)/2
 
           !ww = (facexData(SIGM_VAR,1:Nxb+1,1:Nyb+1)+facexData(SIGM_VAR,1:Nxb+1,2:Nyb+2))/2
 
@@ -107,8 +111,8 @@ subroutine Solver_evolve
           !pp = ((solnData(PFUN_VAR,1:Nxb+1,1:Nyb+1)+solnData(PFUN_VAR,2:Nxb+2,1:Nyb+1))/2 &
           !     +(solnData(PFUN_VAR,1:Nxb+1,2:Nyb+2)+solnData(PFUN_VAR,2:Nxb+2,2:Nyb+2))/2)/2
 
-          !tt = ((solnData(VISC_VAR,1:Nxb+1,1:Nyb+1)+solnData(VISC_VAR,2:Nxb+2,1:Nyb+1))/2 &
-          !     +(solnData(VISC_VAR,1:Nxb+1,2:Nyb+2)+solnData(VISC_VAR,2:Nxb+2,2:Nyb+2))/2)/2
+          tt = ((solnData(VISC_VAR,1:Nxb+1,1:Nyb+1)+solnData(VISC_VAR,2:Nxb+2,1:Nyb+1))/2 &
+               +(solnData(VISC_VAR,1:Nxb+1,2:Nyb+2)+solnData(VISC_VAR,2:Nxb+2,2:Nyb+2))/2)/2
 
           nullify(solnData)
           nullify(facexData)
@@ -120,7 +124,8 @@ subroutine Solver_evolve
         end if
 #endif
         
-        tstep = tstep +1
+        tstep     = tstep +1
+        dr_dt_old = dr_dt
 
     end do
 
