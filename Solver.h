@@ -39,16 +39,16 @@ _______________________Grid Parameters___________________________
 #define MAX_BLOCKS 80
 
 
-#define Nxb 20
-#define Nyb 20
+#define Nxb 50
+#define Nyb 50
 
 
-#define D_xmin -0.5
-#define D_ymin -0.5
+#define D_xmin -5.0
+#define D_ymin -5.0
 
 
-#define D_xmax  0.5
-#define D_ymax  0.5
+#define D_xmax  10.0
+#define D_ymax  5.0
 
 #define TIME_END 60.00
 
@@ -56,7 +56,6 @@ _______________________Grid Parameters___________________________
 #define nblocky 2
 
 #define MaxIt 1500
-
 
 #define PRES_VAR 1
 #define TEMP_VAR 2
@@ -93,7 +92,7 @@ _______________________Grid Parameters___________________________
 _______________________Defining Flow Type_____________________
 #endif
 
-#define FLOW 1
+#define FLOW 2
 
 #if FLOW == 1
 #define LID_DRIVEN_FLOW

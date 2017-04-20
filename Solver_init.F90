@@ -18,9 +18,9 @@ subroutine Solver_init
 
     call IncompNS_init()
 
-    call HeatAD_init()
-
     call Multiphase_init()
+
+    call HeatAD_init()
 
     call IBM_init()
 

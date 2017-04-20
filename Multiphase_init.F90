@@ -16,17 +16,17 @@ subroutine Multiphase_init()
    integer :: i,j
 
    mph_thco2 = 1.0
-   mph_rho2 = 1.0
-   mph_cp2 = 1.0*mph_rho2
-   mph_vis2 = 1.0
+   mph_rho2  = 1.0
+   mph_cp2   = 1.0*mph_rho2
+   mph_vis2  = 1.0
 
    mph_thco1 = 1.0
-   mph_rho1 = 1.0
-   mph_cp1 = 1.0*mph_rho1
-   mph_vis1 = 1.0
+   mph_rho1  = 1.0
+   mph_cp1   = 1.0*mph_rho1
+   mph_vis1  = 1.0
 
-   mph_beta = 1.0
-   mph_sten = 1.0
+   mph_beta  = 1.0
+   mph_sten  = 1.0
 
    solnData => ph_center
    facexData => ph_facex
@@ -36,9 +36,9 @@ subroutine Multiphase_init()
    solnData(PFUN_VAR,:,:)  = 0.0
    solnData(NRMX_VAR,:,:)  = 0.0
    solnData(NRMY_VAR,:,:)  = 0.0
-   solnData(VISC_VAR,:,:)  = mph_vis2
-   solnData(THCO_VAR,:,:)  = mph_thco2
-   solnData(CPRS_VAR,:,:)  = mph_cp2
+   solnData(VISC_VAR,:,:)  = 1.0
+   solnData(THCO_VAR,:,:)  = 1.0
+   solnData(CPRS_VAR,:,:)  = 1.0
    solnData(SMHV_VAR,:,:)  = 0.0
    solnData(SMRH_VAR,:,:)  = 0.0
    solnData(SIGP_VAR,:,:)  = 0.0
@@ -47,12 +47,12 @@ subroutine Multiphase_init()
 
    facexData(RH1F_VAR,:,:) = 0.0
    faceyData(RH1F_VAR,:,:) = 0.0
-   facexData(RH2F_VAR,:,:) = 1./mph_rho2
-   faceyData(RH2F_VAR,:,:) = 1./mph_rho2
+   facexData(RH2F_VAR,:,:) = 1.0
+   faceyData(RH2F_VAR,:,:) = 1.0
    facexData(AL1F_VAR,:,:) = 0.0
    faceyData(AL1F_VAR,:,:) = 0.0
-   facexData(AL2F_VAR,:,:) = mph_thco2/mph_cp2
-   faceyData(AL2F_VAR,:,:) = mph_thco2/mph_cp2
+   facexData(AL2F_VAR,:,:) = 1.0
+   faceyData(AL2F_VAR,:,:) = 1.0
    facexData(SIGM_VAR,:,:) = 0.0
    faceyData(SIGM_VAR,:,:) = 0.0
    facexData(VELI_VAR,:,:) = 0.0
@@ -67,7 +67,7 @@ subroutine Multiphase_init()
    !___Multiphase Test__!
    mph_x0 = 0.0
    mph_y0 = 0.0
-   mph_r0 = 0.125
+   mph_r0 = 1.0
 
    !___Conjugate Heat Test_!
    !mph_x0 = -5.0
@@ -100,12 +100,14 @@ subroutine Multiphase_init()
 
          end if
 
-              !solnData(DFUN_VAR,i,j) = mph_r0 - sqrt((xcell-mph_x0)**2+(ycell-mph_y0)**2)
-              solnData(DFUN_VAR,i,j) = 1.0 - (sqrt((xcell-mph_x0)**2+(ycell-mph_y0)**2)/mph_r0)
+              solnData(DFUN_VAR,i,j) = mph_r0 - sqrt((xcell-mph_x0)**2+(ycell-mph_y0)**2)
+              !solnData(DFUN_VAR,i,j) = 1.0 - (sqrt((xcell-mph_x0)**2+(ycell-mph_y0)**2)/mph_r0)
 
       end do
 
     end do
+
+    !mph_redistance
 
    nullify(solnData)
    nullify(facexData)

@@ -19,7 +19,7 @@ subroutine mph_getInterfaceVelocity(u,v,u_int,v_int,smrh,mdot,nrmx,nrmy)
         do j = 2,Nyb+1
         do i = 2,Nxb+1
 
-             rhox  = 2.0d0/(smrh(i-1,j)+smrh(i,j))
+             rhox  = (smrh(i-1,j)+smrh(i,j))/2.d0
              mdotx = (mdot(i-1,j)+mdot(i,j))/2.d0
              normx = (nrmy(i-1,j)+nrmx(i,j))/2.d0
 
@@ -33,7 +33,7 @@ subroutine mph_getInterfaceVelocity(u,v,u_int,v_int,smrh,mdot,nrmx,nrmy)
         do j = 2,Nyb+1
         do i = 2,Nxb+1
 
-             rhoy  = 2.0d0/(smrh(i,j-1)+smrh(i,j))
+             rhoy  = (smrh(i,j-1)+smrh(i,j))/2.d0
              mdoty = (mdot(i,j-1)+mdot(i,j))/2.d0
              normy = (nrmx(i,j-1)+nrmy(i,j))/2.d0
 

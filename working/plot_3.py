@@ -4,11 +4,11 @@ import numpy as np
 k=2
 d=2
 
-M=20+1
-N=20+1
+M=50+1
+N=50+1
 
 #r=0.05
-r=0.125
+r=1.0
 #r=0.5
 
 X=np.zeros((N*d,M*k),dtype=float)

@@ -1,5 +1,6 @@
 subroutine heat_tempSolver_mph(tstep,T,T_old,mdot,smrh,u,v,a1x,a1y,a2x,a2y,s,pf,thco,cp)
 
+#define MPH_DEBUG
 #include "Solver.h"
 
   !$ use omp_lib
@@ -67,6 +68,9 @@ subroutine heat_tempSolver_mph(tstep,T,T_old,mdot,smrh,u,v,a1x,a1y,a2x,a2y,s,pf,
 
      Tij = T_old(i,j)
 
+#ifdef MPH_DEBUG
+
+#else
      ! Case 1 !
      if(s(i,j)*s(i+1,j).le.0.d0) then
 
@@ -116,6 +120,7 @@ subroutine heat_tempSolver_mph(tstep,T,T_old,mdot,smrh,u,v,a1x,a1y,a2x,a2y,s,pf,
 
     end if
     ! End of Case 4 !
+#endif
 
     alphax_plus = (thco(i,j)/cp(i,j))*(ins_inRe/ht_Pr)
     alphax_mins = (thco(i,j)/cp(i,j))*(ins_inRe/ht_Pr)

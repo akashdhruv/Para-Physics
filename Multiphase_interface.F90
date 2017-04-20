@@ -11,10 +11,11 @@ implicit none
   end interface
 
   interface 
-    subroutine Multiphase_solver(tstep,solnX)
+    subroutine Multiphase_solver(tstep,solnX,jump_flag)
      implicit none
      integer, intent(in) :: tstep
      real, intent(out) :: solnX
+     logical, intent(in) :: jump_flag
     end subroutine Multiphase_solver
   end interface
 

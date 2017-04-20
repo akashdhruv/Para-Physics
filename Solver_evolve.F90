@@ -44,15 +44,19 @@ subroutine Solver_evolve
 
 
 #ifdef MULTIPHASE
-       call Multiphase_solver(tstep,solnX)
-#endif
-
-#ifdef INS
-       call IncompNS_solver(tstep,p_counter)
+       call Multiphase_solver(tstep,solnX,.FALSE.)
 #endif
 
 #ifdef ENERGY
        call HeatAD_solver(tstep)
+#endif
+
+#ifdef MULTIPHASE
+       call Multiphase_solver(tstep,solnX,.TRUE.)
+#endif
+
+#ifdef INS
+       call IncompNS_solver(tstep,p_counter)
 #endif
 
 #ifdef IBM
@@ -91,16 +95,19 @@ subroutine Solver_evolve
 
           !vs = (faceyData(SIGM_VAR,1:Nxb+1,1:Nyb+1)+faceyData(SIGM_VAR,2:Nxb+2,1:Nyb+1))/2
 
-          ww = (facexData(RH1F_VAR,1:Nxb+1,1:Nyb+1)+facexData(RH1F_VAR,1:Nxb+1,2:Nyb+2)+&
-                facexData(RH2F_VAR,1:Nxb+1,1:Nyb+1)+facexData(RH2F_VAR,1:Nxb+1,2:Nyb+2))/2
+          !ww = (facexData(RH1F_VAR,1:Nxb+1,1:Nyb+1)+facexData(RH1F_VAR,1:Nxb+1,2:Nyb+2)+&
+          !      facexData(RH2F_VAR,1:Nxb+1,1:Nyb+1)+facexData(RH2F_VAR,1:Nxb+1,2:Nyb+2))/2
 
-          vs = (faceyData(RH1F_VAR,1:Nxb+1,1:Nyb+1)+faceyData(RH1F_VAR,2:Nxb+2,1:Nyb+1)+&
-                faceyData(RH2F_VAR,1:Nxb+1,1:Nyb+1)+faceyData(RH2F_VAR,2:Nxb+2,1:Nyb+1))/2
+          !vs = (faceyData(RH1F_VAR,1:Nxb+1,1:Nyb+1)+faceyData(RH1F_VAR,2:Nxb+2,1:Nyb+1)+&
+          !      faceyData(RH2F_VAR,1:Nxb+1,1:Nyb+1)+faceyData(RH2F_VAR,2:Nxb+2,1:Nyb+1))/2
 
           !ww = ((solnData(SMRH_VAR,1:Nxb+1,1:Nyb+1)+solnData(SMRH_VAR,2:Nxb+2,1:Nyb+1))/2 &
           !     +(solnData(SMRH_VAR,1:Nxb+1,2:Nyb+2)+solnData(SMRH_VAR,2:Nxb+2,2:Nyb+2))/2)/2
 
-          !pp = ((solnData(VISC_VAR,1:Nxb+1,1:Nyb+1)+solnData(VISC_VAR,2:Nxb+2,1:Nyb+1))/2 &
+          !pp = ((solnData(PFUN_VAR,1:Nxb+1,1:Nyb+1)+solnData(PFUN_VAR,2:Nxb+2,1:Nyb+1))/2 &
+          !     +(solnData(PFUN_VAR,1:Nxb+1,2:Nyb+2)+solnData(PFUN_VAR,2:Nxb+2,2:Nyb+2))/2)/2
+
+          !tt = ((solnData(VISC_VAR,1:Nxb+1,1:Nyb+1)+solnData(VISC_VAR,2:Nxb+2,1:Nyb+1))/2 &
           !     +(solnData(VISC_VAR,1:Nxb+1,2:Nyb+2)+solnData(VISC_VAR,2:Nxb+2,2:Nyb+2))/2)/2
 
           nullify(solnData)
