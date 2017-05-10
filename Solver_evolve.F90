@@ -75,7 +75,7 @@ subroutine Solver_evolve
                           ins_umaxmin,ins_vmaxmin)
        endif
 
-       if((ins_u_res .lt. 0.0000001) .and. (ins_u_res .ne. 0).and. (ins_v_res .lt. 0.0000001) .and. (ins_v_res .ne. 0) ) exit
+       !if((ins_u_res .lt. 0.0000001) .and. (ins_u_res .ne. 0).and. (ins_v_res .lt. 0.0000001) .and. (ins_v_res .ne. 0) ) exit
 
 #ifdef SOLVER_DEBUG
 
@@ -92,8 +92,8 @@ subroutine Solver_evolve
           pp = ((solnData(PRES_VAR,1:Nxb+1,1:Nyb+1)+solnData(PRES_VAR,2:Nxb+2,1:Nyb+1))/2 &
                +(solnData(PRES_VAR,1:Nxb+1,2:Nyb+2)+solnData(PRES_VAR,2:Nxb+2,2:Nyb+2))/2)/2
 
-          !tt = ((solnData(TEMP_VAR,1:Nxb+1,1:Nyb+1)+solnData(TEMP_VAR,2:Nxb+2,1:Nyb+1))/2 &
-          !     +(solnData(TEMP_VAR,1:Nxb+1,2:Nyb+2)+solnData(TEMP_VAR,2:Nxb+2,2:Nyb+2))/2)/2
+          tt = ((solnData(TEMP_VAR,1:Nxb+1,1:Nyb+1)+solnData(TEMP_VAR,2:Nxb+2,1:Nyb+1))/2 &
+               +(solnData(TEMP_VAR,1:Nxb+1,2:Nyb+2)+solnData(TEMP_VAR,2:Nxb+2,2:Nyb+2))/2)/2
 
           !ww = (facexData(SIGM_VAR,1:Nxb+1,1:Nyb+1)+facexData(SIGM_VAR,1:Nxb+1,2:Nyb+2))/2
 
@@ -111,8 +111,8 @@ subroutine Solver_evolve
           !pp = ((solnData(PFUN_VAR,1:Nxb+1,1:Nyb+1)+solnData(PFUN_VAR,2:Nxb+2,1:Nyb+1))/2 &
           !     +(solnData(PFUN_VAR,1:Nxb+1,2:Nyb+2)+solnData(PFUN_VAR,2:Nxb+2,2:Nyb+2))/2)/2
 
-          tt = ((solnData(VISC_VAR,1:Nxb+1,1:Nyb+1)+solnData(VISC_VAR,2:Nxb+2,1:Nyb+1))/2 &
-               +(solnData(VISC_VAR,1:Nxb+1,2:Nyb+2)+solnData(VISC_VAR,2:Nxb+2,2:Nyb+2))/2)/2
+          !tt = ((solnData(VISC_VAR,1:Nxb+1,1:Nyb+1)+solnData(VISC_VAR,2:Nxb+2,1:Nyb+1))/2 &
+          !     +(solnData(VISC_VAR,1:Nxb+1,2:Nyb+2)+solnData(VISC_VAR,2:Nxb+2,2:Nyb+2))/2)/2
 
           nullify(solnData)
           nullify(facexData)

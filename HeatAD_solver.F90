@@ -1,5 +1,6 @@
 subroutine HeatAD_solver(tstep)
 
+#define MPH_DEBUG
 #include "Solver.h"
 
    use HeatAD_interface, only: heat_tempSolver,heat_tempSolver_ibm,heat_tempSolver_mph
@@ -43,6 +44,19 @@ subroutine HeatAD_solver(tstep)
 
 #else
 
+#ifdef MPH_DEBUG
+
+   call heat_tempSolver(tstep,solnData(TEMP_VAR,:,:),solnData(TOLD_VAR,:,:),&
+                         solnData(MDOT_VAR,:,:),solnData(SMRH_VAR,:,:),&
+                         facexData(VELC_VAR,:,:),faceyData(VELC_VAR,:,:),&
+                         facexData(AL1F_VAR,:,:),faceyData(AL1F_VAR,:,:),&
+                         facexData(AL2F_VAR,:,:),faceyData(AL2F_VAR,:,:),&
+                         solnData(DFUN_VAR,:,:),solnData(PFUN_VAR,:,:),&
+                         solnData(THCO_VAR,:,:),solnData(CPRS_VAR,:,:))
+
+
+#else
+
    call heat_tempSolver_mph(tstep,solnData(TEMP_VAR,:,:),solnData(TOLD_VAR,:,:),&
                          solnData(MDOT_VAR,:,:),solnData(SMRH_VAR,:,:),&
                          facexData(VELC_VAR,:,:),faceyData(VELC_VAR,:,:),&
@@ -52,6 +66,9 @@ subroutine HeatAD_solver(tstep)
                          solnData(THCO_VAR,:,:),solnData(CPRS_VAR,:,:))
 
 #endif
+
+#endif
+
 #endif
 
    nullify(solnData)

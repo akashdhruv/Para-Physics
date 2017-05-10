@@ -86,26 +86,26 @@ subroutine MPI_physicalBC_pres(p_ex)
 
        if ( x_id == 0) then
 
-           p_ex(1,:)=-p_ex(2,:)
+           p_ex(1,:) = p_ex(2,:)
 
        end if
 
        if ( x_id == nblockx-1) then
 
-           p_ex(Nxb+2,:)=-p_ex(Nxb+1,:)
+           p_ex(Nxb+2,:) = p_ex(Nxb+1,:)
 
        end if
 
 
        if ( y_id == 0) then
 
-           p_ex(:,1)=-p_ex(:,2)
+           p_ex(:,1) = p_ex(:,2)
 
        end if
 
        if ( y_id == nblocky-1) then
 
-           p_ex(:,Nyb+2)=-p_ex(:,Nyb+1)
+           p_ex(:,Nyb+2) = -p_ex(:,Nyb+1)
 
        end if
 

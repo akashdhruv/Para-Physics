@@ -39,16 +39,16 @@ _______________________Grid Parameters___________________________
 #define MAX_BLOCKS 80
 
 
-#define Nxb 50
-#define Nyb 50
+#define Nxb 20
+#define Nyb 20
 
 
-#define D_xmin -2.5
-#define D_ymin -2.5
+#define D_xmin -1.5
+#define D_ymin  0.0
 
 
-#define D_xmax  5.0
-#define D_ymax  2.5
+#define D_xmax  1.5
+#define D_ymax  3.0
 
 #define TIME_END 60.00
 
@@ -92,7 +92,7 @@ _______________________Grid Parameters___________________________
 _______________________Defining Flow Type_____________________
 #endif
 
-#define FLOW 2
+#define FLOW 1
 
 #if FLOW == 1
 #define LID_DRIVEN_FLOW
@@ -110,7 +110,7 @@ _______________________Defining Flow Type_____________________
 _______________________Multiphase On/Off_____________________
 #endif
 
-#define MPH 0
+#define MPH 1
 
 #if MPH == 1
 #define MULTIPHASE
@@ -134,7 +134,7 @@ ______________________Navier Stokes On/Off___________________
 _________________________Energy On/Off______________________
 #endif
 
-#define HEAT 0
+#define HEAT 1
 
 #if HEAT == 1
 #define ENERGY
@@ -154,7 +154,7 @@ _____________________Only Poisson On/Off_____________________
 ___________________Immersed Boundary On/Off________________
 #endif
 
-#define IB 1
+#define IB 0
 
 #if IB == 1
 #define IBM

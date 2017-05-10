@@ -59,7 +59,7 @@ subroutine heat_tempSolver(tstep,T,T_old,mdot,smrh,u,v,a1x,a1y,a2x,a2y,s,pf,thco
 
   !$OMP PARALLEL DEFAULT(NONE) PRIVATE(i,j,u_conv,v_conv,u_plus,u_mins,&
   !$OMP v_plus,v_mins,Tx_plus,Tx_mins,Ty_plus,Ty_mins,ii,jj) NUM_THREADS(NTHREADS) &
-  !$OMP SHARED(T,T_old,dr_dt,gr_dy,gr_dx,ht_Pr,ins_inRe,u,v,dr_tile)
+  !$OMP SHARED(T,T_old,dr_dt,gr_dy,gr_dx,ht_Pr,ins_inRe,u,v,dr_tile,a1x,a2x,a1y,a2y)
 
   !$OMP DO COLLAPSE(2) SCHEDULE(STATIC)
 
@@ -85,8 +85,8 @@ subroutine heat_tempSolver(tstep,T,T_old,mdot,smrh,u,v,a1x,a1y,a2x,a2y,s,pf,thco
      Ty_plus = (T_old(i,j+1)-T_old(i,j))/gr_dy
      Ty_mins = (T_old(i,j)-T_old(i,j-1))/gr_dy
 
-     T(i,j) = T_old(i,j)+((dr_dt*ins_inRe)/(ht_Pr*gr_dx*gr_dx))*(T_old(i+1,j)+T_old(i-1,j)-2*T_old(i,j))&
-                        +((dr_dt*ins_inRe)/(ht_Pr*gr_dy*gr_dy))*(T_old(i,j+1)+T_old(i,j-1)-2*T_old(i,j))&
+     T(i,j) = T_old(i,j)+((dr_dt*ins_inRe*0.5*(a2x(i,j)+a2x(i-1,j)))/(ht_Pr*gr_dx*gr_dx))*(T_old(i+1,j)+T_old(i-1,j)-2*T_old(i,j))&
+                        +((dr_dt*ins_inRe*0.5*(a2x(i,j)+a2x(i,j-1)))/(ht_Pr*gr_dy*gr_dy))*(T_old(i,j+1)+T_old(i,j-1)-2*T_old(i,j))&
                         -((dr_dt))*(u_plus*Tx_mins + u_mins*Tx_plus)&
                         -((dr_dt))*(v_plus*Ty_mins + v_mins*Ty_plus)
 
