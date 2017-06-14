@@ -28,23 +28,11 @@ subroutine Solver_evolve
     real, pointer, dimension(:,:,:) :: solnData
 
     real :: solnX
-
-    !allocate(uu(Nxb+1,Nyb+1))
-    !allocate(vv(Nxb+1,Nyb+1))
-    !allocate(pp(Nxb+1,Nyb+1))
-    !allocate(tt(Nxb+1,Nyb+1))
-    !allocate(df(Nxb+1,Nyb+1))
-    !allocate(pf(Nxb+1,Nyb+1))
-    !allocate(th(Nxb+1,Nyb+1))
-    !allocate(cp(Nxb+1,Nyb+1))
-    !allocate(ww(Nxb+1,Nyb+1))
-  
+ 
     tstep     = 0
     dr_dt_old = gr_dx
 
     do while(tstep<=dr_nt) 
-
-       !call Driver_init()
 
 #ifdef MULTIPHASE
        call Multiphase_solver(tstep,solnX,.FALSE.)
@@ -63,7 +51,7 @@ subroutine Solver_evolve
 #endif
 
 #ifdef IBM
-       !call IBM_solver(tstep)
+       call IBM_solver(tstep)
 #endif
 
 #ifdef ONLY_POISSON
@@ -95,31 +83,11 @@ subroutine Solver_evolve
           tt = ((solnData(TEMP_VAR,1:Nxb+1,1:Nyb+1)+solnData(TEMP_VAR,2:Nxb+2,1:Nyb+1))/2 &
                +(solnData(TEMP_VAR,1:Nxb+1,2:Nyb+2)+solnData(TEMP_VAR,2:Nxb+2,2:Nyb+2))/2)/2
 
-          !ww = (facexData(SIGM_VAR,1:Nxb+1,1:Nyb+1)+facexData(SIGM_VAR,1:Nxb+1,2:Nyb+2))/2
-
-          !vs = (faceyData(SIGM_VAR,1:Nxb+1,1:Nyb+1)+faceyData(SIGM_VAR,2:Nxb+2,1:Nyb+1))/2
-
-          !ww = (facexData(RH1F_VAR,1:Nxb+1,1:Nyb+1)+facexData(RH1F_VAR,1:Nxb+1,2:Nyb+2)+&
-          !      facexData(RH2F_VAR,1:Nxb+1,1:Nyb+1)+facexData(RH2F_VAR,1:Nxb+1,2:Nyb+2))/2
-
-          !vs = (faceyData(RH1F_VAR,1:Nxb+1,1:Nyb+1)+faceyData(RH1F_VAR,2:Nxb+2,1:Nyb+1)+&
-          !      faceyData(RH2F_VAR,1:Nxb+1,1:Nyb+1)+faceyData(RH2F_VAR,2:Nxb+2,1:Nyb+1))/2
-
-          !ww = ((solnData(SMRH_VAR,1:Nxb+1,1:Nyb+1)+solnData(SMRH_VAR,2:Nxb+2,1:Nyb+1))/2 &
-          !     +(solnData(SMRH_VAR,1:Nxb+1,2:Nyb+2)+solnData(SMRH_VAR,2:Nxb+2,2:Nyb+2))/2)/2
-
-          !pp = ((solnData(PFUN_VAR,1:Nxb+1,1:Nyb+1)+solnData(PFUN_VAR,2:Nxb+2,1:Nyb+1))/2 &
-          !     +(solnData(PFUN_VAR,1:Nxb+1,2:Nyb+2)+solnData(PFUN_VAR,2:Nxb+2,2:Nyb+2))/2)/2
-
-          !tt = ((solnData(VISC_VAR,1:Nxb+1,1:Nyb+1)+solnData(VISC_VAR,2:Nxb+2,1:Nyb+1))/2 &
-          !     +(solnData(VISC_VAR,1:Nxb+1,2:Nyb+2)+solnData(VISC_VAR,2:Nxb+2,2:Nyb+2))/2)/2
-
           nullify(solnData)
           nullify(facexData)
           nullify(faceyData)
 
           call IO_write(gr_x,gr_y,uu,vv,pp,tt,myid)
-          !call IO_write(gr_x,gr_y,ww,vs,pp,tt,myid)
 
         end if
 #endif
@@ -151,7 +119,5 @@ subroutine Solver_evolve
     nullify(solnData)
 
     call IO_write(gr_x,gr_y,uu,vv,pp,tt,myid)
-
-   !deallocate(uu,vv,pp,tt,df,pf,th,cp,ww)
 
 end subroutine Solver_evolve

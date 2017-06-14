@@ -4,12 +4,12 @@ import numpy as np
 k=2
 d=2
 
-M=50+1
-N=50+1
+M=20+1
+N=20+1
 
 #r=0.05
 #r=1.0
-r=0.5
+r=0.1
 
 X=np.zeros((N*d,M*k),dtype=float)
 Y=np.zeros((N*d,M*k),dtype=float)
@@ -60,7 +60,7 @@ x_c = np.linspace(-r,r,200)
 y_c = np.sqrt(r**2-x_c**2)
 
 x_circle = np.concatenate([x_c,np.fliplr([x_c[:-1]])[0]])
-y_circle = np.concatenate([y_c,-np.fliplr([y_c[:-1]])[0]])
+y_circle = np.concatenate([y_c,-np.fliplr([y_c[:-1]])[0]]) + 0.5
 
 r = 0.10
 x_c = np.linspace(-r,r,200)

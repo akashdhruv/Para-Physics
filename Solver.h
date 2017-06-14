@@ -43,12 +43,12 @@ _______________________Grid Parameters___________________________
 #define Nyb 20
 
 
-#define D_xmin -1.5
+#define D_xmin -0.5
 #define D_ymin  0.0
 
 
-#define D_xmax  1.5
-#define D_ymax  3.0
+#define D_xmax  0.5
+#define D_ymax  1.0
 
 #define TIME_END 60.00
 
@@ -110,7 +110,7 @@ _______________________Defining Flow Type_____________________
 _______________________Multiphase On/Off_____________________
 #endif
 
-#define MPH 1
+#define MPH 0
 
 #if MPH == 1
 #define MULTIPHASE
@@ -134,7 +134,7 @@ ______________________Navier Stokes On/Off___________________
 _________________________Energy On/Off______________________
 #endif
 
-#define HEAT 1
+#define HEAT 0
 
 #if HEAT == 1
 #define ENERGY
@@ -154,7 +154,7 @@ _____________________Only Poisson On/Off_____________________
 ___________________Immersed Boundary On/Off________________
 #endif
 
-#define IB 0
+#define IB 1
 
 #if IB == 1
 #define IBM
@@ -166,7 +166,7 @@ ___________________Immersed Boundary On/Off________________
 _________________OpenMP threads per MPI rank_______________
 #endif
 
-#define NTHREADS 2
+#define NTHREADS 4
 
 #if 0
 __________________Data Operation Parameters________________
