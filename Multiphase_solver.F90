@@ -28,6 +28,7 @@ subroutine Multiphase_solver(tstep,solnX,jump_flag)
     facexData => ph_facex
     faceyData => ph_facey
 
+    solnX = 0.0
 
 if (jump_flag .eqv. .FALSE.) then
 

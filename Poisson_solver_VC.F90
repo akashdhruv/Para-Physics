@@ -35,7 +35,7 @@ subroutine Poisson_solver_VC(ps_RHS,ps,ps_rx,ps_ry,ps_res,ps_counter,ps_quant)
   !allocate(ps_old(Nxb+2,Nyb+2))
   !allocate(ps_new(Nxb+2,Nyb+2))
 
-  !DIR$ OFFLOAD BEGIN TARGET(mic) in(ps_old,gr_dy,gr_dx,ps_RHS,i,j,thread_id,ps_res1,ps_quant,dr_tile,ii,jj) inout(ps,ps_res,ps_counter)
+  !!DIR$ OFFLOAD BEGIN TARGET(mic) in(ps_old,gr_dy,gr_dx,ps_RHS,i,j,thread_id,ps_res1,ps_quant,dr_tile,ii,jj) inout(ps,ps_res,ps_counter)
 
   !$OMP PARALLEL PRIVATE(i,j,thread_id,ii,jj) DEFAULT(NONE) NUM_THREADS(NTHREADS) &
   !$OMP SHARED(ps_old,ps_rx,ps_ry,gr_dy,gr_dx,ps_RHS,ps,ps_res,ps_counter,ps_res1,ps_quant,dr_tile)
@@ -131,7 +131,7 @@ subroutine Poisson_solver_VC(ps_RHS,ps,ps_rx,ps_ry,ps_res,ps_counter,ps_quant)
 
   !$OMP END PARALLEL
 
-  !DIR$ END OFFLOAD
+  !!DIR$ END OFFLOAD
 
   !deallocate(ps_old,ps_new)
 
