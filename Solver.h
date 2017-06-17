@@ -154,7 +154,7 @@ _____________________Only Poisson On/Off_____________________
 ___________________Immersed Boundary On/Off________________
 #endif
 
-#define IB 1
+#define IB 0
 
 #if IB == 1
 #define IBM
@@ -166,7 +166,7 @@ ___________________Immersed Boundary On/Off________________
 _________________OpenMP threads per MPI rank_______________
 #endif
 
-#define NTHREADS 4
+#define NTHREADS 1
 
 #if 0
 __________________Data Operation Parameters________________
