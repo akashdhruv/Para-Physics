@@ -78,7 +78,7 @@ subroutine Poisson_solver(ps_RHS,ps,ps_res,ps_counter,ps_quant)
 
 #ifdef POISSON_SOLVER_GS
 
-     !$OMP DO COLLAPSE(2) SCHEDULE(STATIC)
+     !$OMP DO SCHEDULE(STATIC)
  
      !do jj=2,Nyb+1,dr_tile
      !do ii=2,Nxb+1,dr_tile

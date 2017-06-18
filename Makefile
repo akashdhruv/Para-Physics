@@ -13,13 +13,13 @@ MPIFF = $(MPI_PATH)/bin/mpif90
 
 #LIB_HYPRE = -L${HYPRE_PATH}/lib -lHYPRE
 
-FFLAGS = -c
-#FFLAGS = -fopenmp -c
+FFLAGS = -O3 -ftree-vectorize -c
+#FFLAGS = -fopenmp -O3 -ftree-vectorize -c
 #FFLAGS = -qopenmp -c 
 #FFLAGS = -Mmpi=mpich -c
 
-EXEFLAGS = -o
-#EXEFLAGS = -fopenmp -o
+EXEFLAGS = -O3 -ftree-vectorize -o
+#EXEFLAGS = -fopenmp -O3 -ftree-vectorize -o
 #EXEFLAGS = -qopenmp -o
 #EXEFLAGS = -Mmpi=mpich -o
 
