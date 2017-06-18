@@ -2,7 +2,7 @@
 
 ### Important Information
 
-  1. This is the latest version of ParaSolve, for previous versions look at other ParaSolve repositories.
+  1. This is the latest version of **Para-Physics**, for previous versions look at other **ParaSolve** repositories.
   2. Single phase Heat Equation, Navier Stokes and Poisson Solver modules are working.
   3. Immersed boundary module is working.
   4. Conjugate Heat Transfer is in beta.
