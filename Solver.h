@@ -134,7 +134,7 @@ ______________________Navier Stokes On/Off___________________
 _________________________Energy On/Off______________________
 #endif
 
-#define HEAT 0
+#define HEAT 1
 
 #if HEAT == 1
 #define ENERGY
@@ -166,7 +166,7 @@ ___________________Immersed Boundary On/Off________________
 _________________OpenMP threads per MPI rank_______________
 #endif
 
-#define NTHREADS 1
+#define NTHREADS 4
 
 #if 0
 __________________Data Operation Parameters________________

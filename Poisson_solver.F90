@@ -78,12 +78,20 @@ subroutine Poisson_solver(ps_RHS,ps,ps_res,ps_counter,ps_quant)
 
 #ifdef POISSON_SOLVER_GS
 
-     !$OMP DO SCHEDULE(STATIC)
- 
+     !$OMP DO COLLAPSE(2) SCHEDULE(STATIC) 
+
+     !___Double Tile____
      !do jj=2,Nyb+1,dr_tile
      !do ii=2,Nxb+1,dr_tile
      !do j=jj,jj+dr_tile-1
-        !do i=ii,ii+dr_tile-1
+     !   do i=ii,ii+dr_tile-1
+
+     !___Single Tile____
+     !do jj=2,Nyb+1,dr_tile
+     ! do j=jj,jj+dr_tile-1
+     !  do i=2,Nxb+1
+
+     !____No Tile______
      do j=2,Nyb+1
         do i=2,Nxb+1
 
@@ -92,11 +100,23 @@ subroutine Poisson_solver(ps_RHS,ps,ps_res,ps_counter,ps_quant)
                   +ps_RHS(i-1,j-1))&
                   *(1/((1/(gr_dx*gr_dx))+(1/(gr_dy*gr_dy))+&
                    (1/(gr_dx*gr_dx))+(1/(gr_dy*gr_dy))))
-
+     
         end do
      end do
+     !___No Tile______
+
+
+
+     !   end do
+     !  end do
+     !end do
+     !___Single Tile___
+
+     !   end do
+     !  end do
      !end do
      !end do
+     !__Double Tile___
 
      !$OMP END DO
 
