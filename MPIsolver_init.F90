@@ -68,6 +68,8 @@ subroutine MPIsolver_init()
     call MPI_COMM_RANK(y_comm,y_id,ierr)
     call MPI_COMM_size(y_comm,y_procs,ierr)
 
+    !call MPI_COMM_SPLIT_TYPE(solver_comm, MPI_COMM_TYPE_SHARED, 0, MPI_INFO_NULL, shared_comm, ierr)
+
     !call cpu_time(start)
     !start = omp_get_wtime()
     start = MPI_Wtime()
