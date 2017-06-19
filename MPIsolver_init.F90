@@ -20,7 +20,7 @@ subroutine MPIsolver_init()
     call MPI_INIT(ierr)
     call MPI_COMM_RANK(solver_comm, myid, ierr)
     call MPI_COMM_SIZE(solver_comm, procs, ierr)    
-
+    
     !_______________code for AMR - still in debug_________!
 
     blockCount = ((nblockx*nblocky)/procs)
@@ -59,6 +59,35 @@ subroutine MPIsolver_init()
 
     !call MPI_BARRIER(solver_comm,ierr)
 
+goto 100
+
+    world_ranks = (/(I,I=0,procs-1)/)
+
+    call MPI_COMM_SPLIT_TYPE(solver_comm, MPI_COMM_TYPE_SHARED, 0, MPI_INFO_NULL, shared_comm, ierr)
+
+    call MPI_COMM_RANK(shared_comm,shared_id,ierr)
+    call MPI_COMM_SIZE(shared_comm,shared_procs,ierr)
+
+    !call MPI_COMM_GROUP(solver_comm, world_group, ierr)
+    !call MPI_COMM_GROUP(shared_comm, shared_group, ierr)
+
+    !call MPI_GROUP_TRANSLATE_RANKS(world_group, procs, world_ranks, shared_group, shared_ranks)
+
+    call MPI_COMM_SPLIT(shared_comm,shared_id/nblockx,shared_id,x_comm,ierr)
+    call MPI_COMM_SPLIT(shared_comm,mod(shared_id,nblockx),shared_id,y_comm,ierr)
+
+    call MPI_COMM_RANK(x_comm,x_id,ierr)
+    call MPI_COMM_SIZE(x_comm,x_procs,ierr)
+
+    call MPI_COMM_RANK(y_comm,y_id,ierr)
+    call MPI_COMM_size(y_comm,y_procs,ierr)
+
+    !print *,"World: ",myid,"Shared: ",shared_id,"x_id: ",x_id,"y_id: ",y_id
+
+100 continue
+
+!goto 200
+
     call MPI_COMM_SPLIT(solver_comm,myid/nblockx,myid,x_comm,ierr)
     call MPI_COMM_SPLIT(solver_comm,mod(myid,nblockx),myid,y_comm,ierr)
 
@@ -68,7 +97,7 @@ subroutine MPIsolver_init()
     call MPI_COMM_RANK(y_comm,y_id,ierr)
     call MPI_COMM_size(y_comm,y_procs,ierr)
 
-    !call MPI_COMM_SPLIT_TYPE(solver_comm, MPI_COMM_TYPE_SHARED, 0, MPI_INFO_NULL, shared_comm, ierr)
+!200 continue
 
     !call cpu_time(start)
     !start = omp_get_wtime()

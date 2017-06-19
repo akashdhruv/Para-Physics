@@ -12,7 +12,8 @@ subroutine MPIsolver_finalize(sim_Complete)
 
       call MPI_COMM_FREE(x_comm,ierr)
       call MPI_COMM_FREE(y_comm,ierr)
-  
+      !call MPI_COMM_FREE(shared_comm,ierr)  
+
       !call cpu_time(finish)
       !finish = omp_get_wtime()
       finish = MPI_Wtime()
