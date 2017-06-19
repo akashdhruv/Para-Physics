@@ -82,8 +82,8 @@ subroutine Driver_init()
       dr_nt = dr_t/dr_dt
 
       !dr_tile = (Nyb)/(ceiling((Nyb)/40.)*NTHREADS)
-      !dr_tile = (Nyb)/NTHREADS
-      dr_tile = Nyb/8
+      dr_tile = (Nyb)/NTHREADS
+      !dr_tile = Nyb/8
      
 
       nullify(solnData)
