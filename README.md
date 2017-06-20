@@ -13,10 +13,13 @@
 
   1. Download the source code 
   2. Make sure you have make utility and the latest version of GNU and MPI installed
-  3. Edit the Makefile to include your MPI path.
+  3. Edit the Makefile in ./src to include your MPI path.
 
      ~~~terminal 
+        cd src
         make
+        cp Solver ../working/.
+        cd ../working
         mpirun -n [number_of_procs] ./Solver 
      ~~~
 
@@ -30,6 +33,8 @@
      ~~~terminal
         python plot.py
      ~~~ 
+
+  7. Use make clean in src and working folder to remove rebuildables.
 
 ### Software outline
 
