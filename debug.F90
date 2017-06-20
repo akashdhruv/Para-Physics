@@ -1,6 +1,8 @@
 program debug
 
 
+        use, intrinsic :: ISO_C_BINDING, ONLY: C_PTR, C_F_POINTER
+
         implicit none
 
         include "mpif.h"
@@ -9,12 +11,18 @@ program debug
         integer :: shared_id,shared_procs,ierr
         integer :: resultlen
         character*(MPI_MAX_PROCESSOR_NAME) :: nameproc
-        integer(kind=MPI_ADDRESS_KIND) :: sze, baseptr
-        integer :: disp_unit,info,win
+        integer(kind=MPI_ADDRESS_KIND) :: sze
+        integer :: disp_unit
 
+        type(C_PTR) :: baseptr
+        integer :: win
 
-        sze  = 9000
-        info = MPI_INFO_NULL
+        real,pointer,dimension(:,:) :: shared_data
+
+        integer :: Nx,Ny
+
+        Nx = 10
+        Ny = 1
 
         solver_comm = MPI_COMM_WORLD
 
@@ -29,17 +37,45 @@ program debug
         call MPI_COMM_RANK(shared_comm,shared_id,ierr)
         call MPI_COMM_SIZE(shared_comm,shared_procs,ierr)
 
-        print *,"Global rank: ",myid,"Shared rank: ",shared_id,"Proc: ",nameproc(1:resultlen)
+        !print *,"Global rank: ",myid,"Shared rank: ",shared_id,"Proc: ",nameproc(1:resultlen)
 
-        !disp_unit = sze/shared_procs
+        if(shared_id == 0) then
+           
+           sze = Nx*Ny
 
-        !call MPI_WIN_ALLOCATE_SHARED(sze,disp_unit,info,shared_comm,baseptr,win,ierr)
+        else
 
-        !print *,"Global rank: ",myid,"Shared rank: ",shared_id,"Proc: ",nameproc(1:resultlen),disp_unit
+           sze = 0
 
-        !call MPI_WIN_SHARED_QUERY(win,shared_id,sze,disp_unit,baseptr,ierr)
+        end if
 
-        !print *,"Global rank: ",myid,"Shared rank: ",shared_id,"Proc: ",nameproc(1:resultlen),disp_unit
+        disp_unit = 1
+
+        call MPI_WIN_ALLOCATE_SHARED(sze,disp_unit,MPI_INFO_NULL,shared_comm,baseptr,win,ierr)
+       
+        if (shared_id /= 0) call MPI_WIN_SHARED_QUERY(win, 0, sze, disp_unit, baseptr)
+        call MPI_BARRIER(shared_comm,ierr)
+
+        call C_F_POINTER(baseptr, shared_data,[Nx,Ny])
+
+        call MPI_WIN_LOCK_ALL(0,win,ierr)
+
+
+        if(shared_id == 1) shared_data(4,1) = 5
+
+        call MPI_BARRIER(shared_comm,ierr)
+
+        if(shared_id == 5) shared_data(4,1) = 2*shared_data(4,1)
+      
+
+        call MPI_WIN_SYNC(win,ierr)
+        call MPI_BARRIER(shared_comm,ierr)
+
+        call MPI_WIN_UNLOCK_ALL(win,ierr)
+
+        print *,"rank = ",myid,"memory = ",shared_data(4,1),sze,disp_unit,baseptr
+
+        call MPI_WIN_FREE(win,ierr)
 
         call MPI_COMM_FREE(shared_comm,ierr)
         call MPI_FINALIZE(ierr)
