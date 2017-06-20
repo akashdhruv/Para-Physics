@@ -2,8 +2,8 @@
 
 ### Important Information
 
-  1. This is the latest version of **Para-Physics**, for previous versions look at other **ParaSolve** repositories.
-  2. Single phase Heat Equation, Navier Stokes and Poisson Solver modules are working.
+  1. This is version 1.0 of **Para-Physics**, a computational multi-physics solver.
+  2. Single phase heat equation, Navier-Stokes and Poisson solver modules are working.
   3. Immersed boundary module is working.
   4. Conjugate Heat Transfer is in beta.
   5. AMR module not yet implemented.
@@ -25,7 +25,7 @@
 
   4. Note that the total number of MPI processes must be equal to the total number of blocks (nblockx X nblocky) defined in Solver.h
 
-  5. You can also optimize Poisson solver by multi-threading using OpenMP on each MPI process. The number of threads are specified 
+  5. You can also optimize Poisson solver and heat equation by multi-threading using OpenMP on each MPI process. The number of threads are specified 
      in Solver.h
 
   6. To plot results, edit the python file (plot.py) to match your grid size and simply type (make sure k = nblockx and d = nblocky)
