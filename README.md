@@ -100,4 +100,4 @@
 ### Author - Akash V. Dhruv  
 ### License - Refer LICENSE.md
 
-#### Please cite this research [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.815018.svg)](https://doi.org/10.5281/zenodo.815018)
+### Cite as - Akash Dhruv. (2017, June 21). akidhruv/Para-Physics: Para-Physics. Zenodo. http://doi.org/10.5281/zenodo.815018
