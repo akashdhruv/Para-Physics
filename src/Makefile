@@ -5,9 +5,9 @@ MPI_PATH = /opt/mpich2-1.4.1p1/
 #PGI_PATH = /opt/pgi/osx86-64/2016
 #MPI_PATH = /usr/lib64/mpich 
 
-MPIFF = $(MPI_PATH)/bin/mpif90
+#MPIFF = $(MPI_PATH)/bin/mpif90
 #MPIFF = mpiifort
-#MPIFF = mpif90
+MPIFF = mpif90
 #FF = ifort
 #MPIFF = $(PGI_PATH)/bin/pgf90
 

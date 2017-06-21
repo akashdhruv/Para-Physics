@@ -14,7 +14,5 @@ module MPI_data
 
       integer,save :: blockID(MAX_BLOCKS),blockLC(nblockx*nblocky,2)
       integer,save :: blockCount
-      integer,save :: world_ranks(nblockx*nblocky),shared_ranks(nblockx*nblocky)
-
 
 end module MPI_data
