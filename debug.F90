@@ -21,7 +21,7 @@ program debug
 
         integer :: Nx,Ny
 
-        real :: a
+        real :: A
 
         Nx = 10
         Ny = 1
@@ -41,26 +41,37 @@ program debug
 
         !print *,"Global rank: ",myid,"Shared rank: ",shared_id,"Proc: ",nameproc(1:resultlen)
  
-        sze = sizeof(a)
-        disp_unit = sizeof(a)
+        !sze = 0
+
+        !if(shared_id == 0) sze = 1
+
+        !disp_unit = 1
+
+        sze       = sizeof(A)
+        disp_unit = sizeof(A)
 
         call MPI_WIN_ALLOCATE_SHARED(sze,disp_unit,MPI_INFO_NULL,shared_comm,baseptr,win,ierr)
+        !call MPI_WIN_ALLOCATE_SHARED(sze,disp_unit,MPI_INFO_NULL,shared_comm,A,win,ierr)
 
         call MPI_WIN_SHARED_QUERY(win, shared_id, sze, disp_unit, baseptr)
+        !call MPI_WIN_SHARED_QUERY(win, 0, sze, disp_unit, A)
 
         call MPI_BARRIER(shared_comm,ierr)
 
-        !call C_F_POINTER(baseptr, shared_data,[Nx,Ny])
+        call C_F_POINTER(baseptr, shared_data,[Nx,Ny])
 
         call MPI_WIN_LOCK_ALL(0,win,ierr)
 
-        !shared_data(:,1) = 0
+        shared_data(:,1) = 0
+        !A(:,1) = 0
+    
+        call MPI_BARRIER(shared_comm,ierr)
 
         if(shared_id == 1) shared_data(1,1) = 5 !shared_data(4,1) = 5
 
         call MPI_BARRIER(shared_comm,ierr)
 
-        if(shared_id == 5) shared_data(1,1) = 2*shared_data(1,1) !shared_data(4,1) = 2*shared_data(4,1)
+        if(shared_id == 5) shared_data(1,1) = 2 !shared_data(4,1) = 2*shared_data(4,1)
       
         call MPI_WIN_SYNC(win,ierr)
         call MPI_BARRIER(shared_comm,ierr)
@@ -68,7 +79,6 @@ program debug
         call MPI_WIN_UNLOCK_ALL(win,ierr)
 
         if(shared_id == 0) print *,"rank = ",shared_id,"memory = ",shared_data(:,1),sze,disp_unit
-    
 
         call MPI_WIN_FREE(win,ierr)
 
