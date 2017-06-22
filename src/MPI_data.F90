@@ -8,6 +8,8 @@ module MPI_data
       integer, save :: ierr, myid, procs, solver_comm, x_id, x_procs,x_comm,shared_comm
       integer, save :: y_id, y_procs,y_comm,shared_procs,shared_id,world_group,shared_group
 
+      integer, allocatable, save, dimension(:) :: world_part, shared_part
+
       integer, save :: mpi_dir_flag
 
       double precision, save :: start, finish, exec_time

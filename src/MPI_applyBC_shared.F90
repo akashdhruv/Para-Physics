@@ -1,29 +1,52 @@
-subroutine MPI_applyBC_shared(local,shared,myid,procs,solver_comm,world_prt,shared_id,shared_procs,shared_comm,shared_prt,Nx,Ny)
+subroutine MPI_applyBC_shared(local,shared)
+
+#include "Solver.h"
+
+        use MPI_data
 
         implicit none
 
         include "mpif.h"
 
         real,intent(inout), dimension(:,:) :: local,shared
-        integer,intent(in), dimension(:) :: world_prt,shared_prt
-        integer,intent(in) :: myid,procs,shared_id,shared_procs,Nx,Ny,solver_comm,shared_comm
 
-        integer :: send_req,recv_req,ierr
+        integer :: send_req,recv_req
 
-        !_____Check if right neighbour is on the same node__________!
+        if(x_id < x_procs - 1) then
 
-        if(shared_prt(myid+1+1) /= MPI_UNDEFINED) then
 
-         if(myid < procs - 1) local(2,2) = shared(1,(shared_id+1)*Ny+1) ! Write data from shared memory to local chunk
+                if(shared_part(myid+1+1) /= MPI_UNDEFINED) then
 
-        else
+                        local(Nxb+2,:) = shared(2,(shared_id+1)*(Nyb+2)+1:(shared_id+1)*(Nyb+2)+(Nyb+2)+1)
 
-         if(myid < procs - 1) call MPI_IRECV(local(2,2), 1, MPI_REAL, myid+1, 1, solver_comm, recv_req, ierr) ! Recieve data from other node
+                else
+
+                        call MPI_IRECV(local(Nxb+2,:), Nyb+2, MPI_REAL, x_id+1, 1, x_comm, recv_req, ierr)
+
+                end if
 
         end if
 
-        !______Send data to left node _______________!
-        if(shared_prt(myid-1+1) == MPI_UNDEFINED .and. myid > 0) &
-        call MPI_ISEND(local(1,1), 1, MPI_REAL, myid-1, 1,solver_comm,send_req, ierr)
+        if(shared_part(myid-1+1) == MPI_UNDEFINED .and. x_id>0) &
+        call MPI_ISEND(local(2,:), Nyb+2, MPI_REAL, x_id-1, 1, x_comm, send_req,ierr)
+
+
+        if(x_id > 0) then
+
+                if(shared_part(myid-1+1) /= MPI_UNDEFINED) then
+
+                        local(1,:) = shared(Nxb+1,(shared_id-1)*(Nyb+2)+1:(shared_id-1)*(Nyb+2)+(Nyb+2)+1)
+
+
+                else
+
+                        call MPI_IRECV(local(1,:), Nyb+2, MPI_REAL, x_id-1, 2, x_comm, recv_req, ierr)
+
+                end if
+
+        end if
+
+        if(shared_part(myid+1+1) == MPI_UNDEFINED .and. x_id < x_procs-1) &
+        call MPI_ISEND(local(Nxb+1,:), Nyb+2, MPI_REAL, x_id+1, 2, x_comm, send_req,ierr)
 
 end subroutine MPI_applyBC_shared
