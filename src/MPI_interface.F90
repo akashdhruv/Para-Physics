@@ -30,6 +30,16 @@ module MPI_interface
           end subroutine MPI_applyBC_v2
     end interface
 
+    interface
+          subroutine MPI_applyBC_shared(local,shared,myid,procs,solver_comm,world_prt,&
+                                        shared_id,shared_procs,shared_comm,shared_prt,Nx,Ny)
+          implicit none
+          real,intent(inout), dimension(:,:) :: local,shared
+          integer,intent(in), dimension(:) :: world_prt,shared_prt
+          integer,intent(in) :: myid,procs,shared_id,shared_procs,Nx,Ny,solver_comm,shared_comm
+          end subroutine MPI_applyBC_shared
+    end interface 
+
     interface 
        subroutine MPI_CollectResiduals(res,res1,collect_type)
        implicit none

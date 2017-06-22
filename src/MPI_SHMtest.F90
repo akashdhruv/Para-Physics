@@ -1,40 +1,6 @@
-module MPI_debug
-     contains
-        subroutine MPI_debugBC(local,shared,myid,procs,solver_comm,world_prt,shared_id,shared_procs,shared_comm,shared_prt,Nx,Ny)
+program MPI_SHMtest
 
-        implicit none
-
-        include "mpif.h"
-
-        real,intent(inout), dimension(:,:) :: local,shared
-        integer,intent(in), dimension(:) :: world_prt,shared_prt
-        integer,intent(in) :: myid,procs,shared_id,shared_procs,Nx,Ny,solver_comm,shared_comm
-
-        integer :: send_req,recv_req,ierr
-
-        !_____Check if right neighbour is on the same node__________!
-
-        if(shared_prt(myid+1+1) /= MPI_UNDEFINED) then
-
-                if(myid < procs - 1) local(2,2) = shared(1,(shared_id+1)*Ny+1) ! Write data from shared memory to local chunk
-
-        else
-
-                if(myid < procs - 1) call MPI_IRECV(local(2,2), 1, MPI_REAL, myid+1, 1, solver_comm, recv_req, ierr) ! Recieve data from other node
-
-        end if
-
-        !______Send data to left node _______________!
-        if(shared_prt(myid-1+1) == MPI_UNDEFINED .and. myid > 0) &
-        call MPI_ISEND(local(1,1), 1, MPI_REAL, myid-1, 1, solver_comm,send_req, ierr)
-
-        end subroutine MPI_debugBC
-end module
-
-program debug
-
-
-        use MPI_debug
+        use MPI_interface, only: MPI_applyBC_shared
         use, intrinsic :: ISO_C_BINDING, ONLY: C_PTR, C_F_POINTER
 
         implicit none
@@ -110,7 +76,7 @@ program debug
         call MPI_BARRIER(solver_comm,ierr)
 
         !_____Exchange Information_____!
-        call MPI_debugBC(local_data,shared_data,myid,procs,solver_comm,world_part,&
+        call MPI_applyBC_shared(local_data,shared_data,myid,procs,solver_comm,world_part,&
                         shared_id,shared_procs,shared_comm,shared_part,Nx,Ny)
        
         call MPI_BARRIER(solver_comm,ierr)
@@ -148,6 +114,6 @@ program debug
        call MPI_COMM_FREE(shared_comm,ierr)
        call MPI_FINALIZE(ierr)
 
-end program debug
+end program MPI_SHMtest
 
 
