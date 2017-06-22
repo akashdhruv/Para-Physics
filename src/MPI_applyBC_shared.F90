@@ -21,14 +21,14 @@ subroutine MPI_applyBC_shared(local,shared)
 
                 else
 
-                        call MPI_IRECV(local(Nxb+2,:), Nyb+2, MPI_REAL, x_id+1, 1, x_comm, recv_req, ierr)
+                        call MPI_RECV(local(Nxb+2,:), Nyb+2, MPI_REAL, x_id+1, 1, x_comm, recv_req, ierr)
 
                 end if
 
         end if
 
         if(shared_part(myid+1-1) == MPI_UNDEFINED .and. x_id>0) &
-        call MPI_ISEND(local(2,:), Nyb+2, MPI_REAL, x_id-1, 1, x_comm, send_req,ierr)
+        call MPI_SEND(local(2,:), Nyb+2, MPI_REAL, x_id-1, 1, x_comm, send_req,ierr)
 
 
         if(x_id > 0) then
@@ -40,14 +40,14 @@ subroutine MPI_applyBC_shared(local,shared)
 
                 else
 
-                        call MPI_IRECV(local(1,:), Nyb+2, MPI_REAL, x_id-1, 2, x_comm, recv_req, ierr)
+                        call MPI_RECV(local(1,:), Nyb+2, MPI_REAL, x_id-1, 2, x_comm, recv_req, ierr)
 
                 end if
 
         end if
 
         if(shared_part(myid+1+1) == MPI_UNDEFINED .and. x_id < x_procs-1) &
-        call MPI_ISEND(local(Nxb+1,:), Nyb+2, MPI_REAL, x_id+1, 2, x_comm, send_req,ierr)
+        call MPI_SEND(local(Nxb+1,:), Nyb+2, MPI_REAL, x_id+1, 2, x_comm, send_req,ierr)
 
 
         if(y_id < y_procs - 1) then
@@ -58,7 +58,7 @@ subroutine MPI_applyBC_shared(local,shared)
 
                 else
 
-                        call MPI_IRECV(local(:,Nyb+2), Nxb+2, MPI_REAL, y_id+1, 3, y_comm, recv_req, ierr)
+                        call MPI_RECV(local(:,Nyb+2), Nxb+2, MPI_REAL, y_id+1, 3, y_comm, recv_req, ierr)
 
 
                 end if
@@ -66,7 +66,7 @@ subroutine MPI_applyBC_shared(local,shared)
         end if
 
         if(shared_part(myid+1-x_procs) == MPI_UNDEFINED .and. y_id>0) &
-        call MPI_ISEND(local(:,2), Nxb+2, MPI_REAL, y_id-1, 3, y_comm, send_req,ierr)
+        call MPI_SEND(local(:,2), Nxb+2, MPI_REAL, y_id-1, 3, y_comm, send_req,ierr)
 
        if(y_id > 0) then
 
@@ -76,14 +76,14 @@ subroutine MPI_applyBC_shared(local,shared)
 
                 else
 
-                        call MPI_IRECV(local(:,1), Nxb+2, MPI_REAL, y_id-1, 4, y_comm, recv_req,ierr)
+                        call MPI_RECV(local(:,1), Nxb+2, MPI_REAL, y_id-1, 4, y_comm, recv_req,ierr)
 
                 end if
 
         end if
 
         if(shared_part(myid+1+x_procs) == MPI_UNDEFINED .and. y_id < y_procs -1) &
-        call MPI_ISEND(local(:,Nyb+1), Nxb+2, MPI_REAL, y_id+1, 4 ,y_comm, send_req, ierr)
+        call MPI_SEND(local(:,Nyb+1), Nxb+2, MPI_REAL, y_id+1, 4 ,y_comm, send_req, ierr)
         
 
 end subroutine MPI_applyBC_shared
