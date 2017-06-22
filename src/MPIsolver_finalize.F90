@@ -8,14 +8,14 @@ subroutine MPIsolver_finalize(sim_Complete)
 
       logical,intent(in) :: sim_Complete
 
-      include "mpif.h"
+      call MPI_WIN_FREE(center_win,ierr)
+      call MPI_WIN_FREE(facex_win,ierr)
+      call MPI_WIN_FREE(facey_win,ierr)
 
       call MPI_COMM_FREE(x_comm,ierr)
       call MPI_COMM_FREE(y_comm,ierr)
-      !call MPI_COMM_FREE(shared_comm,ierr)  
+      call MPI_COMM_FREE(shared_comm,ierr)  
 
-      !call cpu_time(finish)
-      !finish = omp_get_wtime()
       finish = MPI_Wtime()
 
       exec_time = (finish - start) 

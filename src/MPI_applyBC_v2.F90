@@ -6,8 +6,6 @@ subroutine MPI_applyBC_v2(u_ex)
 
        implicit none
 
-       include "mpif.h"
-
        real, dimension(:,:), intent(inout) :: u_ex
        integer :: status(MPI_STATUS_SIZE)
         

@@ -8,10 +8,10 @@ program MPI_SHMtest
 
         implicit none
 
-        include "mpif.h"
+        !include "mpif.h"
 
         integer(kind=MPI_ADDRESS_KIND) :: sze
-        integer :: disp_unit
+        !integer :: disp_unit
         type(C_PTR) :: baseptr,shareptr
         integer :: win,i,j
 

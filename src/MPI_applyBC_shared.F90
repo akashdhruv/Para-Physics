@@ -6,8 +6,6 @@ subroutine MPI_applyBC_shared(local,shared)
 
         implicit none
 
-        include "mpif.h"
-
         real,intent(inout), dimension(:,:) :: local,shared
 
         integer :: send_req,recv_req

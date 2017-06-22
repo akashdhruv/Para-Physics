@@ -23,14 +23,6 @@ subroutine Grid_init()
      allocate(gr_x(Nxb+1,Nyb+1))
      allocate(gr_y(Nxb+1,Nyb+1))
 
-     allocate(ph_center(CENT_VAR,Nxb+2,Nyb+2))
-     allocate(ph_facex(FACE_VAR,Nxb+2,Nyb+2))
-     allocate(ph_facey(FACE_VAR,Nxb+2,Nyb+2))
-
-     ph_center = 0.0
-     ph_facex = 0.0
-     ph_facey = 0.0
-
      do i=1,Nyb+1
         gr_x(:,i)=D_xmin+mod(myid,nblockx)*gr_Lx+gr_dx*(/(I,I=0,Nxb)/)
      enddo

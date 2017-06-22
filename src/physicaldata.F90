@@ -2,7 +2,7 @@ module physicaldata
 
        implicit none
 
-       real, save, allocatable :: ph_center(:,:,:), ph_facex(:,:,:), ph_facey(:,:,:)
-       target :: ph_center, ph_facex, ph_facey
+       real, pointer, dimension(:,:,:) :: solnData, facexData, faceyData
+       real, pointer, dimension(:,:,:) :: SHD_solnData, SHD_facexData, SHD_faceyData
 
 end module physicaldata
