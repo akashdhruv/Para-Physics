@@ -1,17 +1,18 @@
 module MPI_interface
      contains
-        subroutine MPI_applyBC(local,shared,myid,procs,solver_comm,shared_id,shared_procs,shared_comm,Nx,Ny)
+        subroutine MPI_applyBC(local,shared,myid,procs,solver_comm,world_prt,shared_id,shared_procs,shared_comm,shared_prt,Nx,Ny)
 
         implicit none
 
         include "mpif.h"
 
         real,intent(inout), dimension(:,:) :: local,shared
+        integer,intent(in), dimension(:) :: world_prt,shared_prt
         integer,intent(in) :: myid,procs,shared_id,shared_procs,Nx,Ny,solver_comm,shared_comm
 
         integer :: send_req,recv_req,ierr
 
-        if(myid/shared_procs == (myid+1)/shared_procs) then
+        if(shared_prt(myid+1) /= MPI_UNDEFINED) then
 
                 if(myid < procs - 1) local(2,2) = shared(1,(shared_id+1)*Ny+1)
 
@@ -19,10 +20,10 @@ module MPI_interface
 
                 if(myid < procs - 1) call MPI_IRECV(local(2,2), 1, MPI_REAL, myid+1, 1, solver_comm, recv_req, ierr)
 
-                if(myid/shared_procs == (myid-1)/shared_procs .and. myid > 0) &
-                call MPI_ISEND(local(1,1), 1, MPI_REAL, myid-1, 1, solver_comm, send_req, ierr)
- 
         end if
+
+        if(shared_prt(myid-1) == MPI_UNDEFINED .and. myid > 0) &
+        call MPI_ISEND(local(1,1), 1, MPI_REAL, myid-1, 1, solver_comm,send_req, ierr)
 
         end subroutine MPI_applyBC
 end module
@@ -45,7 +46,7 @@ program debug
         integer :: disp_unit
 
         type(C_PTR) :: baseptr,shareptr
-        integer :: win,i,j,neigh(2)
+        integer :: win,i,j
 
         real,pointer,dimension(:,:) :: local_data,shared_data
 
@@ -66,8 +67,6 @@ program debug
         call MPI_COMM_RANK(solver_comm, myid, ierr)
         call MPI_COMM_SIZE(solver_comm, procs, ierr)
 
-        call MPI_GET_PROCESSOR_NAME(nameproc,resultlen,ierr)
-
         call MPI_COMM_SPLIT_TYPE(solver_comm, MPI_COMM_TYPE_SHARED, 0, MPI_INFO_NULL, shared_comm, ierr)
 
         call MPI_COMM_RANK(shared_comm,shared_id,ierr)
@@ -84,8 +83,8 @@ program debug
 
         !print *,"Global rank: ",myid,"Shared rank: ",shared_id,"Proc: ",nameproc(1:resultlen)
  
-        if(myid == 0) print *,world_part
-        if(myid == 0) print *,shared_part
+        !if(myid == 0) print *,world_part
+        !if(myid == 0) print *,shared_part
 
         sze       = Nx*Ny*sizeof(A)
         disp_unit = sizeof(A)
@@ -105,12 +104,13 @@ program debug
 
         call MPI_BARRIER(shared_comm,ierr)
 
-        !call MPI_applyBC(local_data,shared_data,myid,procs,solver_comm,shared_id,shared_procs,shared_comm,Nx,Ny)
+        call MPI_applyBC(local_data,shared_data,myid,procs,solver_comm,world_part,&
+                        shared_id,shared_procs,shared_comm,shared_part,Nx,Ny)
        
         call MPI_BARRIER(solver_comm,ierr)
         call MPI_BARRIER(shared_comm,ierr)
 
-        !print *,"Global Rank: ",myid," Shared Rank: ",shared_id," data(1,1): ",local_data(1,1)," data(2,2): ",local_data(2,2),neigh
+        print *,"Global Rank: ",myid," Shared Rank: ",shared_id," data(1,1): ",local_data(1,1)," data(2,2): ",local_data(2,2)
 
         call MPI_BARRIER(solver_comm, ierr)
         call MPI_BARRIER(shared_comm, ierr)
