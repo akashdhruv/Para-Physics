@@ -93,29 +93,29 @@ program MPI_SHMtest
         call MPI_BARRIER(solver_comm,ierr)
 
         !_____Exchange Information_____!
-        !call MPI_applyBC_shared(local_data,shared_data,myid,procs,solver_comm,world_part,&
-        !                shared_id,shared_procs,shared_comm,shared_part,Nx,Ny)
+        call MPI_applyBC_shared(local_data,shared_data,myid,procs,solver_comm,world_part,&
+                        shared_id,shared_procs,shared_comm,shared_part,Nx,Ny)
        
-        !call MPI_BARRIER(solver_comm,ierr)
-        !call MPI_BARRIER(shared_comm,ierr)
+        call MPI_BARRIER(solver_comm,ierr)
+        call MPI_BARRIER(shared_comm,ierr)
 
         !_______Print Results_____________!
-        if(myid == 0) print *,"world_part:",world_part
-        if(myid == 0) print *,"shared_part: ",shared_part
+        !if(myid == 0) print *,"world_part:",world_part
+        !if(myid == 0) print *,"shared_part: ",shared_part
         
-        !print *,"Global Rank: ",myid," Shared Rank: ",shared_id," data(1,1): ",local_data(1,1)," data(2,2): ",local_data(2,2)
+        print *,"Global Rank: ",myid," Shared Rank: ",shared_id," data(1,1): ",local_data(1,1)," data(2,2): ",local_data(2,2)
 
-        !call MPI_BARRIER(solver_comm, ierr)
-        !call MPI_BARRIER(shared_comm, ierr)
+        call MPI_BARRIER(solver_comm, ierr)
+        call MPI_BARRIER(shared_comm, ierr)
 
-        ! if (shared_id == 0) then
-        ! print *,"Data on rank: ",shared_id
-        !  do j=1,Ny*shared_procs
-        !      print *,shared_data(:,j)
-        !  end do
-        ! end if
+         if (shared_id == 0) then
+         print *,"Data on rank: ",shared_id
+          do j=1,Ny*shared_procs
+              print *,shared_data(:,j)
+          end do
+         end if
 
-        !call MPI_BARRIER(solver_comm,ierr)
+        call MPI_BARRIER(solver_comm,ierr)
 
         ! if (shared_id == 1) then
 
