@@ -9,22 +9,26 @@ subroutine MPI_applyBC_shared(local,shared)
         real,intent(inout), dimension(:,:) :: local,shared
 
         integer :: status(MPI_STATUS_SIZE)
+        integer, dimension(Nxb+2) :: Ysendreq, Yrecvreq
+        integer, dimension(Nyb+2) :: Xsendreq, Xrecvreq
 
 
         !_______________________MPI BC for High X______________________________!
         if(x_id < x_procs - 1) then
 
-                if(shared_part(myid+1+1) /= MPI_UNDEFINED) then
+        !        if(shared_part(myid+1+1) /= MPI_UNDEFINED) then
 
-                        local(Nxb+2,:) = shared(2,(shared_id+1)*(Nyb+2)+1:(shared_id+1)*(Nyb+2)+(Nyb+2)+1)
-                else
-                        call MPI_RECV(local(Nxb+2,:), Nyb+2, MPI_REAL, x_id+1, 1, x_comm, status, ierr)
+        !                local(Nxb+2,:) = shared(2,(shared_id+1)*(Nyb+2)+1:(shared_id+1)*(Nyb+2)+(Nyb+2)+1)
+        !        else
+  
+                        call MPI_IRECV(local(Nxb+2,:), Nyb+2, MPI_REAL, x_id+1, 1, x_comm, Xrecvreq, ierr)
 
-                end if
+        !        end if
         end if
 
-        if(shared_part(myid+1-1) == MPI_UNDEFINED .and. x_id>0) &
-        call MPI_SEND(local(2,:), Nyb+2, MPI_REAL, x_id-1, 1, x_comm,  ierr)
+        !if(shared_part(myid+1-1) == MPI_UNDEFINED .and. x_id>0) &
+        if(x_id>0)&
+        call MPI_ISEND(local(2,:), Nyb+2, MPI_REAL, x_id-1, 1, x_comm, Xsendreq, ierr)
 
         !_______________________MPI BC for Low X______________________________!
         if(x_id > 0) then

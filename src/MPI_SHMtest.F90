@@ -109,7 +109,7 @@ program MPI_SHMtest
  
         !do i=1,procs
 
-         if (myid == 64) then
+         if (myid == 27) then
          print *,"Global rank:",myid," Shared rank:",shared_id
           do j=1,Nyb+2
               print *,local_data(:,j)
@@ -119,7 +119,7 @@ program MPI_SHMtest
         call MPI_BARRIER(solver_comm,ierr)
         call MPI_BARRIER(shared_comm,ierr)
 
-         if (myid == 63) then
+         if (myid == 35) then
          print *,"Global rank:",myid," Shared rank:",shared_id
           do j=1,Nyb+2
               print *,local_data(:,j)
@@ -129,7 +129,7 @@ program MPI_SHMtest
         call MPI_BARRIER(solver_comm,ierr)
         call MPI_BARRIER(shared_comm,ierr)
 
-         if (myid == 65) then
+         if (myid == 43) then
          print *,"Global rank:",myid," Shared rank:",shared_id
           do j=1,Nyb+2
               print *,local_data(:,j)
