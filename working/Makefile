@@ -1,4 +1,4 @@
 EXE = Solver
 
 clean:
-	rm -f *.dat $(EXE)
+	rm -f *.dat

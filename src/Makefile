@@ -6,9 +6,9 @@ MPI_PATH = /c1/apps/mpich/3.1.4
 #PGI_PATH = /opt/pgi/osx86-64/2016
 #MPI_PATH = /usr/lib64/mpich 
 
-MPIFF = $(MPI_PATH)/bin/mpif90
+#MPIFF = $(MPI_PATH)/bin/mpif90
 #MPIFF = mpiifort
-#MPIFF = mpif90
+MPIFF = mpif90
 #FF = ifort
 #MPIFF = $(PGI_PATH)/bin/pgf90
 
@@ -79,6 +79,7 @@ Objects += physicaldata.o \
            MPI_CollectResiduals.o \
            MPI_applyBC_v2.o\
            MPI_applyBC.o \
+           MPI_applyBC_shared.o \
            MPI_physicalBC_vel.o \
            MPI_physicalBC_pres.o \
            MPI_physicalBC_temp.o \

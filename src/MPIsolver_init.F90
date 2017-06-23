@@ -111,6 +111,14 @@ subroutine MPIsolver_init()
     call MPI_BARRIER(shared_comm,ierr)
     call C_F_POINTER(center_ptr,SHD_solnData,[CENT_VAR,Nxb+2,(Nyb+2)*shared_procs])
 
+    call MPI_WIN_SHARED_QUERY(facex_win, 0, facex_size,disp_unit,facex_ptr,ierr)
+    call MPI_BARRIER(shared_comm,ierr)
+    call C_F_POINTER(facex_ptr,SHD_facexData,[FACE_VAR,Nxb+2,(Nyb+2)*shared_procs])
+
+    call MPI_WIN_SHARED_QUERY(facey_win, 0, facey_size,disp_unit,facey_ptr,ierr)
+    call MPI_BARRIER(shared_comm,ierr)
+    call C_F_POINTER(facey_ptr,SHD_faceyData,[FACE_VAR,Nxb+2,(Nyb+2)*shared_procs])
+
     !call cpu_time(start)
     !start = omp_get_wtime()
     start = MPI_Wtime()

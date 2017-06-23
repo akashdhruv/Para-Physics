@@ -6,8 +6,6 @@ subroutine MPI_physicalBC_pres(p_ex)
 
        implicit none
 
-       include "mpif.h"
-
        real, dimension(:,:), intent(inout) :: p_ex
        integer :: status(MPI_STATUS_SIZE)
        logical :: mask

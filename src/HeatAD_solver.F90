@@ -4,16 +4,11 @@ subroutine HeatAD_solver(tstep)
 #include "Solver.h"
 
    use HeatAD_interface, only: heat_tempSolver,heat_tempSolver_ibm,heat_tempSolver_mph
-   use physicaldata
+   use physicaldata, only: solnData,facexData,faceyData
  
    implicit none
    
    integer, intent(in) :: tstep
-   real, pointer, dimension(:,:,:) :: solnData,facexData,faceyData
-
-   solnData => ph_center
-   facexData => ph_facex
-   faceyData => ph_facey
 
    solnData(TOLD_VAR,:,:) = solnData(TEMP_VAR,:,:) 
 
@@ -70,9 +65,5 @@ subroutine HeatAD_solver(tstep)
 #endif
 
 #endif
-
-   nullify(solnData)
-   nullify(facexData)
-   nullify(faceyData)
 
 end subroutine

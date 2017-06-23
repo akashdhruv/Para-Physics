@@ -2,14 +2,13 @@ subroutine IBM_init()
 
 #include "Solver.h"
 
-   use physicaldata
+   use physicaldata, only: facexData,faceyData
    use Grid_data
    use IBM_data
    use Multiphase_interface, only: mph_FillVars
 
    implicit none
 
-   real,pointer,dimension(:,:,:) :: facexData,faceyData
    real :: x0,y0,r,xcell,ycell
    real :: x1,y1,r1
 
@@ -26,9 +25,6 @@ subroutine IBM_init()
    ibm_vis1 = 1.0
 
    ibm_omega = 1.0
-
-   facexData => ph_facex
-   faceyData => ph_facey
 
    facexData(IBMF_VAR,:,:) = 0.0
    faceyData(IBMF_VAR,:,:) = 0.0
@@ -93,8 +89,5 @@ subroutine IBM_init()
 
     end do
    end do
-
-   nullify(facexData)
-   nullify(faceyData)
 
 end subroutine IBM_init

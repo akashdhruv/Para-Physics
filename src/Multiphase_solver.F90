@@ -5,7 +5,7 @@ subroutine Multiphase_solver(tstep,solnX,jump_flag)
 
     use Driver_data,  only: dr_dt
     use Multiphase_data, only: mph_thco1, mph_cp1, mph_thco2, mph_cp2,mph_beta
-    use physicaldata
+    use physicaldata, only: solnData,facexData,faceyData
     use Grid_data
     use Multiphase_interface , only: mph_FillVars, mph_PressureJumps,&
                                      mph_getInterfaceVelocity,&
@@ -17,16 +17,10 @@ subroutine Multiphase_solver(tstep,solnX,jump_flag)
 
     integer, intent(in) :: tstep
     
-
     real,intent(out) :: solnX
     real :: ycell
-    real, pointer, dimension(:,:,:) :: solnData,facexData,faceyData
     integer :: j,i
     logical,intent(in) :: jump_flag
-
-    solnData => ph_center
-    facexData => ph_facex
-    faceyData => ph_facey
 
     solnX = 0.0
 
@@ -106,9 +100,5 @@ else if (jump_flag .eqv. .TRUE.) then
 
 end if
 
-    nullify(solnData)  
-    nullify(facexData)
-    nullify(faceyData)
- 
 end subroutine Multiphase_solver
 

@@ -6,8 +6,6 @@ subroutine MPI_periodicBC(u_ex,v_ex,aDIM)
 
      implicit none
      
-     include "mpif.h"
-
      real, dimension(:,:) , intent(inout) :: u_ex,v_ex
      integer, intent(in) :: aDIM
 

@@ -3,15 +3,14 @@ subroutine Poisson_solver(ps_RHS,ps,ps_res,ps_counter,ps_quant)
   !$ use omp_lib
   use Grid_data
   use MPI_data
-  use MPI_interface, ONLY: MPI_applyBC, MPI_CollectResiduals, MPI_physicalBC_pres
+  use MPI_interface, ONLY: MPI_applyBC, MPI_CollectResiduals, MPI_physicalBC_pres, MPI_applyBC_shared
   use Driver_data, ONLY: dr_tile
   use IncompNS_data, ONLY: ins_timePoisson
+  use physicaldata, only: SHD_solnData
 
 #include "Solver.h"
                 
   implicit none
-
-  include "mpif.h"
 
   real, dimension(:,:), intent(in) :: ps_RHS
 
@@ -19,7 +18,6 @@ subroutine Poisson_solver(ps_RHS,ps,ps_res,ps_counter,ps_quant)
 
   integer, intent(in) :: ps_quant
 
-  !real, allocatable, dimension(:,:) :: ps_old, ps_new
   real, dimension(Nxb+2,Nyb+2) :: ps_old,ps_new
 
   real, intent(out) :: ps_res
@@ -147,9 +145,10 @@ subroutine Poisson_solver(ps_RHS,ps,ps_res,ps_counter,ps_quant)
      if (thread_id == 0) then
 
      call MPI_applyBC(ps)
+     !call MPI_applyBC_shared(ps,SHD_solnData(PRES_VAR,:,:))
 
      if(ps_quant == PRES_VAR) call MPI_physicalBC_pres(ps)
- 
+
      ps_counter = ps_counter + 1
 
      ps_res = ps_res + sum(sum((ps-ps_old)**2,1))

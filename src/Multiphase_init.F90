@@ -1,7 +1,7 @@
 subroutine Multiphase_init()
 
    use Multiphase_data
-   use physicaldata
+   use physicaldata, only: solnData,facexData,faceyData
    use Grid_data
    use MPI_interface , only: MPI_CollectResiduals
 
@@ -9,7 +9,6 @@ subroutine Multiphase_init()
 
    implicit none
 
-   real,pointer,dimension(:,:,:) :: solnData,facexData,faceyData
    real :: xcell,ycell
    real :: min_s,max_s,all_min_s,all_max_s
 
@@ -27,10 +26,6 @@ subroutine Multiphase_init()
 
    mph_beta  = 1.0
    mph_sten  = 1.0
-
-   solnData => ph_center
-   facexData => ph_facex
-   faceyData => ph_facey
 
    solnData(DFUN_VAR,:,:)  = 0.0
    solnData(PFUN_VAR,:,:)  = 0.0
@@ -108,9 +103,5 @@ subroutine Multiphase_init()
     end do
 
     !mph_redistance
-
-   nullify(solnData)
-   nullify(facexData)
-   nullify(faceyData)
 
 end subroutine Multiphase_init

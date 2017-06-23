@@ -7,7 +7,7 @@ subroutine Driver_init()
       use IncompNS_data
       use Multiphase_data
       use HeatAD_data, only : ht_Pr
-      use physicaldata
+      use physicaldata, only: solnData,facexData,faceyData
 
       implicit none
       
@@ -15,11 +15,6 @@ subroutine Driver_init()
       real :: velcoeff
       real, parameter :: eps = 1e-12
       real, parameter :: pi  = acos(-1.0)
-      real,pointer,dimension(:,:,:) :: facexData,faceyData,solnData
-
-      solnData => ph_center
-      facexData => ph_facex
-      faceyData => ph_facey
 
       dr_t   = TIME_END
 
@@ -29,12 +24,6 @@ subroutine Driver_init()
 
       velcoeff =  MAX( MAXVAL(ABS(facexData(VELC_VAR,:,:))/gr_dx), &
                        MAXVAL(ABS(faceyData(VELC_VAR,:,:))/gr_dy))
-
-      !if(velcoeff .gt. eps) then
-      !  dt_cfl = ins_cfl/velcoeff
-      !else
-      !  dt_cfl = ins_cfl/eps
-      !end if 
 
       dt_cfl = ins_cfl*min(gr_dx,gr_dy)
 
@@ -81,13 +70,7 @@ subroutine Driver_init()
 
       dr_nt = dr_t/dr_dt
 
-      !dr_tile = (Nyb)/(ceiling((Nyb)/40.)*NTHREADS)
       dr_tile = (Nyb)/NTHREADS
-      !dr_tile = Nyb/8
+      
      
-
-      nullify(solnData)
-      nullify(facexData)
-      nullify(faceyData)
- 
 end subroutine Driver_init

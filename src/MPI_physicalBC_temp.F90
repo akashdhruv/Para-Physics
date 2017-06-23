@@ -6,8 +6,6 @@ subroutine MPI_physicalBC_temp(t_ex)
 
        implicit none
 
-       include "mpif.h"
-
        real, dimension(:,:), intent(inout) :: t_ex
        integer :: status(MPI_STATUS_SIZE)
     

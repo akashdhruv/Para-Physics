@@ -5,9 +5,7 @@ subroutine MPI_CollectResiduals(res,res1,collect_type)
       use MPI_data
 
       implicit none
-
-      include "mpif.h"
-      
+     
       real, intent(inout) :: res,res1
       integer, intent(in) :: collect_type
       integer :: status(MPI_STATUS_SIZE)

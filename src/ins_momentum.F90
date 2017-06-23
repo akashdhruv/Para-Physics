@@ -1,13 +1,14 @@
-subroutine ins_momentum(tstep,p_counter,p,u,v,s,s2)
+subroutine ins_momentum(tstep,p_counter,p,u,v,ut,vt,s,s2)
 
        use Poisson_interface, ONLY: Poisson_solver            
        use Grid_data
        use Driver_data
        use MPI_data
        use IncompNS_data
-       use MPI_interface, ONLY: MPI_applyBC, MPI_CollectResiduals, MPI_physicalBC_vel
+       use MPI_interface, ONLY: MPI_applyBC, MPI_CollectResiduals, MPI_physicalBC_vel, MPI_applyBC_shared
        use IncompNS_interface, ONLY: ins_rescaleVel
        use IBM_interface, ONLY: IBM_ApplyForcing
+       use physicaldata, only: SHD_facexData,SHD_faceyData
 
 #include "Solver.h"
 
@@ -22,11 +23,12 @@ subroutine ins_momentum(tstep,p_counter,p,u,v,s,s2)
        !real, allocatable, dimension(:,:) :: ut,vt,u_old,v_old
        !real, allocatable, dimension(:,:) :: C1,G1,D1,C2,G2,D2,p_RHS
 
-       real, dimension(Nxb+2,Nyb+2) :: ut,vt,u_old,v_old
+       real, dimension(Nxb+2,Nyb+2) :: u_old,v_old
        real, dimension(Nxb,Nyb) :: C1,G1,D1,C2,G2,D2,p_RHS
        real :: u_res1, v_res1, maxdiv, mindiv,umax,umin,vmax,vmin
        integer :: i,j
        real, intent(inout), dimension(:,:) :: u, v, p, s, s2
+       real, intent(inout), dimension(:,:) :: ut,vt
 
        !allocate(C1(Nxb,Nyb))
        !allocate(G1(Nxb,Nyb))
@@ -93,6 +95,10 @@ subroutine ins_momentum(tstep,p_counter,p,u,v,s,s2)
 
        call MPI_applyBC(ut)
        call MPI_applyBC(vt)
+
+       !call MPI_applyBC_shared(ut,SHD_facexData(USTR_VAR,:,:))
+       !call MPI_applyBC_shared(vt,SHD_faceyData(USTR_VAR,:,:))
+       
        call MPI_physicalBC_vel(ut,vt)
 
 #ifdef IBM
@@ -117,6 +123,10 @@ subroutine ins_momentum(tstep,p_counter,p,u,v,s,s2)
 
        call MPI_applyBC(u)
        call MPI_applyBC(v)
+
+       !call MPI_applyBC_shared(u,SHD_facexData(VELC_VAR,:,:))
+       !call MPI_applyBC_shared(v,SHD_faceyData(VELC_VAR,:,:))
+
        call MPI_physicalBC_vel(u,v)
 
        ! Divergence
@@ -170,14 +180,14 @@ end subroutine ins_momentum
 
 
 !! CONVECTIVE U !!
-subroutine Convective_U(ut,vt,dx,dy,C1)
+subroutine Convective_U(ut_cal,vt_cal,dx,dy,C1)
 
 #include "Solver.h"
        
       implicit none
 
-      real,dimension(Nxb+2,Nyb+2), intent(in) :: ut
-      real,dimension(Nxb+2,Nyb+2), intent(in) :: vt
+      real,dimension(Nxb+2,Nyb+2), intent(in) :: ut_cal
+      real,dimension(Nxb+2,Nyb+2), intent(in) :: vt_cal
 
       real,intent(in) :: dx
       real,intent(in) :: dy
@@ -199,12 +209,12 @@ subroutine Convective_U(ut,vt,dx,dy,C1)
       !allocate(vs(Nxb,Nyb))
       !allocate(vn(Nxb,Nyb))
 
-      ue = (ut(2:Nxb+1,2:Nyb+1)+ut(3:Nxb+2,2:Nyb+1))/2
-      uw = (ut(2:Nxb+1,2:Nyb+1)+ut(1:Nxb,2:Nyb+1))/2
-      us = (ut(2:Nxb+1,2:Nyb+1)+ut(2:Nxb+1,1:Nyb))/2
-      un = (ut(2:Nxb+1,2:Nyb+1)+ut(2:Nxb+1,3:Nyb+2))/2
-      vs = (vt(2:Nxb+1,1:Nyb)+vt(3:Nxb+2,1:Nyb))/2
-      vn = (vt(2:Nxb+1,2:Nyb+1)+vt(3:Nxb+2,2:Nyb+1))/2
+      ue = (ut_cal(2:Nxb+1,2:Nyb+1)+ut_cal(3:Nxb+2,2:Nyb+1))/2
+      uw = (ut_cal(2:Nxb+1,2:Nyb+1)+ut_cal(1:Nxb,2:Nyb+1))/2
+      us = (ut_cal(2:Nxb+1,2:Nyb+1)+ut_cal(2:Nxb+1,1:Nyb))/2
+      un = (ut_cal(2:Nxb+1,2:Nyb+1)+ut_cal(2:Nxb+1,3:Nyb+2))/2
+      vs = (vt_cal(2:Nxb+1,1:Nyb)+vt_cal(3:Nxb+2,1:Nyb))/2
+      vn = (vt_cal(2:Nxb+1,2:Nyb+1)+vt_cal(3:Nxb+2,2:Nyb+1))/2
 
       C1 = -((ue**2)-(uw**2))/dx - ((un*vn)-(us*vs))/dy
 
@@ -213,14 +223,14 @@ subroutine Convective_U(ut,vt,dx,dy,C1)
 end subroutine Convective_U
 
 !! CONVECTIVE V !!
-subroutine Convective_V(ut,vt,dx,dy,C2)
+subroutine Convective_V(ut_cal,vt_cal,dx,dy,C2)
 
 #include "Solver.h"
 
       implicit none
 
-      real,dimension(Nxb+2,Nyb+2), intent(in) :: ut
-      real,dimension(Nxb+2,Nyb+2), intent(in) :: vt
+      real,dimension(Nxb+2,Nyb+2), intent(in) :: ut_cal
+      real,dimension(Nxb+2,Nyb+2), intent(in) :: vt_cal
 
       real, intent(in) :: dx
       real, intent(in) :: dy      
@@ -236,12 +246,12 @@ subroutine Convective_V(ut,vt,dx,dy,C2)
       !allocate(ue(Nxb,Nyb))
       !allocate(uw(Nxb,Nyb))
 
-      vs = (vt(2:Nxb+1,2:Nyb+1)+vt(2:Nxb+1,1:Nyb))/2
-      vn = (vt(2:Nxb+1,2:Nyb+1)+vt(2:Nxb+1,3:Nyb+2))/2
-      ve = (vt(2:Nxb+1,2:Nyb+1)+vt(3:Nxb+2,2:Nyb+1))/2
-      vw = (vt(2:Nxb+1,2:Nyb+1)+vt(1:Nxb,2:Nyb+1))/2
-      ue = (ut(2:Nxb+1,2:Nyb+1)+ut(2:Nxb+1,3:Nyb+2))/2
-      uw = (ut(1:Nxb,2:Nyb+1)+ut(1:Nxb,3:Nyb+2))/2
+      vs = (vt_cal(2:Nxb+1,2:Nyb+1)+vt_cal(2:Nxb+1,1:Nyb))/2
+      vn = (vt_cal(2:Nxb+1,2:Nyb+1)+vt_cal(2:Nxb+1,3:Nyb+2))/2
+      ve = (vt_cal(2:Nxb+1,2:Nyb+1)+vt_cal(3:Nxb+2,2:Nyb+1))/2
+      vw = (vt_cal(2:Nxb+1,2:Nyb+1)+vt_cal(1:Nxb,2:Nyb+1))/2
+      ue = (ut_cal(2:Nxb+1,2:Nyb+1)+ut_cal(2:Nxb+1,3:Nyb+2))/2
+      uw = (ut_cal(1:Nxb,2:Nyb+1)+ut_cal(1:Nxb,3:Nyb+2))/2
 
       C2 = -((ue*ve)-(uw*vw))/dx - ((vn**2)-(vs**2))/dy
 
@@ -250,13 +260,13 @@ subroutine Convective_V(ut,vt,dx,dy,C2)
 end subroutine Convective_V
 
 !! DIFFUSIVE U !!
-subroutine Diffusive_U(ut,dx,dy,inRe,D1)
+subroutine Diffusive_U(ut_cal,dx,dy,inRe,D1)
 
 #include "Solver.h"
 
       implicit none
 
-      real,dimension(Nxb+2,Nyb+2), intent(in) :: ut
+      real,dimension(Nxb+2,Nyb+2), intent(in) :: ut_cal
 
       real, intent(in) :: dx
       real, intent(in) :: dy
@@ -278,11 +288,11 @@ subroutine Diffusive_U(ut,dx,dy,inRe,D1)
       !allocate(uE(Nxb,Nyb))
       !allocate(uW(Nxb,Nyb))
 
-      uP = ut(2:Nxb+1,2:Nyb+1)
-      uE = ut(3:Nxb+2,2:Nyb+1)
-      uW = ut(1:Nxb,2:Nyb+1)
-      uN = ut(2:Nxb+1,3:Nyb+2)
-      uS = ut(2:Nxb+1,1:Nyb)
+      uP = ut_cal(2:Nxb+1,2:Nyb+1)
+      uE = ut_cal(3:Nxb+2,2:Nyb+1)
+      uW = ut_cal(1:Nxb,2:Nyb+1)
+      uN = ut_cal(2:Nxb+1,3:Nyb+2)
+      uS = ut_cal(2:Nxb+1,1:Nyb)
 
       !D1 = (inRe/dx)*(((uE-uP)/dx)-((uP-uW)/dx)) + (inRe/dy)*(((uN-uP)/dy)-((uP-uS)/dy))
 
@@ -299,13 +309,13 @@ subroutine Diffusive_U(ut,dx,dy,inRe,D1)
 end subroutine Diffusive_U
 
 !! DIFFUSIVE V !!
-subroutine Diffusive_V(vt,dx,dy,inRe,D2)
+subroutine Diffusive_V(vt_cal,dx,dy,inRe,D2)
 
 #include "Solver.h"
 
       implicit none
 
-      real,dimension(Nxb+2,Nyb+2), intent(in) :: vt
+      real,dimension(Nxb+2,Nyb+2), intent(in) :: vt_cal
 
       real, intent(in) :: dx
       real, intent(in) :: dy
@@ -323,11 +333,11 @@ subroutine Diffusive_V(vt,dx,dy,inRe,D2)
       !allocate(vN(Nxb,Nyb))
       !allocate(vS(Nxb,Nyb))
 
-      vP = vt(2:Nxb+1,2:Nyb+1)
-      vE = vt(3:Nxb+2,2:Nyb+1)
-      vW = vt(1:Nxb,2:Nyb+1)
-      vN = vt(2:Nxb+1,3:Nyb+2)
-      vS = vt(2:Nxb+1,1:Nyb)
+      vP = vt_cal(2:Nxb+1,2:Nyb+1)
+      vE = vt_cal(3:Nxb+2,2:Nyb+1)
+      vW = vt_cal(1:Nxb,2:Nyb+1)
+      vN = vt_cal(2:Nxb+1,3:Nyb+2)
+      vS = vt_cal(2:Nxb+1,1:Nyb)
 
       !D2 = (inRe/dx)*(((vE-vP)/dx)-((vP-vW)/dx)) + (inRe/dy)*(((vN-vP)/dy)-((vP-vS)/dy))
 
