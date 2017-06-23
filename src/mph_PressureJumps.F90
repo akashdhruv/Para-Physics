@@ -4,7 +4,8 @@ subroutine mph_PressureJumps(s,pf,crv,rho1x,rho1y,rho2x,rho2y,w,sigx,sigy,mdot)
 
         use Multiphase_data, ONLY: mph_rho1,mph_rho2,mph_sten,mph_crmx,mph_crmn
         use Grid_data, ONLY: gr_dx,gr_dy
-        use MPI_interface, ONLY: MPI_applyBC,MPI_physicalBC_dfun
+        use MPI_interface, ONLY: MPI_applyBC,MPI_physicalBC_dfun, MPI_applyBC_shared
+        use physicaldata, only: SHD_facexData, SHD_faceyData
 
         implicit none
 
@@ -187,10 +188,18 @@ subroutine mph_PressureJumps(s,pf,crv,rho1x,rho1y,rho2x,rho2y,w,sigx,sigy,mdot)
           end do
        end do
 
-
+#ifdef MPI_DIST
        call MPI_applyBC(rho1x)
        call MPI_applyBC(rho2x)
        call MPI_applyBC(rho1y)
        call MPI_applyBC(rho2y)
+#endif
+
+#ifdef MPI_SHRD
+    call MPI_applyBC_shared(rho1x,SHD_facexData(RH1F_VAR,:,:))
+    call MPI_applyBC_shared(rho1y,SHD_faceyData(RH1F_VAR,:,:))
+    call MPI_applyBC_shared(rho2x,SHD_facexData(RH2F_VAR,:,:))
+    call MPI_applyBC_shared(rho2y,SHD_faceyData(RH2F_VAR,:,:))
+#endif
 
 end subroutine mph_PressureJumps

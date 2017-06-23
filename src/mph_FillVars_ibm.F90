@@ -2,7 +2,8 @@ subroutine mph_FillVars_ibm(s,pf,thco,cprs,visc,rhox,rhoy,alpx,alpy,T,T_old,beta
 
 #include "Solver.h"
 
-    use MPI_interface, ONLY: MPI_applyBC,MPI_physicalBC_dfun
+    use MPI_interface, ONLY: MPI_applyBC,MPI_physicalBC_dfun, MPI_applyBC_shared
+    use physicaldata, only: SHD_solnData, SHD_facexData, SHD_faceyData
 
     implicit none
     real,intent(inout),dimension(Nxb+2,Nyb+2) :: s,pf,thco,cprs,visc,rhox,rhoy,alpx,alpy
@@ -35,11 +36,21 @@ subroutine mph_FillVars_ibm(s,pf,thco,cprs,visc,rhox,rhoy,alpx,alpy,T,T_old,beta
      end do
     end do
 
+#ifdef MPI_DIST
     call MPI_applyBC(visc)
     call MPI_applyBC(rhox)
     call MPI_applyBC(rhoy)
     call MPI_applyBC(alpx)
     call MPI_applyBC(alpy)    
+#endif
+
+#ifdef MPI_SHRD
+    call MPI_applyBC_shared(visc,SHD_solnData(VISC_VAR,:,:))
+    call MPI_applyBC_shared(rhox,SHD_facexData(RH2F_VAR,:,:))
+    call MPI_applyBC_shared(rhoy,SHD_faceyData(RH2F_VAR,:,:))
+    call MPI_applyBC_shared(alpx,SHD_facexData(AL2F_VAR,:,:))
+    call MPI_applyBC_shared(alpy,SHD_faceyData(AL2F_VAR,:,:))
+#endif
 
     call MPI_physicalBC_dfun(visc)
     call MPI_physicalBC_dfun(rhox)

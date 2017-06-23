@@ -5,11 +5,6 @@ subroutine HeatAD_init()
    use HeatAD_data
    use IncompNS_data
    use physicaldata, only: solnData
-   use Grid_data
-   use Multiphase_data, only: mph_thco2,mph_cp2,mph_vis2,mph_rho2
-   use IBM_data,        only: ibm_thco2,ibm_cp2,ibm_rho2,ibm_vis2
-   use Driver_data, only: dr_dt
-   use MPI_interface, only: MPI_applyBC, MPI_physicalBC_temp
 
    implicit none
 

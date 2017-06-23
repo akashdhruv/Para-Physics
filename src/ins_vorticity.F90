@@ -7,20 +7,18 @@ subroutine ins_vorticity(tstep,w,u,v,s)
     use Driver_data
     use MPI_data
     use IncompNS_data
-    use MPI_interface, ONLY: MPI_applyBC, MPI_CollectResiduals,MPI_physicalBC_vort,MPI_physicalBC_dfun
+    use MPI_interface, ONLY: MPI_applyBC, MPI_CollectResiduals,MPI_physicalBC_vort,MPI_physicalBC_dfun,MPI_applyBC_shared
+    use physicaldata, only: SHD_solnData
 
     implicit none
     integer, intent(in) :: tstep
     real, intent(inout), dimension(:,:) :: w,u,v,s
     real :: u_conv,v_conv,u_plus,u_mins,v_plus,v_mins
     real :: wx_plus,wx_mins,wy_plus,wy_mins
-    !real, allocatable,dimension(:,:) :: w_old
     real, dimension(Nxb+2,Nyb+2) :: w_old
     integer :: i,j
     real :: w_res1
     real :: w_sat,th,tol,wij
-
-    !allocate(w_old(Nxb+2,Nyb+2))
 
     w_old = w
     
@@ -136,7 +134,14 @@ subroutine ins_vorticity(tstep,w,u,v,s)
      !$OMP END DO
      !$OMP END PARALLEL
 
+#ifdef MPI_DIST
      call MPI_applyBC(w)
+#endif
+
+#ifdef MPI_SHRD
+     call MPI_applyBC_shared(w,SHD_solnData(VORT_VAR,:,:))
+#endif
+
      call MPI_physicalBC_vort(w)
    
      do i=1,Nyb+2
@@ -145,7 +150,5 @@ subroutine ins_vorticity(tstep,w,u,v,s)
 
      call MPI_CollectResiduals(ins_w_res,w_res1,SUM_DATA)
      ins_w_res = sqrt(w_res1/((nblockx*nblocky)*(Nxb+2)*(Nyb+2))) 
-
-     !deallocate(w_old)
 
 end subroutine ins_vorticity

@@ -52,8 +52,8 @@ _______________________Grid Parameters___________________________
 
 #define TIME_END 60.00
 
-#define nblockx 2
-#define nblocky 2
+#define nblockx 12
+#define nblocky 12
 
 #define MaxIt 1500
 
@@ -77,14 +77,14 @@ _______________________Grid Parameters___________________________
 #define CENT_VAR 16
 
 #define VELC_VAR 1
-#define VELP_VAR 2
-#define IBMF_VAR 3
-#define RH1F_VAR 4
-#define RH2F_VAR 5
-#define AL1F_VAR 6
-#define AL2F_VAR 7
-#define SIGM_VAR 8
-#define VELI_VAR 9
+#define IBMF_VAR 2
+#define RH1F_VAR 3
+#define RH2F_VAR 4
+#define AL1F_VAR 5
+#define AL2F_VAR 6
+#define SIGM_VAR 7
+#define VELI_VAR 8
+#define USTR_VAR 9
 
 #define FACE_VAR 9
 

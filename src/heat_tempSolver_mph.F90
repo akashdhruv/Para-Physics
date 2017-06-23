@@ -8,9 +8,10 @@ subroutine heat_tempSolver_mph(tstep,T,T_old,mdot,smrh,u,v,a1x,a1y,a2x,a2y,s,pf,
   use IncompNS_data
   use HeatAD_data
   use Driver_data
-  use MPI_interface, only: MPI_applyBC, MPI_physicalBC_temp, MPI_CollectResiduals
+  use MPI_interface, only: MPI_applyBC, MPI_physicalBC_temp, MPI_CollectResiduals, MPI_applyBC_shared
   use Multiphase_data, only: mph_cp2,mph_thco2,mph_max_s,mph_min_s
   use IBM_data, only: ibm_cp1,ibm_thco1
+  use physicaldata, only: SHD_solnData
 
   implicit none
       
@@ -142,8 +143,15 @@ subroutine heat_tempSolver_mph(tstep,T,T_old,mdot,smrh,u,v,a1x,a1y,a2x,a2y,s,pf,
   !$OMP END DO
   !$OMP END PARALLEL
 
-  call MPI_applyBC(T)
-  call MPI_physicalBC_temp(T)
+#ifdef MPI_DIST
+     call MPI_applyBC(T)
+#endif
+
+#ifdef MPI_SHRD
+     call MPI_applyBC_shared(T,SHD_solnData(TEMP_VAR,:,:))
+#endif
+
+     call MPI_physicalBC_temp(T)
 
   do i=1,Nxb+2
        ht_T_res = ht_T_res + sum((T(i,:)-T_old(i,:))**2)

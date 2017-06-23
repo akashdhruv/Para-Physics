@@ -8,6 +8,7 @@ subroutine ins_momentum_VD(tstep,p_counter,p,u,v,visc,rho1x,rho1y,rho2x,rho2y,s,
        use MPI_interface, ONLY: MPI_applyBC, MPI_CollectResiduals, MPI_physicalBC_vel
        use IncompNS_interface, ONLY: ins_rescaleVel
        use IBM_interface, ONLY: IBM_ApplyForcing
+       use physicaldata, only: SHD_facexData, SHD_faceyData
 
 #include "Solver.h"
 
@@ -28,22 +29,6 @@ subroutine ins_momentum_VD(tstep,p_counter,p,u,v,visc,rho1x,rho1y,rho2x,rho2y,s,
        integer :: i,j
        real, intent(inout), dimension(:,:) :: u,v,visc,rho1x,rho1y,rho2x,rho2y,p,s,s2,sigp,sigx,sigy
        real, dimension(Nxb+2,Nyb+2) :: rhox,rhoy
-
-       !allocate(C1(Nxb,Nyb))
-       !allocate(G1(Nxb,Nyb))
-       !allocate(D1(Nxb,Nyb))
-
-       !allocate(C2(Nxb,Nyb))
-       !allocate(G2(Nxb,Nyb))
-       !allocate(D2(Nxb,Nyb))
-
-       !allocate(ut(Nxb+2,Nyb+2))
-       !allocate(vt(Nxb+2,Nyb+2))
-
-       !allocate(u_old(Nxb+2,Nyb+2))
-       !allocate(v_old(Nxb+2,Nyb+2))
-
-       !allocate(p_RHS(Nxb,Nyb))
 
        ins_v_res = 0
        ins_u_res = 0
@@ -92,8 +77,16 @@ subroutine ins_momentum_VD(tstep,p_counter,p,u,v,visc,rho1x,rho1y,rho2x,rho2y,s,
 
        ! Boundary Conditions
 
+#ifdef MPI_DIST
        call MPI_applyBC(ut)
        call MPI_applyBC(vt)
+#endif
+
+#ifdef MPI_SHRD
+       call MPI_applyBC_shared(ut,SHD_facexData(USTR_VAR,:,:))
+       call MPI_applyBC_shared(vt,SHD_faceyData(USTR_VAR,:,:))
+#endif 
+
        call MPI_physicalBC_vel(ut,vt)
 
 #ifdef IBM
@@ -125,8 +118,16 @@ subroutine ins_momentum_VD(tstep,p_counter,p,u,v,visc,rho1x,rho1y,rho2x,rho2y,s,
 
        ! Boundary Conditions
 
+#ifdef MPI_DIST
        call MPI_applyBC(u)
        call MPI_applyBC(v)
+#endif
+
+#ifdef MPI_SHRD
+       call MPI_applyBC_shared(u,SHD_facexData(VELC_VAR,:,:))
+       call MPI_applyBC_shared(v,SHD_faceyData(VELC_VAR,:,:))
+#endif 
+
        call MPI_physicalBC_vel(u,v)
 
        ! Divergence
@@ -160,9 +161,6 @@ subroutine ins_momentum_VD(tstep,p_counter,p,u,v,visc,rho1x,rho1y,rho2x,rho2y,s,
        call MPI_CollectResiduals(ins_v_res,v_res1,SUM_DATA)
        ins_v_res = sqrt(v_res1/((nblockx*nblocky)*(Nxb+2)*(Nyb+2)))
 
-
-       !deallocate(ut,vt,u_old,v_old)
-       !deallocate(C1,G1,D1,C2,G2,D2,p_RHS)
 
 end subroutine ins_momentum_VD
 

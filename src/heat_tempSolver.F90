@@ -16,8 +16,6 @@ subroutine heat_tempSolver(tstep,T,T_old,mdot,smrh,u,v,a1x,a1y,a2x,a2y,s,pf,thco
       
       integer, intent(in) :: tstep
       real, intent(inout), dimension(:,:) :: T,T_old,mdot,smrh,u,v,a1x,a1y,s,pf,thco,cp,a2x,a2y
-      !real, allocatable, dimension(:,:) :: T_old
-      !real, dimension(Nxb+2,Nyb+2) :: T_old
 
       integer :: i,j,ii,jj
 
@@ -38,11 +36,7 @@ subroutine heat_tempSolver(tstep,T,T_old,mdot,smrh,u,v,a1x,a1y,a2x,a2y,s,pf,thco
 
       tol = 0.01
 
-      !allocate(T_old(Nxb+2,Nyb+2))
-
       Tsat = 0.0
-
-      !T_old = T
 
 #ifdef TEMP_SOLVER_CENTRAL
 
@@ -117,7 +111,5 @@ subroutine heat_tempSolver(tstep,T,T_old,mdot,smrh,u,v,a1x,a1y,a2x,a2y,s,pf,thco
      call MPI_CollectResiduals(ht_T_res,T_res1,SUM_DATA)
 
      ht_T_res = sqrt(T_res1/((Nxb+2)*(Nyb+2)*(nblockx*nblocky)))
-
-  !deallocate(T_old)
 
 end subroutine heat_tempSolver

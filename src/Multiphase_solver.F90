@@ -53,7 +53,7 @@ if (jump_flag .eqv. .FALSE.) then
     if(tstep > 0) then 
 
         call mph_getInterfaceVelocity(facexData(VELC_VAR,:,:),faceyData(VELC_VAR,:,:),&
-                                      faceyData(VELI_VAR,:,:),faceyData(VELI_VAR,:,:),&
+                                      facexData(VELI_VAR,:,:),faceyData(VELI_VAR,:,:),&
                                       solnData(SMRH_VAR,:,:),solnData(MDOT_VAR,:,:),&
                                       solnData(NRMX_VAR,:,:),solnData(NRMY_VAR,:,:))
 

@@ -40,7 +40,7 @@ subroutine MPI_applyBC_shared(local,shared)
 
         if(shared_part(myid+1+1) == MPI_UNDEFINED .and. x_id < x_procs-1) &
         call MPI_SEND(local(Nxb+1,:), Nyb+2, MPI_REAL, x_id+1, 2, x_comm, ierr)
-
+                
         !_______________________MPI BC for High Y______________________________!
         if(y_id < y_procs - 1) then
 
@@ -72,5 +72,6 @@ subroutine MPI_applyBC_shared(local,shared)
         if(shared_part(myid+1+x_procs) == MPI_UNDEFINED .and. y_id < y_procs -1) &
         call MPI_SEND(local(:,Nyb+1), Nxb+2, MPI_REAL, y_id+1, 4 ,y_comm, ierr)
         
+        call MPI_BARRIER(shared_comm,ierr)
 
 end subroutine MPI_applyBC_shared

@@ -73,15 +73,15 @@ subroutine ins_momentum(tstep,p_counter,p,u,v,ut,vt,s,s2)
 
        ! Boundary Conditions
 
-!#ifdef MPI_DIST
+#ifdef MPI_DIST
        call MPI_applyBC(ut)
        call MPI_applyBC(vt)
-!#endif
+#endif
 
-!#ifdef MPI_SHRD
-!       call MPI_applyBC_shared(ut,SHD_facexData(VELP_VAR,:,:))
-!       call MPI_applyBC_shared(vt,SHD_faceyData(VELP_VAR,:,:))
-!#endif 
+#ifdef MPI_SHRD
+       call MPI_applyBC_shared(ut,SHD_facexData(USTR_VAR,:,:))
+       call MPI_applyBC_shared(vt,SHD_faceyData(USTR_VAR,:,:))
+#endif 
      
        call MPI_physicalBC_vel(ut,vt)
 

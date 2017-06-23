@@ -107,10 +107,9 @@ program MPI_SHMtest
        
         !print *,"x_rank : ",x_id," y_rank: ", y_id," comm_x: ",mod(x_id-1+x_procs,x_procs)," comm_y: ",mod(y_id-1+y_procs,y_procs)
  
-        call MPI_BARRIER(solver_comm, ierr)
-        call MPI_BARRIER(shared_comm, ierr)
+        !do i=1,procs
 
-         if (myid == 0) then
+         if (myid == 64) then
          print *,"Global rank:",myid," Shared rank:",shared_id
           do j=1,Nyb+2
               print *,local_data(:,j)
@@ -120,7 +119,7 @@ program MPI_SHMtest
         call MPI_BARRIER(solver_comm,ierr)
         call MPI_BARRIER(shared_comm,ierr)
 
-         if (myid == 6) then
+         if (myid == 63) then
          print *,"Global rank:",myid," Shared rank:",shared_id
           do j=1,Nyb+2
               print *,local_data(:,j)
@@ -130,7 +129,7 @@ program MPI_SHMtest
         call MPI_BARRIER(solver_comm,ierr)
         call MPI_BARRIER(shared_comm,ierr)
 
-         if (myid == 12) then
+         if (myid == 65) then
          print *,"Global rank:",myid," Shared rank:",shared_id
           do j=1,Nyb+2
               print *,local_data(:,j)
@@ -140,46 +139,7 @@ program MPI_SHMtest
         call MPI_BARRIER(solver_comm,ierr)
         call MPI_BARRIER(shared_comm,ierr)
 
-         if (myid == 16) then
-         print *,"Global rank:",myid," Shared rank:",shared_id
-          do j=1,Nyb+2
-              print *,local_data(:,j)
-          end do
-         end if
-
-        call MPI_BARRIER(solver_comm,ierr)
-        call MPI_BARRIER(shared_comm,ierr)
-
-         if (myid == 27) then
-         print *,"Global rank:",myid," Shared rank:",shared_id
-          do j=1,Nyb+2
-              print *,local_data(:,j)
-          end do
-         end if
-
-        call MPI_BARRIER(solver_comm,ierr)
-        call MPI_BARRIER(shared_comm,ierr)
-
-
-        if (myid == 42) then
-         print *,"Global rank:",myid," Shared rank:",shared_id
-          do j=1,Nyb+2
-              print *,local_data(:,j)
-          end do
-         end if
-
-        call MPI_BARRIER(solver_comm,ierr)
-        call MPI_BARRIER(shared_comm,ierr)
-
-         if (myid == 48) then
-         print *,"Global rank:",myid," Shared rank:",shared_id
-          do j=1,Nyb+2
-              print *,local_data(:,j)
-          end do
-         end if
-
-        call MPI_BARRIER(solver_comm,ierr)
-        call MPI_BARRIER(shared_comm,ierr)
+        !end do
 
      !___Deallocate memory and clean up_____!
        deallocate(world_part)

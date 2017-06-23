@@ -37,9 +37,6 @@ subroutine Poisson_solver(ps_RHS,ps,ps_res,ps_counter,ps_quant)
 
   poisson_start = MPI_Wtime()
 
-  !allocate(ps_old(Nxb+2,Nyb+2))
-  !allocate(ps_new(Nxb+2,Nyb+2))
-
   !!DIR$ OFFLOAD BEGIN TARGET(mic) in(ps_old,gr_dy,gr_dx,ps_RHS,i,j,thread_id,ps_res1,ps_quant,dr_tile,ii,jj) inout(ps,ps_res,ps_counter)
 
   !$OMP PARALLEL PRIVATE(i,j,thread_id,ii,jj) DEFAULT(NONE) NUM_THREADS(NTHREADS) &
@@ -149,7 +146,7 @@ subroutine Poisson_solver(ps_RHS,ps,ps_res,ps_counter,ps_quant)
 #endif
 
 #ifdef MPI_SHRD
-     call MPI_applyBC_shared(ps,SHD_solnData(PRES_VAR,:,:))
+     call MPI_applyBC_shared(ps,SHD_solnData(ps_quant,:,:))
 #endif
 
      if(ps_quant == PRES_VAR) call MPI_physicalBC_pres(ps)
@@ -177,7 +174,5 @@ subroutine Poisson_solver(ps_RHS,ps,ps_res,ps_counter,ps_quant)
   poisson_finish = MPI_Wtime()
 
   ins_timePoisson = ins_timePoisson + (poisson_finish - poisson_start) 
-
-  !deallocate(ps_old,ps_new)
 
 end subroutine Poisson_solver

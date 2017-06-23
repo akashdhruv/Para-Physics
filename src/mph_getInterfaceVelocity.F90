@@ -3,7 +3,8 @@ subroutine mph_getInterfaceVelocity(u,v,u_int,v_int,smrh,mdot,nrmx,nrmy)
 
 #include "Solver.h"
 
-       use MPI_interface, ONLY: MPI_applyBC,MPI_physicalBC_vel
+       use MPI_interface, ONLY: MPI_applyBC,MPI_physicalBC_vel,MPI_applyBC_shared
+       use physicaldata, only: SHD_facexData, SHD_faceyData
 
        implicit none
       
@@ -42,8 +43,15 @@ subroutine mph_getInterfaceVelocity(u,v,u_int,v_int,smrh,mdot,nrmx,nrmy)
         enddo
         enddo
 
+#ifdef MPI_DIST
       call MPI_applyBC(u_int)
       call MPI_applyBC(v_int)
+#endif
+
+#ifdef MPI_SHRD
+      call MPI_applyBC_shared(u_int,SHD_facexData(VELI_VAR,:,:))
+      call MPI_applyBC_shared(v_int,SHD_faceyData(VELI_VAR,:,:))
+#endif
 
       call MPI_physicalBC_vel(u_int,v_int)
 

@@ -3,8 +3,9 @@ subroutine Poisson_solver_VC(ps_RHS,ps,ps_rx,ps_ry,ps_res,ps_counter,ps_quant)
   !$ use omp_lib
   use Grid_data
   use MPI_data
-  use MPI_interface, ONLY: MPI_applyBC, MPI_CollectResiduals, MPI_physicalBC_pres
+  use MPI_interface, ONLY: MPI_applyBC, MPI_CollectResiduals, MPI_physicalBC_pres, MPI_applyBC_shared
   use Driver_data, ONLY: dr_tile
+  use physicaldata, ONLY: SHD_solnData
 
 #include "Solver.h"
                 
@@ -31,9 +32,6 @@ subroutine Poisson_solver_VC(ps_RHS,ps,ps_rx,ps_ry,ps_res,ps_counter,ps_quant)
   thread_id = 0
   ps_old = 0
   ps_counter = 0
-
-  !allocate(ps_old(Nxb+2,Nyb+2))
-  !allocate(ps_new(Nxb+2,Nyb+2))
 
   !!DIR$ OFFLOAD BEGIN TARGET(mic) in(ps_old,gr_dy,gr_dx,ps_RHS,i,j,thread_id,ps_res1,ps_quant,dr_tile,ii,jj) inout(ps,ps_res,ps_counter)
 
@@ -109,7 +107,13 @@ subroutine Poisson_solver_VC(ps_RHS,ps,ps_rx,ps_ry,ps_res,ps_counter,ps_quant)
 
      if (thread_id == 0) then
 
+#ifdef MPI_DIST
      call MPI_applyBC(ps)
+#endif
+
+#ifdef MPI_SHRD
+     call MPI_applyBC_shared(ps,SHD_solnData(ps_quant,:,:))
+#endif
 
      if(ps_quant == PRES_VAR) call MPI_physicalBC_pres(ps)
  
@@ -132,7 +136,5 @@ subroutine Poisson_solver_VC(ps_RHS,ps,ps_rx,ps_ry,ps_res,ps_counter,ps_quant)
   !$OMP END PARALLEL
 
   !!DIR$ END OFFLOAD
-
-  !deallocate(ps_old,ps_new)
 
 end subroutine Poisson_solver_VC
