@@ -21,7 +21,6 @@ subroutine Solver_evolve
 
     integer :: tstep,p_counter
 
-    !real, allocatable,  dimension(:,:) :: uu,vv,pp,tt,df,pf,th,cp,ww
     real, dimension(Nxb+1,Nyb+1) :: uu,vv,pp,tt,ww,rx,ry,vs,ax,ay
 
     real :: solnX

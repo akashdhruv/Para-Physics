@@ -144,8 +144,13 @@ subroutine Poisson_solver(ps_RHS,ps,ps_res,ps_counter,ps_quant)
 
      if (thread_id == 0) then
 
+#ifdef MPI_DIST
      call MPI_applyBC(ps)
-     !call MPI_applyBC_shared(ps,SHD_solnData(PRES_VAR,:,:))
+#endif
+
+#ifdef MPI_SHRD
+     call MPI_applyBC_shared(ps,SHD_solnData(PRES_VAR,:,:))
+#endif
 
      if(ps_quant == PRES_VAR) call MPI_physicalBC_pres(ps)
 

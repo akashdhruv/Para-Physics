@@ -12,6 +12,9 @@ subroutine IncompNS_init()
 
       facexData(VELC_VAR,:,:) = 0.0
       faceyData(VELC_VAR,:,:) = 0.0
+
+      facexData(VELP_VAR,:,:) = 0.0
+      faceyData(VELP_VAR,:,:) = 0.0
      
       ins_inRe  = 0.001
 

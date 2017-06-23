@@ -17,34 +17,14 @@ subroutine ins_momentum(tstep,p_counter,p,u,v,ut,vt,s,s2)
        !-Arguments
        integer, intent(in) :: tstep
        integer, intent(out) :: p_counter
+       real, intent(inout), dimension(:,:) :: u, v, p, s, s2
+       real, intent(inout), dimension(:,:) :: ut,vt
 
        !-Local Variables
-
-       !real, allocatable, dimension(:,:) :: ut,vt,u_old,v_old
-       !real, allocatable, dimension(:,:) :: C1,G1,D1,C2,G2,D2,p_RHS
-
        real, dimension(Nxb+2,Nyb+2) :: u_old,v_old
        real, dimension(Nxb,Nyb) :: C1,G1,D1,C2,G2,D2,p_RHS
        real :: u_res1, v_res1, maxdiv, mindiv,umax,umin,vmax,vmin
        integer :: i,j
-       real, intent(inout), dimension(:,:) :: u, v, p, s, s2
-       real, intent(inout), dimension(:,:) :: ut,vt
-
-       !allocate(C1(Nxb,Nyb))
-       !allocate(G1(Nxb,Nyb))
-       !allocate(D1(Nxb,Nyb))
-
-       !allocate(C2(Nxb,Nyb))
-       !allocate(G2(Nxb,Nyb))
-       !allocate(D2(Nxb,Nyb))
-
-       !allocate(ut(Nxb+2,Nyb+2))
-       !allocate(vt(Nxb+2,Nyb+2))
-
-       !allocate(u_old(Nxb+2,Nyb+2))
-       !allocate(v_old(Nxb+2,Nyb+2))
-
-       !allocate(p_RHS(Nxb,Nyb))
 
        ins_v_res = 0
        ins_u_res = 0
@@ -93,12 +73,16 @@ subroutine ins_momentum(tstep,p_counter,p,u,v,ut,vt,s,s2)
 
        ! Boundary Conditions
 
+#ifdef MPI_DIST
        call MPI_applyBC(ut)
        call MPI_applyBC(vt)
+#endif
 
-       !call MPI_applyBC_shared(ut,SHD_facexData(USTR_VAR,:,:))
-       !call MPI_applyBC_shared(vt,SHD_faceyData(USTR_VAR,:,:))
-       
+#ifdef MPI_SHRD
+       call MPI_applyBC_shared(ut,SHD_facexData(VELP_VAR,:,:))
+       call MPI_applyBC_shared(vt,SHD_faceyData(VELP_VAR,:,:))
+#endif 
+     
        call MPI_physicalBC_vel(ut,vt)
 
 #ifdef IBM
@@ -121,11 +105,15 @@ subroutine ins_momentum(tstep,p_counter,p,u,v,ut,vt,s,s2)
 
        ! Boundary Conditions
 
+#ifdef MPI_DIST
        call MPI_applyBC(u)
        call MPI_applyBC(v)
+#endif
 
-       !call MPI_applyBC_shared(u,SHD_facexData(VELC_VAR,:,:))
-       !call MPI_applyBC_shared(v,SHD_faceyData(VELC_VAR,:,:))
+#ifdef MPI_SHRD
+       call MPI_applyBC_shared(u,SHD_facexData(VELC_VAR,:,:))
+       call MPI_applyBC_shared(v,SHD_faceyData(VELC_VAR,:,:))
+#endif
 
        call MPI_physicalBC_vel(u,v)
 

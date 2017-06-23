@@ -13,7 +13,7 @@ subroutine IncompNS_solver(tstep,p_counter)
 #ifdef SINGLEPHASE
     call ins_momentum(tstep,p_counter,solnData(PRES_VAR,:,:),&
                       facexData(VELC_VAR,:,:),faceyData(VELC_VAR,:,:),&
-                      facexData(USTR_VAR,:,:),faceyData(USTR_VAR,:,:),&
+                      facexData(VELP_VAR,:,:),faceyData(VELP_VAR,:,:),&
                       facexData(IBMF_VAR,:,:),faceyData(IBMF_VAR,:,:))
 #endif
 

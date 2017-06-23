@@ -1,7 +1,26 @@
+module modify
+
+     contains
+     subroutine modify_data(local_data)
+
+#include "Solver.h"     
+
+     use MPI_data
+
+     implicit none
+     real,intent(inout),dimension(:,:) :: local_data
+
+     local_data(2:Nxb+1,2:Nyb+1) = myid + 1
+
+     end subroutine
+
+end module modify
+
 program MPI_SHMtest
 
 #include "Solver.h"
 
+        use modify
         use MPI_interface, only: MPI_applyBC_shared
         use MPI_data
         use, intrinsic :: ISO_C_BINDING, ONLY: C_PTR, C_F_POINTER
@@ -15,7 +34,7 @@ program MPI_SHMtest
         type(C_PTR) :: baseptr,shareptr
         integer :: win,i,j
 
-        real,pointer,dimension(:,:) :: local_data,shared_data
+        real,save,pointer,dimension(:,:) :: local_data,shared_data
         real :: A
 
         !_____Defined Block Size________!
@@ -71,7 +90,7 @@ program MPI_SHMtest
 
 
         !___Modify Local Data____!
-        local_data(2:Nxb+1,2:Nyb+1) = myid + 1
+        call modify_data(local_data)
 
         call MPI_BARRIER(shared_comm,ierr)
         call MPI_BARRIER(solver_comm,ierr)

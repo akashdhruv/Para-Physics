@@ -99,8 +99,14 @@ subroutine heat_tempSolver(tstep,T,T_old,mdot,smrh,u,v,a1x,a1y,a2x,a2y,s,pf,thco
   !$OMP END DO
   !$OMP END PARALLEL
 #endif
+
+#ifdef MPI_DIST
      call MPI_applyBC(T)
-     !call MPI_applyBC_shared(T,SHD_solnData(TEMP_VAR,:,:))
+#endif
+
+#ifdef MPI_SHRD
+     call MPI_applyBC_shared(T,SHD_solnData(TEMP_VAR,:,:))
+#endif
 
      call MPI_physicalBC_temp(T)
 

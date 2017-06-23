@@ -52,8 +52,8 @@ _______________________Grid Parameters___________________________
 
 #define TIME_END 60.00
 
-#define nblockx 8
-#define nblocky 8
+#define nblockx 2
+#define nblocky 2
 
 #define MaxIt 1500
 
@@ -77,7 +77,7 @@ _______________________Grid Parameters___________________________
 #define CENT_VAR 16
 
 #define VELC_VAR 1
-#define USTR_VAR 2
+#define VELP_VAR 2
 #define IBMF_VAR 3
 #define RH1F_VAR 4
 #define RH2F_VAR 5
@@ -168,6 +168,20 @@ _________________OpenMP threads per MPI rank_______________
 #endif
 
 #define NTHREADS 1
+
+#if 0
+_________________MPI with shared memory on/off_______________
+#endif
+
+#define SHARE_TYPE 1
+
+#if SHARE_TYPE == 1
+#define MPI_SHRD
+#endif
+
+#if SHARE_TYPE == 0
+#define MPI_DIST
+#endif
 
 #if 0
 __________________Data Operation Parameters________________
