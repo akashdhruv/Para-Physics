@@ -1,18 +1,20 @@
-## Fortran based Hybrid MPI-OpenMP, Block Structured Computational Multi-Physics Solver 
+## PARA-PHYSICS, A parallel block structured computational multi-physics solver 
 
 ### Important Information
 
-  1. This is version 1.0 of **Para-Physics**, a computational multi-physics solver.
+  1. This is version 2.0 of the software, previous versions can be found in the releases
   2. Single phase heat equation, Navier-Stokes and Poisson solver modules are working.
   3. Immersed boundary module is working.
-  4. Conjugate Heat Transfer is in beta.
+  4. Conjugate heat transfer is in beta.
   5. AMR module not yet implemented.
   6. Multiphase module is in beta.
+  7. Parallelization is implemented using MPI-3, which enables on-node optimization using a shared memory model.
+  8. Multi-threading using OpenMP is also available
 
 ### Execution instructions
 
   1. Download the source code 
-  2. Make sure you have make utility and the latest version of GNU and MPI installed
+  2. Make sure you have make utility and the latest version of GNU and MPI-3 or higher installed
   3. Edit the Makefile in ./src to include your MPI path.
 
      ~~~terminal 
