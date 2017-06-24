@@ -73,6 +73,6 @@ subroutine MPI_applyBC_shared(local,shared)
         if(shared_part(myid+1+x_procs) == MPI_UNDEFINED .and. y_id < y_procs -1) &
         call MPI_ISEND(local(:,Nyb+1), Nxb+2, MPI_REAL, y_id+1, 4 ,y_comm, sendreq, ierr)
         
-        !call MPI_BARRIER(shared_comm,ierr)
+        call MPI_BARRIER(shared_comm,ierr)
 
 end subroutine MPI_applyBC_shared
