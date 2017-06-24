@@ -59,7 +59,7 @@ subroutine Solver_evolve
                           ins_umaxmin,ins_vmaxmin)
        endif
 
-       !if((ins_u_res .lt. 0.0000001) .and. (ins_u_res .ne. 0).and. (ins_v_res .lt. 0.0000001) .and. (ins_v_res .ne. 0) ) exit
+       if((ins_u_res .lt. 0.0000001) .and. (ins_u_res .ne. 0).and. (ins_v_res .lt. 0.0000001) .and. (ins_v_res .ne. 0) ) exit
 
 #ifdef SOLVER_DEBUG
 

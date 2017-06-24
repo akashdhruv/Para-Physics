@@ -1,8 +1,8 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-k=2
-d=2
+k=8
+d=8
 
 M=20+1
 N=20+1
@@ -17,12 +17,28 @@ T=np.zeros((N*d,M*k),dtype=float)
 for i in range(0,k*d):
 	
 	if(i<=9):
+		x=np.loadtxt('X000%d.dat' % i)
+		y=np.loadtxt('Y000%d.dat' % i)
+		u=np.loadtxt('U000%d.dat' % i)
+		v=np.loadtxt('V000%d.dat' % i)
+        	p=np.loadtxt('P000%d.dat' % i)
+                t=np.loadtxt('T000%d.dat' % i)
+	elif(i<=99):
+		x=np.loadtxt('X00%d.dat' % i)
+		y=np.loadtxt('Y00%d.dat' % i)
+		u=np.loadtxt('U00%d.dat' % i)
+		v=np.loadtxt('V00%d.dat' % i)
+		p=np.loadtxt('P00%d.dat' % i)
+                t=np.loadtxt('T00%d.dat' % i)
+        
+	elif(i<=999):
 		x=np.loadtxt('X0%d.dat' % i)
 		y=np.loadtxt('Y0%d.dat' % i)
 		u=np.loadtxt('U0%d.dat' % i)
 		v=np.loadtxt('V0%d.dat' % i)
-        	p=np.loadtxt('P0%d.dat' % i)
+		p=np.loadtxt('P0%d.dat' % i)
                 t=np.loadtxt('T0%d.dat' % i)
+
 	else:
 		x=np.loadtxt('X%d.dat' % i)
 		y=np.loadtxt('Y%d.dat' % i)
@@ -30,7 +46,7 @@ for i in range(0,k*d):
 		v=np.loadtxt('V%d.dat' % i)
 		p=np.loadtxt('P%d.dat' % i)
                 t=np.loadtxt('T%d.dat' % i)
-        
+
 	x=np.reshape(x,[N,M])
 	y=np.reshape(y,[N,M])
 	u=np.reshape(u,[N,M])

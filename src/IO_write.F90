@@ -7,12 +7,12 @@ subroutine IO_write(x,y,uu,vv,pp,tt,id)
        integer, intent(in) :: id
        character(len=10) :: f1,f2,f3,f4,f7,f8
      
-       write (f1, '( "X", I2.2, ".dat" )' )id
-       write (f2, '( "Y", I2.2, ".dat" )' )id
-       write (f3, '( "U", I2.2, ".dat" )' )id
-       write (f4, '( "V", I2.2, ".dat" )' )id
-       write (f7, '( "P", I2.2, ".dat" )' )id
-       write (f8, '( "T", I2.2, ".dat" )' )id
+       write (f1, '( "X", I4.4, ".dat" )' )id
+       write (f2, '( "Y", I4.4, ".dat" )' )id
+       write (f3, '( "U", I4.4, ".dat" )' )id
+       write (f4, '( "V", I4.4, ".dat" )' )id
+       write (f7, '( "P", I4.4, ".dat" )' )id
+       write (f8, '( "T", I4.4, ".dat" )' )id
 
        open(unit = 1, file = f1)
        open(unit = 2, file = f2)
