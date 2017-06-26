@@ -52,8 +52,8 @@ _______________________Grid Parameters___________________________
 
 #define TIME_END 60.00
 
-#define nblockx 12
-#define nblocky 6
+#define nblockx 8
+#define nblocky 8
 
 #define MaxIt 1500
 
