@@ -25,4 +25,7 @@ module MPI_data
       type(C_PTR), save :: center_ptr,facex_ptr, facey_ptr
       integer, save :: center_win,facex_win,facey_win
 
+
+      integer,save :: mpi_info_key
+
 end module MPI_data

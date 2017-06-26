@@ -73,7 +73,6 @@ subroutine MPIsolver_init()
     call MPI_COMM_size(y_comm,y_procs,ierr)
 
     !__________Define Shared Communication Environment__________!
-
     call MPI_COMM_SPLIT_TYPE(solver_comm, MPI_COMM_TYPE_SHARED, 0, MPI_INFO_NULL, shared_comm, ierr)
     call MPI_COMM_RANK(shared_comm,shared_id,ierr)
     call MPI_COMM_SIZE(shared_comm,shared_procs,ierr)
@@ -82,6 +81,9 @@ subroutine MPIsolver_init()
     allocate(shared_part(procs))
     call MPI_GROUP_TRANSLATE_RANKS(world_group,procs,world_part,shared_group,shared_part,ierr)
 
+    call MPI_INFO_CREATE(mpi_info_key,ierr)
+    call MPI_INFO_SET(mpi_info_key,"alloc_shared_noncontig","true",ierr)
+
     !_________Make on-node processes allocate their chunk of shared Memory____________________!
     center_size = CENT_VAR*(Nxb+2)*(Nyb+2)*sizeof(A)
     facex_size  = FACE_VAR*(Nxb+2)*(Nyb+2)*sizeof(A)
@@ -89,9 +91,9 @@ subroutine MPIsolver_init()
 
     disp_unit = sizeof(A)
 
-    call MPI_WIN_ALLOCATE_SHARED(center_size,disp_unit,MPI_INFO_NULL,shared_comm,center_ptr,center_win,ierr)
-    call MPI_WIN_ALLOCATE_SHARED(facex_size,disp_unit,MPI_INFO_NULL,shared_comm,facex_ptr,facex_win,ierr)
-    call MPI_WIN_ALLOCATE_SHARED(facey_size,disp_unit,MPI_INFO_NULL,shared_comm,facey_ptr,facey_win,ierr)
+    call MPI_WIN_ALLOCATE_SHARED(center_size,disp_unit,mpi_info_key,shared_comm,center_ptr,center_win,ierr)
+    call MPI_WIN_ALLOCATE_SHARED(facex_size,disp_unit,mpi_info_key,shared_comm,facex_ptr,facex_win,ierr)
+    call MPI_WIN_ALLOCATE_SHARED(facey_size,disp_unit,mpi_info_key,shared_comm,facey_ptr,facey_win,ierr)
 
     !__________________Point to local chunk of the shared data_______________________________!
     call MPI_WIN_SHARED_QUERY(center_win, shared_id, center_size, disp_unit, center_ptr,ierr)
