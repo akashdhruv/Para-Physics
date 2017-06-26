@@ -26,11 +26,11 @@ module IncompNS_interface
        end interface
 
        interface
-           subroutine ins_momentum_VD(tstep,p_counter,p,u,v,visc,rho1x,rho1y,rho2x,rho2y,s,s2,sigp,sigx,sigy)
+           subroutine ins_momentum_VD(tstep,p_counter,p,u,v,ut,vt,visc,rho1x,rho1y,rho2x,rho2y,s,s2,sigp,sigx,sigy)
             implicit none
             integer, intent(in) :: tstep
             integer, intent(out) :: p_counter
-            real, intent(inout), dimension(:,:) :: u, v, p, visc, rho1x, rho1y, rho2x, rho2y, s, s2, sigp, sigx, sigy
+            real, intent(inout), dimension(:,:) :: u, v, p, visc, rho1x, rho1y, rho2x, rho2y, s, s2, sigp, sigx, sigy, ut, vt
            end subroutine ins_momentum_VD
        end interface
 

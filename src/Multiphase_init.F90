@@ -24,7 +24,7 @@ subroutine Multiphase_init()
    mph_cp1   = 1.0*mph_rho1
    mph_vis1  = 1.0
 
-   mph_beta  = 1.0
+   mph_beta  = 0.1
    mph_sten  = 1.0
 
    solnData(DFUN_VAR,:,:)  = 0.0

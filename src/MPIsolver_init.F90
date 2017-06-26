@@ -106,18 +106,56 @@ subroutine MPIsolver_init()
     call MPI_BARRIER(shared_comm,ierr)
     call C_F_POINTER(facey_ptr, faceyData, [FACE_VAR,Nxb+2,Nyb+2])
 
-    !_____________________Point to the enitre shared data_____________________________!
-    call MPI_WIN_SHARED_QUERY(center_win, 0 ,center_size,disp_unit,center_ptr,ierr)
-    call MPI_BARRIER(shared_comm,ierr)
-    call C_F_POINTER(center_ptr,SHD_solnData,[CENT_VAR,Nxb+2,(Nyb+2)*shared_procs])
+    !_____________________Point to the neighbour's data________________________________!
 
-    call MPI_WIN_SHARED_QUERY(facex_win, 0, facex_size,disp_unit,facex_ptr,ierr)
-    call MPI_BARRIER(shared_comm,ierr)
-    call C_F_POINTER(facex_ptr,SHD_facexData,[FACE_VAR,Nxb+2,(Nyb+2)*shared_procs])
+    if(x_id < x_procs-1 .and. shared_part(myid+1+1) /= MPI_UNDEFINED) then
+    call MPI_WIN_SHARED_QUERY(center_win, shared_id+1 ,center_size,disp_unit,center_ptr,ierr)
+    call C_F_POINTER(center_ptr,eastCENTER,[CENT_VAR,Nxb+2,Nyb+2])
 
-    call MPI_WIN_SHARED_QUERY(facey_win, 0, facey_size,disp_unit,facey_ptr,ierr)
+    call MPI_WIN_SHARED_QUERY(facex_win, shared_id+1,facex_size,disp_unit,facex_ptr,ierr)
+    call C_F_POINTER(facex_ptr,eastFACEX,[FACE_VAR,Nxb+2,Nyb+2])
+
+    call MPI_WIN_SHARED_QUERY(facey_win, shared_id+1,facey_size,disp_unit,facey_ptr,ierr)
+    call C_F_POINTER(facey_ptr,eastFACEY,[FACE_VAR,Nxb+2,Nyb+2])
+    end if
     call MPI_BARRIER(shared_comm,ierr)
-    call C_F_POINTER(facey_ptr,SHD_faceyData,[FACE_VAR,Nxb+2,(Nyb+2)*shared_procs])
+
+    if(x_id > 0 .and. shared_part(myid+1-1) /= MPI_UNDEFINED) then
+    call MPI_WIN_SHARED_QUERY(center_win, shared_id-1 ,center_size,disp_unit,center_ptr,ierr)
+    call C_F_POINTER(center_ptr,westCENTER,[CENT_VAR,Nxb+2,Nyb+2])
+
+    call MPI_WIN_SHARED_QUERY(facex_win, shared_id-1,facex_size,disp_unit,facex_ptr,ierr)
+    call C_F_POINTER(facex_ptr,westFACEX,[FACE_VAR,Nxb+2,Nyb+2])
+
+    call MPI_WIN_SHARED_QUERY(facey_win, shared_id-1,facey_size,disp_unit,facey_ptr,ierr)
+    call C_F_POINTER(facey_ptr,westFACEY,[FACE_VAR,Nxb+2,Nyb+2])
+    end if
+    call MPI_BARRIER(shared_comm,ierr)
+
+    if(y_id < y_procs-1 .and. shared_part(myid+1+x_procs) /= MPI_UNDEFINED) then
+    call MPI_WIN_SHARED_QUERY(center_win, shared_id+x_procs ,center_size,disp_unit,center_ptr,ierr)
+    call C_F_POINTER(center_ptr,northCENTER,[CENT_VAR,Nxb+2,Nyb+2])
+
+    call MPI_WIN_SHARED_QUERY(facex_win, shared_id+x_procs,facex_size,disp_unit,facex_ptr,ierr)
+    call C_F_POINTER(facex_ptr,northFACEX,[FACE_VAR,Nxb+2,Nyb+2])
+
+    call MPI_WIN_SHARED_QUERY(facey_win, shared_id+x_procs,facey_size,disp_unit,facey_ptr,ierr)
+    call C_F_POINTER(facey_ptr,northFACEY,[FACE_VAR,Nxb+2,Nyb+2])
+    end if
+    call MPI_BARRIER(shared_comm,ierr)
+
+    if(y_id > 0 .and. shared_part(myid+1-x_procs) /= MPI_UNDEFINED) then
+    call MPI_WIN_SHARED_QUERY(center_win, shared_id-x_procs ,center_size,disp_unit,center_ptr,ierr)
+    call C_F_POINTER(center_ptr,southCENTER,[CENT_VAR,Nxb+2,Nyb+2])
+
+    call MPI_WIN_SHARED_QUERY(facex_win, shared_id-x_procs,facex_size,disp_unit,facex_ptr,ierr)
+    call C_F_POINTER(facex_ptr,southFACEX,[FACE_VAR,Nxb+2,Nyb+2])
+
+    call MPI_WIN_SHARED_QUERY(facey_win, shared_id-x_procs,facey_size,disp_unit,facey_ptr,ierr)
+    call C_F_POINTER(facey_ptr,southFACEY,[FACE_VAR,Nxb+2,Nyb+2])
+    end if
+    call MPI_BARRIER(shared_comm,ierr)
+
 
     !call cpu_time(start)
     !start = omp_get_wtime()

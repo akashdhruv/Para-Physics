@@ -5,7 +5,7 @@ subroutine Poisson_solver_VC(ps_RHS,ps,ps_rx,ps_ry,ps_res,ps_counter,ps_quant)
   use MPI_data
   use MPI_interface, ONLY: MPI_applyBC, MPI_CollectResiduals, MPI_physicalBC_pres, MPI_applyBC_shared
   use Driver_data, ONLY: dr_tile
-  use physicaldata, ONLY: SHD_solnData
+  use IncompNS_data, ONLY: ins_timePoisson
 
 #include "Solver.h"
                 
@@ -28,6 +28,10 @@ subroutine Poisson_solver_VC(ps_RHS,ps,ps_rx,ps_ry,ps_res,ps_counter,ps_quant)
 
   integer, intent(out) :: ps_counter
   integer :: i,j,thread_id,ii,jj
+
+  double precision :: poisson_start, poisson_finish
+
+  poisson_start = MPI_Wtime()
 
   thread_id = 0
   ps_old = 0
@@ -112,7 +116,7 @@ subroutine Poisson_solver_VC(ps_RHS,ps,ps_rx,ps_ry,ps_res,ps_counter,ps_quant)
 #endif
 
 #ifdef MPI_SHRD
-     call MPI_applyBC_shared(ps,SHD_solnData(ps_quant,:,:))
+     call MPI_applyBC_shared(ps_quant,CENTER)
 #endif
 
      if(ps_quant == PRES_VAR) call MPI_physicalBC_pres(ps)
@@ -136,5 +140,8 @@ subroutine Poisson_solver_VC(ps_RHS,ps,ps_rx,ps_ry,ps_res,ps_counter,ps_quant)
   !$OMP END PARALLEL
 
   !!DIR$ END OFFLOAD
+   poisson_finish = MPI_Wtime()
+
+   ins_timePoisson = ins_timePoisson + (poisson_finish - poisson_start)
 
 end subroutine Poisson_solver_VC

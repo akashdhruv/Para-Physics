@@ -8,7 +8,6 @@ subroutine ins_momentum(tstep,p_counter,p,u,v,ut,vt,s,s2)
        use MPI_interface, ONLY: MPI_applyBC, MPI_CollectResiduals, MPI_physicalBC_vel, MPI_applyBC_shared
        use IncompNS_interface, ONLY: ins_rescaleVel
        use IBM_interface, ONLY: IBM_ApplyForcing
-       use physicaldata, only: SHD_facexData,SHD_faceyData
 
 #include "Solver.h"
 
@@ -79,8 +78,8 @@ subroutine ins_momentum(tstep,p_counter,p,u,v,ut,vt,s,s2)
 #endif
 
 #ifdef MPI_SHRD
-       call MPI_applyBC_shared(ut,SHD_facexData(USTR_VAR,:,:))
-       call MPI_applyBC_shared(vt,SHD_faceyData(USTR_VAR,:,:))
+       call MPI_applyBC_shared(USTR_VAR,FACEX)
+       call MPI_applyBC_shared(USTR_VAR,FACEY)
 #endif 
      
        call MPI_physicalBC_vel(ut,vt)
@@ -111,8 +110,8 @@ subroutine ins_momentum(tstep,p_counter,p,u,v,ut,vt,s,s2)
 #endif
 
 #ifdef MPI_SHRD
-       call MPI_applyBC_shared(u,SHD_facexData(VELC_VAR,:,:))
-       call MPI_applyBC_shared(v,SHD_faceyData(VELC_VAR,:,:))
+       call MPI_applyBC_shared(VELC_VAR,FACEX)
+       call MPI_applyBC_shared(VELC_VAR,FACEY)
 #endif
 
        call MPI_physicalBC_vel(u,v)

@@ -31,9 +31,9 @@ module MPI_interface
     end interface
 
     interface
-          subroutine MPI_applyBC_shared(local,shared)
+          subroutine MPI_applyBC_shared(ivar,datatype)
           implicit none
-          real,intent(inout), dimension(:,:) :: local,shared
+          integer, intent(in) :: ivar,datatype
           end subroutine MPI_applyBC_shared
     end interface 
 

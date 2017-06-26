@@ -43,17 +43,17 @@ _______________________Grid Parameters___________________________
 #define Nyb 20
 
 
-#define D_xmin -0.5
-#define D_ymin  0.0
+#define D_xmin  0.0
+#define D_ymin -0.5
 
 
-#define D_xmax  0.5
-#define D_ymax  1.0
+#define D_xmax  1.0
+#define D_ymax  0.5
 
 #define TIME_END 60.00
 
-#define nblockx 8
-#define nblocky 8
+#define nblockx 12
+#define nblocky 6
 
 #define MaxIt 1500
 
@@ -88,6 +88,9 @@ _______________________Grid Parameters___________________________
 
 #define FACE_VAR 9
 
+#define CENTER 1
+#define FACEX 2
+#define FACEY 3
 
 #if 0
 _______________________Defining Flow Type_____________________
@@ -111,7 +114,7 @@ _______________________Defining Flow Type_____________________
 _______________________Multiphase On/Off_____________________
 #endif
 
-#define MPH 0
+#define MPH 1
 
 #if MPH == 1
 #define MULTIPHASE
@@ -190,5 +193,3 @@ __________________Data Operation Parameters________________
 #define SUM_DATA 1
 #define MIN_DATA 2
 #define MAX_DATA 3
-
-

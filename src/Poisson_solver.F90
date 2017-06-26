@@ -6,7 +6,6 @@ subroutine Poisson_solver(ps_RHS,ps,ps_res,ps_counter,ps_quant)
   use MPI_interface, ONLY: MPI_applyBC, MPI_CollectResiduals, MPI_physicalBC_pres, MPI_applyBC_shared
   use Driver_data, ONLY: dr_tile
   use IncompNS_data, ONLY: ins_timePoisson
-  use physicaldata, only: SHD_solnData
 
 #include "Solver.h"
                 
@@ -146,7 +145,7 @@ subroutine Poisson_solver(ps_RHS,ps,ps_res,ps_counter,ps_quant)
 #endif
 
 #ifdef MPI_SHRD
-     call MPI_applyBC_shared(ps,SHD_solnData(ps_quant,:,:))
+     call MPI_applyBC_shared(ps_quant,CENTER)
 #endif
 
      if(ps_quant == PRES_VAR) call MPI_physicalBC_pres(ps)

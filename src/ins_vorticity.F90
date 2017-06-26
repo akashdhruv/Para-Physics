@@ -8,7 +8,6 @@ subroutine ins_vorticity(tstep,w,u,v,s)
     use MPI_data
     use IncompNS_data
     use MPI_interface, ONLY: MPI_applyBC, MPI_CollectResiduals,MPI_physicalBC_vort,MPI_physicalBC_dfun,MPI_applyBC_shared
-    use physicaldata, only: SHD_solnData
 
     implicit none
     integer, intent(in) :: tstep
@@ -139,7 +138,7 @@ subroutine ins_vorticity(tstep,w,u,v,s)
 #endif
 
 #ifdef MPI_SHRD
-     call MPI_applyBC_shared(w,SHD_solnData(VORT_VAR,:,:))
+     call MPI_applyBC_shared(VORT_VAR,CENTER)
 #endif
 
      call MPI_physicalBC_vort(w)

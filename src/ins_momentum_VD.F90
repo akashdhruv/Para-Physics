@@ -1,4 +1,4 @@
-subroutine ins_momentum_VD(tstep,p_counter,p,u,v,visc,rho1x,rho1y,rho2x,rho2y,s,s2,sigp,sigx,sigy)
+subroutine ins_momentum_VD(tstep,p_counter,p,u,v,ut,vt,visc,rho1x,rho1y,rho2x,rho2y,s,s2,sigp,sigx,sigy)
 
        use Poisson_interface, ONLY: Poisson_solver_VC            
        use Grid_data
@@ -8,7 +8,6 @@ subroutine ins_momentum_VD(tstep,p_counter,p,u,v,visc,rho1x,rho1y,rho2x,rho2y,s,
        use MPI_interface, ONLY: MPI_applyBC, MPI_CollectResiduals, MPI_physicalBC_vel
        use IncompNS_interface, ONLY: ins_rescaleVel
        use IBM_interface, ONLY: IBM_ApplyForcing
-       use physicaldata, only: SHD_facexData, SHD_faceyData
 
 #include "Solver.h"
 
@@ -23,11 +22,11 @@ subroutine ins_momentum_VD(tstep,p_counter,p,u,v,visc,rho1x,rho1y,rho2x,rho2y,s,
        !real, allocatable, dimension(:,:) :: ut,vt,u_old,v_old
        !real, allocatable, dimension(:,:) :: C1,G1,D1,C2,G2,D2,p_RHS
 
-       real, dimension(Nxb+2,Nyb+2) :: ut,vt,u_old,v_old
+       real, dimension(Nxb+2,Nyb+2) :: u_old,v_old
        real, dimension(Nxb,Nyb) :: C1,G1,D1,C2,G2,D2,p_RHS
-       real :: u_res1, v_res1, maxdiv, mindiv
+       real :: u_res1, v_res1, maxdiv, mindiv, umax, umin, vmax, vmin
        integer :: i,j
-       real, intent(inout), dimension(:,:) :: u,v,visc,rho1x,rho1y,rho2x,rho2y,p,s,s2,sigp,sigx,sigy
+       real, intent(inout), dimension(:,:) :: u,v,visc,rho1x,rho1y,rho2x,rho2y,p,s,s2,sigp,sigx,sigy,ut,vt
        real, dimension(Nxb+2,Nyb+2) :: rhox,rhoy
 
        ins_v_res = 0
@@ -83,8 +82,8 @@ subroutine ins_momentum_VD(tstep,p_counter,p,u,v,visc,rho1x,rho1y,rho2x,rho2y,s,
 #endif
 
 #ifdef MPI_SHRD
-       call MPI_applyBC_shared(ut,SHD_facexData(USTR_VAR,:,:))
-       call MPI_applyBC_shared(vt,SHD_faceyData(USTR_VAR,:,:))
+       call MPI_applyBC_shared(USTR_VAR,FACEX)
+       call MPI_applyBC_shared(USTR_VAR,FACEY)
 #endif 
 
        call MPI_physicalBC_vel(ut,vt)
@@ -124,8 +123,8 @@ subroutine ins_momentum_VD(tstep,p_counter,p,u,v,visc,rho1x,rho1y,rho2x,rho2y,s,
 #endif
 
 #ifdef MPI_SHRD
-       call MPI_applyBC_shared(u,SHD_facexData(VELC_VAR,:,:))
-       call MPI_applyBC_shared(v,SHD_faceyData(VELC_VAR,:,:))
+       call MPI_applyBC_shared(VELC_VAR,FACEX)
+       call MPI_applyBC_shared(VELC_VAR,FACEY)
 #endif 
 
        call MPI_physicalBC_vel(u,v)
@@ -141,9 +140,20 @@ subroutine ins_momentum_VD(tstep,p_counter,p,u,v,visc,rho1x,rho1y,rho2x,rho2y,s,
        mindiv = min(mindiv,minval(((1/(gr_dy))*(v(2:Nxb+1,2:Nyb+1)-v(2:Nxb+1,1:Nyb)))&
                                   +((1/(gr_dx))*(u(2:Nxb+1,2:Nyb+1)-u(1:Nxb,2:Nyb+1)))))
 
+       umax = maxval(u)
+       umin = minval(u)
+
+       vmax = maxval(v)
+       vmin = minval(v)
 
        call MPI_CollectResiduals(maxdiv,ins_maxdiv,MAX_DATA)
        call MPI_CollectResiduals(mindiv,ins_mindiv,MIN_DATA)
+
+       call MPI_CollectResiduals(umax,ins_umaxmin(1),MAX_DATA)
+       call MPI_CollectResiduals(umin,ins_umaxmin(2),MIN_DATA)
+
+       call MPI_CollectResiduals(vmax,ins_vmaxmin(1),MAX_DATA)
+       call MPI_CollectResiduals(vmin,ins_vmaxmin(2),MIN_DATA)
 
        ! Residuals
 

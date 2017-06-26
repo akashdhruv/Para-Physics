@@ -2,7 +2,7 @@ subroutine Solver_evolve
 
 #include "Solver.h"
 
-!#define SOLVER_DEBUG
+#define SOLVER_DEBUG
 
     use IncompNS_interface, only: IncompNS_solver
     use HeatAD_interface, only: HeatAD_solver
@@ -21,7 +21,7 @@ subroutine Solver_evolve
 
     integer :: tstep,p_counter
 
-    real, dimension(Nxb+1,Nyb+1) :: uu,vv,pp,tt,ww,rx,ry,vs,ax,ay
+    real, dimension(Nxb+1,Nyb+1) :: uu,vv,pp,tt,ww,rr
 
     real :: solnX
  
@@ -63,7 +63,7 @@ subroutine Solver_evolve
 
 #ifdef SOLVER_DEBUG
 
-       if(mod(tstep,10) == 0) then
+       if(mod(tstep,10000) == 0) then
    
           uu = (facexData(VELC_VAR,1:Nxb+1,1:Nyb+1)+facexData(VELC_VAR,1:Nxb+1,2:Nyb+2))/2 
 
@@ -75,7 +75,13 @@ subroutine Solver_evolve
           tt = ((solnData(TEMP_VAR,1:Nxb+1,1:Nyb+1)+solnData(TEMP_VAR,2:Nxb+2,1:Nyb+1))/2 &
                +(solnData(TEMP_VAR,1:Nxb+1,2:Nyb+2)+solnData(TEMP_VAR,2:Nxb+2,2:Nyb+2))/2)/2
 
-          call IO_write(gr_x,gr_y,uu,vv,pp,tt,myid)
+          ww = ((solnData(VISC_VAR,1:Nxb+1,1:Nyb+1)+solnData(VISC_VAR,2:Nxb+2,1:Nyb+1))/2 &
+               +(solnData(VISC_VAR,1:Nxb+1,2:Nyb+2)+solnData(VISC_VAR,2:Nxb+2,2:Nyb+2))/2)/2
+
+          rr = ((facexData(RH1F_VAR,1:Nxb+1,1:Nyb+1)+facexData(RH2F_VAR,1:Nxb+1,2:Nyb+2)) + &
+                (faceyData(RH1F_VAR,1:Nxb+1,1:Nyb+1)+faceyData(RH2F_VAR,2:Nxb+2,1:Nyb+1)))/2
+
+         call IO_write(gr_x,gr_y,uu,vv,pp,tt,ww,rr,myid)
 
         end if
 #endif
@@ -95,9 +101,12 @@ subroutine Solver_evolve
     tt = ((solnData(TEMP_VAR,1:Nxb+1,1:Nyb+1)+solnData(TEMP_VAR,2:Nxb+2,1:Nyb+1))/2 + &
           (solnData(TEMP_VAR,1:Nxb+1,2:Nyb+2)+solnData(TEMP_VAR,2:Nxb+2,2:Nyb+2))/2)/2
 
-    ww = ((solnData(VORT_VAR,1:Nxb+1,1:Nyb+1)+solnData(VORT_VAR,2:Nxb+2,1:Nyb+1))/2 + &
-          (solnData(VORT_VAR,1:Nxb+1,2:Nyb+2)+solnData(VORT_VAR,2:Nxb+2,2:Nyb+2))/2)/2
+    ww = ((solnData(VISC_VAR,1:Nxb+1,1:Nyb+1)+solnData(VISC_VAR,2:Nxb+2,1:Nyb+1))/2 &
+         +(solnData(VISC_VAR,1:Nxb+1,2:Nyb+2)+solnData(VISC_VAR,2:Nxb+2,2:Nyb+2))/2)/2
 
-    call IO_write(gr_x,gr_y,uu,vv,pp,tt,myid)
+    rr = ((facexData(RH1F_VAR,1:Nxb+1,1:Nyb+1)+facexData(RH2F_VAR,1:Nxb+1,2:Nyb+2)) + &
+          (faceyData(RH1F_VAR,1:Nxb+1,1:Nyb+1)+faceyData(RH2F_VAR,2:Nxb+2,1:Nyb+1)))/2
+
+    call IO_write(gr_x,gr_y,uu,vv,pp,tt,ww,rr,myid)
 
 end subroutine Solver_evolve

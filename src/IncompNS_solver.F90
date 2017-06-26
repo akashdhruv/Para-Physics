@@ -20,6 +20,7 @@ subroutine IncompNS_solver(tstep,p_counter)
 #ifdef MULTIPHASE
     call ins_momentum_VD(tstep,p_counter,solnData(PRES_VAR,:,:),&
                          facexData(VELC_VAR,:,:),faceyData(VELC_VAR,:,:),&
+                         facexData(USTR_VAR,:,:),faceyData(USTR_VAR,:,:),&
                          solnData(VISC_VAR,:,:),&
                          facexData(RH1F_VAR,:,:),faceyData(RH1F_VAR,:,:),&                                       
                          facexData(RH2F_VAR,:,:),faceyData(RH2F_VAR,:,:),&

@@ -2,10 +2,8 @@ subroutine mph_FillVars(s,pf,crv,thco,cprs,visc,rho1x,rho1y,rho2x,rho2y,al1x,al1
 
 #include "Solver.h"
 
-    use MPI_interface, ONLY: MPI_applyBC,MPI_physicalBC_dfun, MPI_applyBC_shared
     use Multiphase_data
     use Grid_data, ONLY: gr_dx,gr_dy
-    use physicaldata, only: SHD_solnData, SHD_facexData, SHD_faceyData
 
     implicit none
     real,intent(inout),dimension(Nxb+2,Nyb+2) :: pf,thco,cprs,visc,crv,rho1x,rho1y,&
@@ -157,61 +155,5 @@ subroutine mph_FillVars(s,pf,crv,thco,cprs,visc,rho1x,rho1y,rho2x,rho2y,al1x,al1
     nrmy(2:Nxb+1,2:Nyb+1) = ((s(2:Nxb+1,3:Nyb+2) - s(2:Nxb+1,1:Nyb))/2./gr_dy)/ &
                        sqrt(((s(3:Nxb+2,2:Nyb+1) - s(1:Nxb,2:Nyb+1))/2./gr_dx)**2 &
                           + ((s(2:Nxb+1,3:Nyb+2) - s(2:Nxb+1,1:Nyb))/2./gr_dy)**2 )
-
-#ifdef MPI_DIST
-    call MPI_applyBC(visc)
-    call MPI_applyBC(rho1x)
-    call MPI_applyBC(rho1y)
-    call MPI_applyBC(rho2x)
-    call MPI_applyBC(rho2y)
-    call MPI_applyBC(al1x)
-    call MPI_applyBC(al1y)
-    call MPI_applyBC(al2x)
-    call MPI_applyBC(al2y)
-    call MPI_applyBC(thco)
-    call MPI_applyBC(cprs)
-    call MPI_applyBC(pf)
-    call MPI_applyBC(nrmx)
-    call MPI_applyBC(nrmy)
-    call MPI_applyBC(crv)
-    call MPI_applyBC(smrh)
-#endif
-
-#ifdef MPI_SHRD
-    call MPI_applyBC_shared(visc,SHD_solnData(VISC_VAR,:,:))
-    call MPI_applyBC_shared(rho1x,SHD_facexData(RH1F_VAR,:,:))
-    call MPI_applyBC_shared(rho1y,SHD_faceyData(RH1F_VAR,:,:))
-    call MPI_applyBC_shared(rho2x,SHD_facexData(RH2F_VAR,:,:))
-    call MPI_applyBC_shared(rho2y,SHD_faceyData(RH2F_VAR,:,:))
-    call MPI_applyBC_shared(al1x,SHD_facexData(AL1F_VAR,:,:))
-    call MPI_applyBC_shared(al1y,SHD_faceyData(AL1F_VAR,:,:))
-    call MPI_applyBC_shared(al2x,SHD_facexData(AL2F_VAR,:,:))
-    call MPI_applyBC_shared(al2y,SHD_faceyData(AL2F_VAR,:,:))
-    call MPI_applyBC_shared(thco,SHD_solnData(THCO_VAR,:,:))
-    call MPI_applyBC_shared(cprs,SHD_solnData(CPRS_VAR,:,:))
-    call MPI_applyBC_shared(pf,SHD_solnData(PFUN_VAR,:,:))
-    call MPI_applyBC_shared(nrmx,SHD_solnData(NRMX_VAR,:,:))
-    call MPI_applyBC_shared(nrmy,SHD_solnData(NRMY_VAR,:,:))
-    call MPI_applyBC_shared(crv,SHD_solnData(CURV_VAR,:,:))
-    call MPI_applyBC_shared(smrh,SHD_solnData(SMRH_VAR,:,:))
-#endif
-
-    call MPI_physicalBC_dfun(visc)
-    call MPI_physicalBC_dfun(rho1x)
-    call MPI_physicalBC_dfun(rho1y)
-    call MPI_physicalBC_dfun(al1x)
-    call MPI_physicalBC_dfun(al1y)
-    call MPI_physicalBC_dfun(rho2x)
-    call MPI_physicalBC_dfun(rho2y)
-    call MPI_physicalBC_dfun(al2x)
-    call MPI_physicalBC_dfun(al2y)
-    call MPI_physicalBC_dfun(thco)
-    call MPI_physicalBC_dfun(cprs)
-    call MPI_physicalBC_dfun(pf)
-    call MPI_physicalBC_dfun(nrmx)
-    call MPI_physicalBC_dfun(nrmy)
-    call MPI_physicalBC_dfun(crv)
-    call MPI_physicalBC_dfun(smrh)
-
 
 end subroutine mph_FillVars

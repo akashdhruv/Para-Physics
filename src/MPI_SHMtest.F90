@@ -34,8 +34,10 @@ program MPI_SHMtest
         type(C_PTR) :: baseptr,shareptr
         integer :: win,i,j
 
-        real,save,pointer,dimension(:,:) :: local_data,shared_data
+        real,save,pointer,dimension(:,:,:) :: local_data,shared_data,neigh_data
         real :: A
+
+        integer :: ivar
 
         !_____Defined Block Size________!
 
@@ -73,7 +75,7 @@ program MPI_SHMtest
         call MPI_GROUP_TRANSLATE_RANKS(world_group,procs,world_part,shared_group,shared_part,ierr)
 
         !________Make on-node processes allocate their chunk of shared Memory____________________!
-        sze       = (Nxb+2)*(Nyb+2)*sizeof(A)
+        sze       = CENT_VAR*(Nxb+2)*(Nyb+2)*sizeof(A)
         disp_unit = sizeof(A)
 
         call MPI_WIN_ALLOCATE_SHARED(sze,disp_unit,MPI_INFO_NULL,shared_comm,baseptr,win,ierr)
@@ -81,22 +83,24 @@ program MPI_SHMtest
         !__________________Point to local chunk of the shared data_______________________________!
         call MPI_WIN_SHARED_QUERY(win, shared_id, sze, disp_unit, baseptr,ierr)
         call MPI_BARRIER(shared_comm,ierr)
-        call C_F_POINTER(baseptr, local_data,[Nxb+2,Nyb+2])
+        call C_F_POINTER(baseptr, local_data,[CENT_VAR,Nxb+2,Nyb+2])
 
         !_____________________Point to the enitre shared data_____________________________!
         call MPI_WIN_SHARED_QUERY(win, 0 ,sze,disp_unit,baseptr,ierr)
         call MPI_BARRIER(shared_comm,ierr)
-        call C_F_POINTER(baseptr,shared_data,[Nxb+2,(Nyb+2)*shared_procs])
+        call C_F_POINTER(baseptr,shared_data,[CENT_VAR,Nxb+2,(Nyb+2)*shared_procs])
 
+
+        ivar = PRES_VAR
 
         !___Modify Local Data____!
-        call modify_data(local_data)
+        call modify_data(local_data(ivar,:,:))
 
         call MPI_BARRIER(shared_comm,ierr)
         call MPI_BARRIER(solver_comm,ierr)
 
         !_____Exchange Information_____!
-        call MPI_applyBC_shared(local_data,shared_data)
+        call MPI_applyBC_shared(local_data(ivar,:,:),shared_data(ivar,:,:))
 
         call MPI_BARRIER(solver_comm,ierr)
         call MPI_BARRIER(shared_comm,ierr)
@@ -109,30 +113,40 @@ program MPI_SHMtest
  
         !do i=1,procs
 
-         if (myid == 27) then
+         if (myid == 0) then
          print *,"Global rank:",myid," Shared rank:",shared_id
           do j=1,Nyb+2
-              print *,local_data(:,j)
+              print *,local_data(ivar,:,j)
           end do
          end if
 
         call MPI_BARRIER(solver_comm,ierr)
         call MPI_BARRIER(shared_comm,ierr)
 
-         if (myid == 35) then
+        if(x_id < x_procs -1)then
+        call MPI_WIN_SHARED_QUERY(win, shared_part(myid+1+1) ,sze,disp_unit,baseptr,ierr)
+        call C_F_POINTER(baseptr,neigh_data,[CENT_VAR,Nxb+2,Nyb+2])
+        end if
+
+        if (myid == 0) then
          print *,"Global rank:",myid," Shared rank:",shared_id
           do j=1,Nyb+2
-              print *,local_data(:,j)
+              print *,neigh_data(ivar,:,j)
           end do
          end if
 
         call MPI_BARRIER(solver_comm,ierr)
         call MPI_BARRIER(shared_comm,ierr)
 
-         if (myid == 43) then
+        if(y_id < y_procs -1) then
+        call MPI_WIN_SHARED_QUERY(win, shared_part(myid+1+x_procs) ,sze,disp_unit,baseptr,ierr)
+        call C_F_POINTER(baseptr,neigh_data,[CENT_VAR,Nxb+2,Nyb+2])
+        end if
+
+        if (myid == 0) then
          print *,"Global rank:",myid," Shared rank:",shared_id
           do j=1,Nyb+2
-              print *,local_data(:,j)
+              print *,neigh_data(ivar,:,j)
           end do
          end if
 
