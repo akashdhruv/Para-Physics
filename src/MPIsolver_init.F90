@@ -174,7 +174,7 @@ subroutine MPIsolver_init()
     call MPI_GROUP_TRANSLATE_RANKS(world_group,procs,world_part,shared_group,shared_part,ierr)
 
     call MPI_INFO_CREATE(mpi_info_key,ierr)
-    call MPI_INFO_SET(mpi_info_key,"alloc_shared_noncontig","true",ierr)
+    call MPI_INFO_SET(mpi_info_key,"no_locks","true",ierr)
 
     allocate(solnData(CENT_VAR,Nxb+2,Nyb+2))
     allocate(facexData(FACE_VAR,Nxb+2,Nyb+2))
@@ -190,7 +190,7 @@ subroutine MPIsolver_init()
     RMA_size  = (Nyb+2+Nxb+2+Nyb+2+Nxb+2)*sizeof(A)
     disp_unit = sizeof(A)
 
-    call MPI_WIN_CREATE(dataTARGET,RMA_size,disp_unit,MPI_INFO_NULL,solver_comm,RMA_win,ierr)
+    call MPI_WIN_CREATE(dataTARGET,RMA_size,disp_unit,mpi_info_key,solver_comm,RMA_win,ierr)
 #endif
 
     !call cpu_time(start)
