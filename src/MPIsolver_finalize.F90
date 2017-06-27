@@ -29,13 +29,8 @@ subroutine MPIsolver_finalize(sim_Complete)
 #endif
 
 #ifdef MPI_RMA
-      call MPI_WIN_FREE(north_win,ierr)
-      call MPI_WIN_FREE(south_win,ierr)
-      call MPI_WIN_FREE(east_win,ierr)
-      call MPI_WIN_FREE(west_win,ierr)
-
+      call MPI_WIN_FREE(RMA_win,ierr)
       deallocate(solnData,facexData,faceyData)
-      deallocate(eastTARGET,westTARGET,northTARGET,southTARGET)
       deallocate(eastORIGIN,westORIGIN,northORIGIN,southORIGIN)
       deallocate(dataTARGET)
       deallocate(world_part)

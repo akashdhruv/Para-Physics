@@ -125,8 +125,4 @@ $(EXE): $(ALL_OBJS)
 clean:
 	rm -f *.dat *.mod *.o $(EXE)
 
-shm: MPI_data.mod MPI_applyBC_shared.o MPI_interface.mod MPI_SHMtest.o
-	$(MPIFF) $(EXEFLAGS) shm MPI_applyBC_shared.o MPI_data.o MPI_SHMtest.o
 
-cleanshm:
-	rm -f *.mod *.o shm	
