@@ -96,9 +96,9 @@ subroutine MPIsolver_init()
 
     disp_unit = sizeof(A)
 
-    call MPI_WIN_ALLOCATE_SHARED(center_size,disp_unit,mpi_info_key,shared_comm,center_ptr,center_win,ierr)
-    call MPI_WIN_ALLOCATE_SHARED(facex_size,disp_unit,mpi_info_key,shared_comm,facex_ptr,facex_win,ierr)
-    call MPI_WIN_ALLOCATE_SHARED(facey_size,disp_unit,mpi_info_key,shared_comm,facey_ptr,facey_win,ierr)
+    call MPI_WIN_ALLOCATE_SHARED(center_size,disp_unit,MPI_INFO_NULL,shared_comm,center_ptr,center_win,ierr)
+    call MPI_WIN_ALLOCATE_SHARED(facex_size,disp_unit,MPI_INFO_NULL,shared_comm,facex_ptr,facex_win,ierr)
+    call MPI_WIN_ALLOCATE_SHARED(facey_size,disp_unit,MPI_INFO_NULL,shared_comm,facey_ptr,facey_win,ierr)
 
     !__________________Point to local chunk of the shared data_______________________________!
     call MPI_WIN_SHARED_QUERY(center_win, shared_id, center_size, disp_unit, center_ptr,ierr)
@@ -114,7 +114,6 @@ subroutine MPIsolver_init()
     call C_F_POINTER(facey_ptr, faceyData, [FACE_VAR,Nxb+2,Nyb+2])
 
     !_____________________Point to the neighbour's data________________________________!
-
     if(x_id < x_procs-1 .and. shared_part(myid+1+1) /= MPI_UNDEFINED) then
     call MPI_WIN_SHARED_QUERY(center_win, shared_id+1 ,center_size,disp_unit,center_ptr,ierr)
     call C_F_POINTER(center_ptr,eastCENTER,[CENT_VAR,Nxb+2,Nyb+2])
@@ -202,7 +201,6 @@ subroutine MPIsolver_init()
     call MPI_WIN_CREATE(northTARGET,north_size,disp_unit,MPI_INFO_NULL,solver_comm,north_win,ierr)
     call MPI_WIN_CREATE(southTARGET,north_size,disp_unit,MPI_INFO_NULL,solver_comm,south_win,ierr)
 #endif
-
 
     !call cpu_time(start)
     !start = omp_get_wtime()
