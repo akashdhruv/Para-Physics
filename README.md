@@ -2,14 +2,19 @@
 
 ### Important Information
 
-  1. This is version 2.0 of the software, previous versions can be found in the releases
+  1. This is version 2.0 of the software, previous versions can be found in the releases.
   2. Single phase heat equation, Navier-Stokes and Poisson solver modules are working.
   3. Immersed boundary module is working.
   4. Conjugate heat transfer is in beta.
   5. AMR module not yet implemented.
   6. Multiphase module is in beta.
-  7. Parallelization is implemented using MPI-3, which enables on-node optimization using a shared memory model.
-  8. Multi-threading using OpenMP is also available
+
+### Parallelization Options
+
+  1. Standard MPI distributed memory model.
+  2. MPI Remote Memory Access (RMA) model.
+  3. MPI Shared Memory (SHM) model.
+  4. Multithreading using OpenMP.
 
 ### Execution instructions
 
