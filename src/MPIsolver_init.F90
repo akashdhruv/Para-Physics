@@ -180,8 +180,6 @@ subroutine MPIsolver_init()
     allocate(facexData(FACE_VAR,Nxb+2,Nyb+2))
     allocate(faceyData(FACE_VAR,Nxb+2,Nyb+2))
 
-    allocate(dataTARGET(Nyb+2+Nyb+2+Nxb+2+Nxb+2))
-
     allocate(eastORIGIN(Nyb+2))
     allocate(westORIGIN(Nyb+2))
     allocate(northORIGIN(Nxb+2))
@@ -192,11 +190,13 @@ subroutine MPIsolver_init()
     disp_unit  = sizeof(A)
 
 #ifdef MPI_RMA_ACTIVE
-    call MPI_WIN_CREATE(dataTARGET,RMA_size,disp_unit,mpi_info_key,solver_comm,RMA_win,ierr)
+    call MPI_WIN_ALLOCATE(RMA_size,disp_unit,mpi_info_key,solver_comm,RMA_ptr,RMA_win,ierr)
+    call C_F_POINTER(RMA_ptr,dataTARGET,[Nyb+2+Nyb+2+Nxb+2+Nxb+2])
 #endif
 
 #ifdef MPI_RMA_PASSIVE
-    call MPI_WIN_CREATE(dataTARGET,RMA_size,disp_unit,MPI_INFO_NULL,solver_comm,RMA_win,ierr)
+    call MPI_WIN_ALLOCATE(RMA_size,disp_unit,MPI_INFO_NULL,solver_comm,RMA_ptr,RMA_win,ierr)
+    call C_F_POINTER(RMA_ptr,dataTARGET,[Nyb+2+Nyb+2+Nxb+2+Nxb+2])
 #endif
 
 #endif

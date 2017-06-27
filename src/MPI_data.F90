@@ -22,7 +22,7 @@ module MPI_data
 
       integer(kind=MPI_ADDRESS_KIND), save :: center_size,facex_size,facey_size,RMA_size
       integer, save :: disp_unit
-      type(C_PTR), save :: center_ptr,facex_ptr, facey_ptr
+      type(C_PTR), save :: center_ptr,facex_ptr, facey_ptr, RMA_ptr
       integer, save :: center_win,facex_win,facey_win,RMA_win
 
       integer,save :: mpi_info_key

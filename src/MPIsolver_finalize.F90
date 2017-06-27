@@ -32,7 +32,6 @@ subroutine MPIsolver_finalize(sim_Complete)
       call MPI_WIN_FREE(RMA_win,ierr)
       deallocate(solnData,facexData,faceyData)
       deallocate(eastORIGIN,westORIGIN,northORIGIN,southORIGIN)
-      deallocate(dataTARGET)
       deallocate(world_part)
       deallocate(shared_part)
 #endif
