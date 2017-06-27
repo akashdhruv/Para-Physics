@@ -20,10 +20,10 @@ module MPI_data
       integer,save :: blockID(MAX_BLOCKS),blockLC(nblockx*nblocky,2)
       integer,save :: blockCount
 
-      integer(kind=MPI_ADDRESS_KIND), save :: center_size,facex_size,facey_size,north_size,east_size
+      integer(kind=MPI_ADDRESS_KIND), save :: center_size,facex_size,facey_size,RMA_size
       integer, save :: disp_unit
       type(C_PTR), save :: center_ptr,facex_ptr, facey_ptr
-      integer, save :: center_win,facex_win,facey_win,north_win,south_win,east_win,west_win
+      integer, save :: center_win,facex_win,facey_win,RMA_win
 
       integer,save :: mpi_info_key
 
