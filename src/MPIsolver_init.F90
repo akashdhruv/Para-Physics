@@ -96,9 +96,9 @@ subroutine MPIsolver_init()
 
     disp_unit = sizeof(A)
 
-    call MPI_WIN_ALLOCATE_SHARED(center_size,disp_unit,MPI_INFO_NULL,shared_comm,center_ptr,center_win,ierr)
-    call MPI_WIN_ALLOCATE_SHARED(facex_size,disp_unit,MPI_INFO_NULL,shared_comm,facex_ptr,facex_win,ierr)
-    call MPI_WIN_ALLOCATE_SHARED(facey_size,disp_unit,MPI_INFO_NULL,shared_comm,facey_ptr,facey_win,ierr)
+    call MPI_WIN_ALLOCATE_SHARED(center_size,disp_unit,mpi_info_key,shared_comm,center_ptr,center_win,ierr)
+    call MPI_WIN_ALLOCATE_SHARED(facex_size,disp_unit,mpi_info_key,shared_comm,facex_ptr,facex_win,ierr)
+    call MPI_WIN_ALLOCATE_SHARED(facey_size,disp_unit,mpi_info_key,shared_comm,facey_ptr,facey_win,ierr)
 
     !__________________Point to local chunk of the shared data_______________________________!
     call MPI_WIN_SHARED_QUERY(center_win, shared_id, center_size, disp_unit, center_ptr,ierr)
