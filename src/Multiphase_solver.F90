@@ -12,7 +12,8 @@ subroutine Multiphase_solver(tstep,solnX,jump_flag)
                                      mph_FillVars_ibm    
 
     use MPI_interface, only: MPI_applyBC_shared,MPI_applyBC,&
-                             MPI_physicalBC_dfun,MPI_physicalBC_vel
+                             MPI_physicalBC_dfun,MPI_physicalBC_vel,&
+                             MPI_applyBC_RMA
 
     implicit none
 
@@ -51,6 +52,14 @@ if (jump_flag .eqv. .FALSE.) then
     call MPI_applyBC_shared(AL2F_VAR,FACEY)
 #endif
 
+#ifdef MPI_RMA
+    call MPI_applyBC_RMA(solnData(VISC_VAR,:,:))
+    call MPI_applyBC_RMA(facexData(RH2F_VAR,:,:))
+    call MPI_applyBC_RMA(faceyData(RH2F_VAR,:,:))
+    call MPI_applyBC_RMA(facexData(AL2F_VAR,:,:))
+    call MPI_applyBC_RMA(faceyData(AL2F_VAR,:,:))    
+#endif
+
     call MPI_physicalBC_dfun(solnData(VISC_VAR,:,:))
     call MPI_physicalBC_dfun(facexData(RH2F_VAR,:,:))
     call MPI_physicalBC_dfun(faceyData(RH2F_VAR,:,:))
@@ -76,6 +85,11 @@ if (jump_flag .eqv. .FALSE.) then
 #ifdef MPI_SHRD
       call MPI_applyBC_shared(VELI_VAR,FACEX)
       call MPI_applyBC_shared(VELI_VAR,FACEY)
+#endif
+
+#ifdef MPI_RMA
+      call MPI_applyBC_RMA(facexData(VELI_VAR,:,:))
+      call MPI_applyBC_RMA(faceyData(VELI_VAR,:,:))
 #endif
 
       call MPI_physicalBC_vel(facexData(VELI_VAR,:,:),faceyData(VELI_VAR,:,:))
@@ -108,6 +122,13 @@ else if (jump_flag .eqv. .TRUE.) then
     call MPI_applyBC_shared(RH1F_VAR,FACEY)
     call MPI_applyBC_shared(RH2F_VAR,FACEX)
     call MPI_applyBC_shared(RH2F_VAR,FACEY)
+#endif
+
+#ifdef MPI_RMA
+    call MPI_applyBC_RMA(facexData(RH1F_VAR,:,:))
+    call MPI_applyBC_RMA(facexData(RH2F_VAR,:,:))
+    call MPI_applyBC_RMA(faceyData(RH1F_VAR,:,:))
+    call MPI_applyBC_RMA(faceyData(RH2F_VAR,:,:))
 #endif
 
     call MPI_physicalBC_dfun(facexData(RH1F_VAR,:,:))

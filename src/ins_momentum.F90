@@ -5,7 +5,7 @@ subroutine ins_momentum(tstep,p_counter,p,u,v,ut,vt,s,s2)
        use Driver_data
        use MPI_data
        use IncompNS_data
-       use MPI_interface, ONLY: MPI_applyBC, MPI_CollectResiduals, MPI_physicalBC_vel, MPI_applyBC_shared
+       use MPI_interface, ONLY: MPI_applyBC, MPI_CollectResiduals, MPI_physicalBC_vel, MPI_applyBC_shared, MPI_applyBC_RMA
        use IncompNS_interface, ONLY: ins_rescaleVel
        use IBM_interface, ONLY: IBM_ApplyForcing
 
@@ -80,8 +80,13 @@ subroutine ins_momentum(tstep,p_counter,p,u,v,ut,vt,s,s2)
 #ifdef MPI_SHRD
        call MPI_applyBC_shared(USTR_VAR,FACEX)
        call MPI_applyBC_shared(USTR_VAR,FACEY)
-#endif 
-     
+#endif
+
+#ifdef MPI_RMA
+       call MPI_applyBC_RMA(ut)
+       call MPI_applyBC_RMA(vt)
+#endif
+      
        call MPI_physicalBC_vel(ut,vt)
 
 #ifdef IBM
@@ -114,7 +119,12 @@ subroutine ins_momentum(tstep,p_counter,p,u,v,ut,vt,s,s2)
        call MPI_applyBC_shared(VELC_VAR,FACEY)
 #endif
 
-       call MPI_physicalBC_vel(u,v)
+#ifdef MPI_RMA
+       call MPI_applyBC_RMA(u)
+       call MPI_applyBC_RMA(v)
+#endif
+
+      call MPI_physicalBC_vel(u,v)
 
        ! Divergence
 

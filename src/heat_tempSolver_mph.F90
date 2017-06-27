@@ -8,7 +8,7 @@ subroutine heat_tempSolver_mph(tstep,T,T_old,mdot,smrh,u,v,a1x,a1y,a2x,a2y,s,pf,
   use IncompNS_data
   use HeatAD_data
   use Driver_data
-  use MPI_interface, only: MPI_applyBC, MPI_physicalBC_temp, MPI_CollectResiduals, MPI_applyBC_shared
+  use MPI_interface, only: MPI_applyBC, MPI_physicalBC_temp, MPI_CollectResiduals, MPI_applyBC_shared, MPI_applyBC_RMA
   use Multiphase_data, only: mph_cp2,mph_thco2,mph_max_s,mph_min_s
   use IBM_data, only: ibm_cp1,ibm_thco1
   use MPI_data, only: shared_comm,ierr
@@ -149,6 +149,10 @@ subroutine heat_tempSolver_mph(tstep,T,T_old,mdot,smrh,u,v,a1x,a1y,a2x,a2y,s,pf,
 
 #ifdef MPI_SHRD
      call MPI_applyBC_shared(TEMP_VAR,CENTER)
+#endif
+
+#ifdef MPI_RMA
+     call MPI_applyBC_RMA(T)
 #endif
 
      call MPI_physicalBC_temp(T)

@@ -60,8 +60,6 @@ subroutine MPIsolver_init()
  
     call morton_sort(blockCount,myid,procs,blockLC)
 
-    !__________________________End________________________!
-
     !_________Define Communication Based On Grid______________!
     call MPI_COMM_SPLIT(solver_comm,myid/nblockx,myid,x_comm,ierr)
     call MPI_COMM_SPLIT(solver_comm,mod(myid,nblockx),myid,y_comm,ierr)
@@ -72,6 +70,13 @@ subroutine MPIsolver_init()
     call MPI_COMM_RANK(y_comm,y_id,ierr)
     call MPI_COMM_size(y_comm,y_procs,ierr)
 
+#ifdef MPI_DIST
+    allocate(solnData(CENT_VAR,Nxb+2,Nyb+2))
+    allocate(facexData(FACE_VAR,Nxb+2,Nyb+2))
+    allocate(faceyData(FACE_VAR,Nxb+2,Nyb+2))
+#endif
+
+#ifdef MPI_SHRD
     !__________Define Shared Communication Environment__________!
     call MPI_COMM_SPLIT_TYPE(solver_comm, MPI_COMM_TYPE_SHARED, 0, MPI_INFO_NULL, shared_comm, ierr)
     call MPI_COMM_RANK(shared_comm,shared_id,ierr)
@@ -84,7 +89,7 @@ subroutine MPIsolver_init()
     call MPI_INFO_CREATE(mpi_info_key,ierr)
     call MPI_INFO_SET(mpi_info_key,"alloc_shared_noncontig","true",ierr)
 
-    !_________Make on-node processes allocate their chunk of shared Memory____________________!
+   !_________Make on-node processes allocate their chunk of shared Memory____________________!
     center_size = CENT_VAR*(Nxb+2)*(Nyb+2)*sizeof(A)
     facex_size  = FACE_VAR*(Nxb+2)*(Nyb+2)*sizeof(A)
     facey_size  = FACE_VAR*(Nxb+2)*(Nyb+2)*sizeof(A) 
@@ -157,6 +162,46 @@ subroutine MPIsolver_init()
     call C_F_POINTER(facey_ptr,southFACEY,[FACE_VAR,Nxb+2,Nyb+2])
     end if
     call MPI_BARRIER(shared_comm,ierr)
+#endif
+
+#ifdef MPI_RMA
+    !__________Define Shared Communication Environment__________!
+    call MPI_COMM_SPLIT_TYPE(solver_comm, MPI_COMM_TYPE_SHARED, 0, MPI_INFO_NULL, shared_comm, ierr)
+    call MPI_COMM_RANK(shared_comm,shared_id,ierr)
+    call MPI_COMM_SIZE(shared_comm,shared_procs,ierr)
+    call MPI_COMM_GROUP(shared_comm, shared_group,ierr)
+
+    allocate(shared_part(procs))
+    call MPI_GROUP_TRANSLATE_RANKS(world_group,procs,world_part,shared_group,shared_part,ierr)
+
+    call MPI_INFO_CREATE(mpi_info_key,ierr)
+    call MPI_INFO_SET(mpi_info_key,"alloc_shared_noncontig","true",ierr)
+
+    allocate(solnData(CENT_VAR,Nxb+2,Nyb+2))
+    allocate(facexData(FACE_VAR,Nxb+2,Nyb+2))
+    allocate(faceyData(FACE_VAR,Nxb+2,Nyb+2))
+
+    allocate(eastTARGET(Nyb+2))
+    allocate(westTARGET(Nyb+2))
+    allocate(northTARGET(Nxb+2))
+    allocate(southTARGET(Nxb+2))
+
+    allocate(eastORIGIN(Nyb+2))
+    allocate(westORIGIN(Nyb+2))
+    allocate(northORIGIN(Nxb+2))
+    allocate(southORIGIN(Nxb+2))
+
+    east_size = (Nyb+2)*sizeof(A)
+    north_size= (Nxb+2)*sizeof(A)
+
+    disp_unit = sizeof(A)
+
+    call MPI_WIN_CREATE(eastTARGET,east_size,disp_unit,MPI_INFO_NULL,solver_comm,east_win,ierr)
+    call MPI_WIN_CREATE(westTARGET,east_size,disp_unit,MPI_INFO_NULL,solver_comm,west_win,ierr)
+
+    call MPI_WIN_CREATE(northTARGET,north_size,disp_unit,MPI_INFO_NULL,solver_comm,north_win,ierr)
+    call MPI_WIN_CREATE(southTARGET,north_size,disp_unit,MPI_INFO_NULL,solver_comm,south_win,ierr)
+#endif
 
 
     !call cpu_time(start)

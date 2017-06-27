@@ -3,7 +3,7 @@ subroutine Poisson_solver_VC(ps_RHS,ps,ps_rx,ps_ry,ps_res,ps_counter,ps_quant)
   !$ use omp_lib
   use Grid_data
   use MPI_data
-  use MPI_interface, ONLY: MPI_applyBC, MPI_CollectResiduals, MPI_physicalBC_pres, MPI_applyBC_shared
+  use MPI_interface, ONLY: MPI_applyBC, MPI_CollectResiduals, MPI_physicalBC_pres, MPI_applyBC_shared, MPI_applyBC_RMA
   use Driver_data, ONLY: dr_tile
   use IncompNS_data, ONLY: ins_timePoisson
 
@@ -117,6 +117,10 @@ subroutine Poisson_solver_VC(ps_RHS,ps,ps_rx,ps_ry,ps_res,ps_counter,ps_quant)
 
 #ifdef MPI_SHRD
      call MPI_applyBC_shared(ps_quant,CENTER)
+#endif
+
+#ifdef MPI_RMA
+     call MPI_applyBC_RMA(ps)
 #endif
 
      if(ps_quant == PRES_VAR) call MPI_physicalBC_pres(ps)

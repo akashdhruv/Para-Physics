@@ -5,7 +5,7 @@ subroutine ins_momentum_VD(tstep,p_counter,p,u,v,ut,vt,visc,rho1x,rho1y,rho2x,rh
        use Driver_data
        use MPI_data
        use IncompNS_data
-       use MPI_interface, ONLY: MPI_applyBC, MPI_CollectResiduals, MPI_physicalBC_vel
+       use MPI_interface, ONLY: MPI_applyBC, MPI_CollectResiduals, MPI_physicalBC_vel, MPI_applyBC_RMA
        use IncompNS_interface, ONLY: ins_rescaleVel
        use IBM_interface, ONLY: IBM_ApplyForcing
 
@@ -86,6 +86,11 @@ subroutine ins_momentum_VD(tstep,p_counter,p,u,v,ut,vt,visc,rho1x,rho1y,rho2x,rh
        call MPI_applyBC_shared(USTR_VAR,FACEY)
 #endif 
 
+#ifdef MPI_RMA
+       call MPI_applyBC_RMA(ut)
+       call MPI_applyBC_RMA(vt)
+#endif
+
        call MPI_physicalBC_vel(ut,vt)
 
 #ifdef IBM
@@ -126,6 +131,11 @@ subroutine ins_momentum_VD(tstep,p_counter,p,u,v,ut,vt,visc,rho1x,rho1y,rho2x,rh
        call MPI_applyBC_shared(VELC_VAR,FACEX)
        call MPI_applyBC_shared(VELC_VAR,FACEY)
 #endif 
+
+#ifdef MPI_RMA
+       call MPI_applyBC_RMA(u)
+       call MPI_applyBC_RMA(v)
+#endif
 
        call MPI_physicalBC_vel(u,v)
 

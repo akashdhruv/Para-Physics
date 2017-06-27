@@ -176,14 +176,18 @@ _________________OpenMP threads per MPI rank_______________
 _________________MPI with shared memory on/off_______________
 #endif
 
-#define SHARE_TYPE 1
+#define SHARE_TYPE 3
 
 #if SHARE_TYPE == 1
+#define MPI_DIST
+#endif
+
+#if SHARE_TYPE == 2
 #define MPI_SHRD
 #endif
 
-#if SHARE_TYPE == 0
-#define MPI_DIST
+#if SHARE_TYPE == 3
+#define MPI_RMA
 #endif
 
 #if 0

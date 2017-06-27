@@ -9,7 +9,7 @@ MPI_PATH = /c1/apps/mpich/3.1.4
 #MPIFF = $(MPI_PATH)/bin/mpif90
 #MPIFF = mpiifort
 #MPIFF = mpif90
-MPIFF = mpiifort
+MPIFF = mpifort
 #FF = ifort
 #MPIFF = $(PGI_PATH)/bin/pgf90
 
@@ -80,6 +80,7 @@ Objects += physicaldata.o \
            MPI_CollectResiduals.o \
            MPI_applyBC_v2.o\
            MPI_applyBC.o \
+	   MPI_applyBC_RMA.o \
            MPI_applyBC_shared.o \
            MPI_physicalBC_vel.o \
            MPI_physicalBC_pres.o \

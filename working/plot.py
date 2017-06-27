@@ -1,8 +1,8 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-k=8
-d=8
+k=2
+d=2
 
 M=20+1
 N=20+1

@@ -8,13 +8,30 @@ subroutine MPIsolver_finalize(sim_Complete)
 
       logical,intent(in) :: sim_Complete
 
+#ifdef MPI_DIST
+      deallocate(solnData,facexData,faceyData)
+#endif
+
+#ifdef MPI_SHRD
       call MPI_WIN_FREE(center_win,ierr)
       call MPI_WIN_FREE(facex_win,ierr)
       call MPI_WIN_FREE(facey_win,ierr)
+      call MPI_COMM_FREE(shared_comm,ierr)
+#endif
+
+#ifdef MPI_RMA
+      call MPI_WIN_FREE(north_win,ierr)
+      call MPI_WIN_FREE(south_win,ierr)
+      call MPI_WIN_FREE(east_win,ierr)
+      call MPI_WIN_FREE(west_win,ierr)
+
+      deallocate(solnData,facexData,faceyData)
+      deallocate(eastTARGET,westTARGET,northTARGET,southTARGET)
+      deallocate(eastORIGIN,westORIGIN,northORIGIN,southORIGIN)
+#endif
 
       call MPI_COMM_FREE(x_comm,ierr)
       call MPI_COMM_FREE(y_comm,ierr)
-      call MPI_COMM_FREE(shared_comm,ierr)  
 
       finish = MPI_Wtime()
 
