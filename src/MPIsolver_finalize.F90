@@ -8,8 +8,14 @@ subroutine MPIsolver_finalize(sim_Complete)
 
       logical,intent(in) :: sim_Complete
 
+
+      finish = MPI_Wtime()
+
+      exec_time = (finish - start)
+
 #ifdef MPI_DIST
       deallocate(solnData,facexData,faceyData)
+      deallocate(world_part)
 #endif
 
 #ifdef MPI_SHRD
@@ -17,6 +23,9 @@ subroutine MPIsolver_finalize(sim_Complete)
       call MPI_WIN_FREE(facex_win,ierr)
       call MPI_WIN_FREE(facey_win,ierr)
       call MPI_COMM_FREE(shared_comm,ierr)
+
+      deallocate(world_part)
+      deallocate(shared_part)
 #endif
 
 #ifdef MPI_RMA
@@ -28,14 +37,13 @@ subroutine MPIsolver_finalize(sim_Complete)
       deallocate(solnData,facexData,faceyData)
       deallocate(eastTARGET,westTARGET,northTARGET,southTARGET)
       deallocate(eastORIGIN,westORIGIN,northORIGIN,southORIGIN)
+
+      deallocate(world_part)
+      deallocate(shared_part)
 #endif
 
       call MPI_COMM_FREE(x_comm,ierr)
       call MPI_COMM_FREE(y_comm,ierr)
-
-      finish = MPI_Wtime()
-
-      exec_time = (finish - start) 
 
       if (sim_Complete) print '("Execution time: ",f20.10," seconds")',exec_time
 

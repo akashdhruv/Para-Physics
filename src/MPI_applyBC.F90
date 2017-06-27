@@ -104,5 +104,7 @@ subroutine MPI_applyBC(u_ex)
 
     end if
   
+    call MPI_BARRIER(solver_comm,ierr)
+
 end subroutine MPI_applyBC
 

@@ -191,7 +191,6 @@ subroutine MPIsolver_init()
     disp_unit = sizeof(A)
 
     call MPI_WIN_CREATE(dataTARGET,RMA_size,disp_unit,MPI_INFO_NULL,solver_comm,RMA_win,ierr)
-
 #endif
 
     !call cpu_time(start)
