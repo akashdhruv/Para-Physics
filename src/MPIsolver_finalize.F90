@@ -37,7 +37,7 @@ subroutine MPIsolver_finalize(sim_Complete)
       deallocate(solnData,facexData,faceyData)
       deallocate(eastTARGET,westTARGET,northTARGET,southTARGET)
       deallocate(eastORIGIN,westORIGIN,northORIGIN,southORIGIN)
-
+      deallocate(dataTARGET)
       deallocate(world_part)
       deallocate(shared_part)
 #endif

@@ -10,5 +10,6 @@ module physicaldata
 
        real, save, pointer, dimension(:) :: dataTARGET
        real, save, pointer, dimension(:) :: northORIGIN, southORIGIN, eastORIGIN, westORIGIN
+       real, save, pointer, dimension(:) :: northTARGET, southTARGET, eastTARGET, westTARGET
 
 end module physicaldata

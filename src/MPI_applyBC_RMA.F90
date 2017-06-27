@@ -4,6 +4,7 @@ subroutine MPI_applyBC_RMA(local)
 
         use MPI_data
         use physicaldata, only : dataTARGET,&
+                                 eastTARGET,westTARGET,northTARGET,southTARGET,&
                                  eastORIGIN,westORIGIN,northORIGIN,southORIGIN
 
         implicit none
@@ -42,6 +43,39 @@ subroutine MPI_applyBC_RMA(local)
         end if
 
         call MPI_WIN_FENCE(0,RMA_win,ierr)
+
+        !eastTARGET  = local(2,:)
+        !westTARGET  = local(Nxb+1,:)
+        !northTARGET = local(:,2)
+        !southTARGET = local(:,Nyb+1)
+
+        !!_______________________MPI BC for High X______________________________!
+        !if(x_id < x_procs - 1) then
+        !  call MPI_WIN_LOCK(MPI_LOCK_SHARED,myid+1,0,east_win,ierr)
+        !  call MPI_GET(eastORIGIN(1),Nyb+2,MPI_REAL,myid+1,target_disp,Nyb+2,MPI_REAL,east_win,ierr)
+        !  call MPI_WIN_UNLOCK(myid+1,east_win,ierr)
+        !end if
+
+        !!_______________________MPI BC for Low X______________________________!
+        !if(x_id > 0) then
+        !  call MPI_WIN_LOCK(MPI_LOCK_SHARED,myid-1,0,west_win,ierr)
+        !  call MPI_GET(westORIGIN(1),Nyb+2,MPI_REAL,myid-1,target_disp,Nyb+2,MPI_REAL,west_win,ierr)
+        !  call MPI_WIN_UNLOCK(myid-1,west_win,ierr)
+        !end if
+
+        !!_______________________MPI BC for High Y______________________________!
+        !if(y_id < y_procs - 1) then
+        !  call MPI_WIN_LOCK(MPI_LOCK_SHARED,myid+x_procs,0,north_win,ierr)
+        !  call MPI_GET(northORIGIN(1),Nxb+2,MPI_REAL,myid+x_procs,target_disp,Nxb+2,MPI_REAL,north_win,ierr)
+        !  call MPI_WIN_UNLOCK(myid+x_procs,north_win,ierr)
+        !end if
+
+        !!_______________________MPI BC for Low Y______________________________!
+        !if(y_id > 0) then
+        !  call MPI_WIN_LOCK(MPI_LOCK_SHARED,myid-x_procs,0,south_win,ierr)
+        !  call MPI_GET(southORIGIN(1),Nxb+2,MPI_REAL,myid-x_procs,target_disp,Nxb+2,MPI_REAL,south_win,ierr)
+        !  call MPI_WIN_UNLOCK(myid-x_procs,south_win,ierr)
+        !end if
 
         local(Nxb+2,:) = eastORIGIN
         local(1,:)     = westORIGIN

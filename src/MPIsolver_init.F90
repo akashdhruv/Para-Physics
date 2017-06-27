@@ -187,10 +187,23 @@ subroutine MPIsolver_init()
     allocate(northORIGIN(Nxb+2))
     allocate(southORIGIN(Nxb+2))
 
-    RMA_size  = (Nyb+2+Nxb+2+Nyb+2+Nxb+2)*sizeof(A)
-    disp_unit = sizeof(A)
+    allocate(eastTARGET(Nyb+2))
+    allocate(westTARGET(Nyb+2))
+    allocate(northTARGET(Nxb+2))
+    allocate(southTARGET(Nxb+2))
+
+    RMA_size   = (Nyb+2+Nxb+2+Nyb+2+Nxb+2)*sizeof(A)
+    north_size = (Nxb+2)*sizeof(A)
+    east_size  = (Nyb+2)*sizeof(A)
+
+    disp_unit  = sizeof(A)
 
     call MPI_WIN_CREATE(dataTARGET,RMA_size,disp_unit,mpi_info_key,solver_comm,RMA_win,ierr)
+
+    !call MPI_WIN_CREATE(eastTARGET,east_size,disp_unit,MPI_INFO_NULL,solver_comm,east_win,ierr)
+    !call MPI_WIN_CREATE(westTARGET,east_size,disp_unit,MPI_INFO_NULL,solver_comm,west_win,ierr)
+    !call MPI_WIN_CREATE(northTARGET,north_size,disp_unit,MPI_INFO_NULL,solver_comm,north_win,ierr)
+    !call MPI_WIN_CREATE(southTARGET,north_size,disp_unit,MPI_INFO_NULL,solver_comm,south_win,ierr)
 #endif
 
     !call cpu_time(start)
