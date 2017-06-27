@@ -8,20 +8,21 @@ MPI_PATH = /c1/apps/mpich/3.1.4
 
 #MPIFF = $(MPI_PATH)/bin/mpif90
 #MPIFF = mpiifort
-MPIFF = mpif90
+#MPIFF = mpif90
+MPIFF = mpiifort
 #FF = ifort
 #MPIFF = $(PGI_PATH)/bin/pgf90
 
 #LIB_HYPRE = -L${HYPRE_PATH}/lib -lHYPRE
 
-#FFLAGS = -c
-FFLAGS = -c -O3 -ftree-vectorize
+FFLAGS = -c -O3
+#FFLAGS = -c -O3 -ftree-vectorize
 #FFLAGS = -fopenmp -O3 -ftree-vectorize -c
 #FFLAGS = -qopenmp -c 
 #FFLAGS = -Mmpi=mpich -c
 
-#EXEFLAGS = -o
-EXEFLAGS = -O3 -ftree-vectorize -o
+EXEFLAGS = -O3 -o
+#EXEFLAGS = -O3 -ftree-vectorize -o
 #EXEFLAGS = -fopenmp -O3 -ftree-vectorize -o
 #EXEFLAGS = -qopenmp -o
 #EXEFLAGS = -Mmpi=mpich -o
