@@ -52,8 +52,8 @@ _______________________Grid Parameters___________________________
 
 #define TIME_END 60.00
 
-#define nblockx 2
-#define nblocky 2
+#define nblockx 8
+#define nblocky 8
 
 #define MaxIt 1500
 
@@ -188,7 +188,7 @@ _________________MPI with shared memory on/off_______________
 
 #if SHARE_TYPE == 3
 #define MPI_RMA
-#define MPI_RMA_ACTIVE
+#define MPI_RMA_PASSIVE
 #endif
 
 #if 0

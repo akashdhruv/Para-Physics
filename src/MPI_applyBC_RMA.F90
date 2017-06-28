@@ -46,33 +46,29 @@ subroutine MPI_applyBC_RMA(local)
 #endif
 
 #ifdef MPI_RMA_PASSIVE
+        call MPI_BARRIER(solver_comm,ierr)
+
         !_______________________MPI BC for High X______________________________!
         if(x_id < x_procs - 1) then
-          call MPI_WIN_LOCK(MPI_LOCK_SHARED,myid+1,0,RMA_win,ierr)
           call MPI_GET(eastORIGIN(1),Nyb+2,MPI_REAL,myid+1,target_disp,Nyb+2,MPI_REAL,RMA_win,ierr)
-          call MPI_WIN_UNLOCK(myid+1,RMA_win,ierr)
         end if
 
         !_______________________MPI BC for Low X______________________________!
         if(x_id > 0) then
-          call MPI_WIN_LOCK(MPI_LOCK_SHARED,myid-1,0,RMA_win,ierr)
           call MPI_GET(westORIGIN(1),Nyb+2,MPI_REAL,myid-1,target_disp+index1,Nyb+2,MPI_REAL,RMA_win,ierr)
-          call MPI_WIN_UNLOCK(myid-1,RMA_win,ierr)
         end if
-
+              
         !_______________________MPI BC for High Y______________________________!
         if(y_id < y_procs - 1) then
-          call MPI_WIN_LOCK(MPI_LOCK_SHARED,myid+x_procs,0,RMA_win,ierr)
           call MPI_GET(northORIGIN(1),Nxb+2,MPI_REAL,myid+x_procs,target_disp+index2,Nxb+2,MPI_REAL,RMA_win,ierr)
-          call MPI_WIN_UNLOCK(myid+x_procs,RMA_win,ierr)
         end if
 
         !_______________________MPI BC for Low Y______________________________!
         if(y_id > 0) then
-          call MPI_WIN_LOCK(MPI_LOCK_SHARED,myid-x_procs,0,RMA_win,ierr)
           call MPI_GET(southORIGIN(1),Nxb+2,MPI_REAL,myid-x_procs,target_disp+index3,Nxb+2,MPI_REAL,RMA_win,ierr)
-          call MPI_WIN_UNLOCK(myid-x_procs,RMA_win,ierr)
         end if
+
+        call MPI_BARRIER(solver_comm,ierr)
 #endif
 
         local(Nxb+2,:) = eastORIGIN
