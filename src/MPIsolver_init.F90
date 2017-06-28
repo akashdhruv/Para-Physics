@@ -71,9 +71,9 @@ subroutine MPIsolver_init()
     call MPI_COMM_size(y_comm,y_procs,ierr)
 
 #ifdef MPI_DIST
-    allocate(solnData(CENT_VAR,Nxb+2,Nyb+2))
-    allocate(facexData(FACE_VAR,Nxb+2,Nyb+2))
-    allocate(faceyData(FACE_VAR,Nxb+2,Nyb+2))
+    allocate(localCENTER(CENT_VAR,Nxb+2,Nyb+2))
+    allocate(localFACEX(FACE_VAR,Nxb+2,Nyb+2))
+    allocate(localFACEY(FACE_VAR,Nxb+2,Nyb+2))
 #endif
 
 #ifdef MPI_SHRD
@@ -103,15 +103,15 @@ subroutine MPIsolver_init()
     !__________________Point to local chunk of the shared data_______________________________!
     call MPI_WIN_SHARED_QUERY(center_win, shared_id, center_size, disp_unit, center_ptr,ierr)
     call MPI_BARRIER(shared_comm,ierr)
-    call C_F_POINTER(center_ptr, solnData,[CENT_VAR,Nxb+2,Nyb+2])
+    call C_F_POINTER(center_ptr, localCENTER,[CENT_VAR,Nxb+2,Nyb+2])
 
     call MPI_WIN_SHARED_QUERY(facex_win, shared_id, facex_size, disp_unit, facex_ptr,ierr)
     call MPI_BARRIER(shared_comm,ierr)
-    call C_F_POINTER(facex_ptr, facexData, [FACE_VAR,Nxb+2,Nyb+2])
+    call C_F_POINTER(facex_ptr, localFACEX, [FACE_VAR,Nxb+2,Nyb+2])
 
     call MPI_WIN_SHARED_QUERY(facey_win, shared_id, facey_size, disp_unit, facey_ptr,ierr)
     call MPI_BARRIER(shared_comm,ierr)
-    call C_F_POINTER(facey_ptr, faceyData, [FACE_VAR,Nxb+2,Nyb+2])
+    call C_F_POINTER(facey_ptr, localFACEY, [FACE_VAR,Nxb+2,Nyb+2])
 
     !_____________________Point to the neighbour's data________________________________!
     if(x_id < x_procs-1 .and. shared_part(myid+1+1) /= MPI_UNDEFINED) then
@@ -176,9 +176,9 @@ subroutine MPIsolver_init()
     call MPI_INFO_CREATE(mpi_info_key,ierr)
     call MPI_INFO_SET(mpi_info_key,"no_locks","true",ierr)
 
-    allocate(solnData(CENT_VAR,Nxb+2,Nyb+2))
-    allocate(facexData(FACE_VAR,Nxb+2,Nyb+2))
-    allocate(faceyData(FACE_VAR,Nxb+2,Nyb+2))
+    allocate(localCENTER(CENT_VAR,Nxb+2,Nyb+2))
+    allocate(localFACEX(FACE_VAR,Nxb+2,Nyb+2))
+    allocate(localFACEY(FACE_VAR,Nxb+2,Nyb+2))
 
     allocate(eastORIGIN(Nyb+2))
     allocate(westORIGIN(Nyb+2))

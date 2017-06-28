@@ -2,7 +2,7 @@ subroutine ibm_evolve(x0,y0,r0,x1,y1,r1)
 
 #include "Solver.h"
 
-   use physicaldata, only: solnData,facexData,faceyData
+   use physicaldata, only: localCENTER,localFACEX,localFACEY
    use Grid_data
 
    implicit none

@@ -8,7 +8,7 @@ subroutine Solver_evolve
     use HeatAD_interface, only: HeatAD_solver
     use Grid_data
     use Driver_data
-    use physicaldata, only: solnData,facexData,faceyData
+    use physicaldata, only: localCENTER,localFACEX,localFACEY
     use IncompNS_data
     use HeatAD_data
     use MPI_data
@@ -24,7 +24,9 @@ subroutine Solver_evolve
     real, dimension(Nxb+1,Nyb+1) :: uu,vv,pp,tt,ww,rr
 
     real :: solnX
- 
+  
+    real, pointer, dimension(:,:,:) :: solnData,facexData,faceyData 
+
     tstep     = 0
     dr_dt_old = gr_dx
 
@@ -64,7 +66,11 @@ subroutine Solver_evolve
 #ifdef SOLVER_DEBUG
 
        if(mod(tstep,10000) == 0) then
-   
+
+          solnData  => localCENTER
+          facexData => localFACEX
+          faceyData => localFACEY     
+
           uu = (facexData(VELC_VAR,1:Nxb+1,1:Nyb+1)+facexData(VELC_VAR,1:Nxb+1,2:Nyb+2))/2 
 
           vv = (faceyData(VELC_VAR,1:Nxb+1,1:Nyb+1)+faceyData(VELC_VAR,2:Nxb+2,1:Nyb+1))/2
@@ -83,6 +89,8 @@ subroutine Solver_evolve
 
          call IO_write(gr_x,gr_y,uu,vv,pp,tt,ww,rr,myid)
 
+         nullify(solnData,facexData,faceyData)
+
         end if
 #endif
         
@@ -90,6 +98,10 @@ subroutine Solver_evolve
         dr_dt_old = dr_dt
 
     end do
+
+    solnData  => localCENTER
+    facexData => localFACEX
+    faceyData => localFACEY
 
     uu = (facexData(VELC_VAR,1:Nxb+1,1:Nyb+1)+facexData(VELC_VAR,1:Nxb+1,2:Nyb+2))/2
 
@@ -108,5 +120,7 @@ subroutine Solver_evolve
           (faceyData(RH1F_VAR,1:Nxb+1,1:Nyb+1)+faceyData(RH2F_VAR,2:Nxb+2,1:Nyb+1)))/2
 
     call IO_write(gr_x,gr_y,uu,vv,pp,tt,ww,rr,myid)
+
+    nullify(solnData,facexData,faceyData)
 
 end subroutine Solver_evolve

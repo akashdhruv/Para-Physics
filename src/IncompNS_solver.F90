@@ -3,12 +3,18 @@ subroutine IncompNS_solver(tstep,p_counter)
 #include "Solver.h"
 
     use IncompNS_interface, only: ins_momentum,ins_vorticity,ins_momentum_VD
-    use physicaldata, only: solnData,facexData,faceyData
+    use physicaldata, only: localCENTER,localFACEX,localFACEY
 
     implicit none
 
     integer, intent(in) :: tstep
     integer, intent(out) :: p_counter
+
+    real, pointer, dimension(:,:,:) :: solnData,facexData,faceyData
+
+    solnData  => localCENTER
+    facexData => localFACEX
+    faceyData => localFACEY
 
 #ifdef SINGLEPHASE
     call ins_momentum(tstep,p_counter,solnData(PRES_VAR,:,:),&
@@ -33,5 +39,8 @@ subroutine IncompNS_solver(tstep,p_counter)
     !call ins_vorticity(tstep,solnData(VORT_VAR,:,:),&
     !                   facexData(VELC_VAR,:,:),faceyData(VELC_VAR,:,:),&
     !                   solnData(DFUN_VAR,:,:))
+
+
+    nullify(solnData,facexData,faceyData)
 
 end subroutine

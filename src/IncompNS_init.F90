@@ -1,12 +1,18 @@
 subroutine IncompNS_init()
 
-      use physicaldata, only: solnData,facexData,faceyData
+      use physicaldata, only: localCENTER,localFACEX,localFACEY
       use IncompNS_data
 
 #include "Solver.h"
    
       implicit none
-      
+        
+      real,pointer,dimension(:,:,:) :: solnData,facexData,faceyData
+
+      solnData  => localCENTER
+      facexData => localFACEX
+      faceyData => localFACEY      
+
       solnData(PRES_VAR,:,:) = 0.0
       solnData(VORT_VAR,:,:) = 0.0
 
@@ -24,5 +30,7 @@ subroutine IncompNS_init()
 
       ins_gravX =  0.0
       ins_gravY =  0.0
+
+      nullify(facexData,faceyData,solnData)
 
 end subroutine IncompNS_init

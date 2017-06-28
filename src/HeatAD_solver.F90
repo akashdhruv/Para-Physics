@@ -4,14 +4,19 @@ subroutine HeatAD_solver(tstep)
 #include "Solver.h"
 
    use HeatAD_interface, only: heat_tempSolver,heat_tempSolver_ibm,heat_tempSolver_mph
-   use physicaldata, only: solnData,facexData,faceyData
+   use physicaldata, only: localCENTER,localFACEX,localFACEY
  
    implicit none
    
    integer, intent(in) :: tstep
 
-   solnData(TOLD_VAR,:,:) = solnData(TEMP_VAR,:,:) 
+   real, pointer, dimension(:,:,:) :: solnData,facexData,faceyData
 
+   solnData  => localCENTER
+   facexData => localFACEX
+   faceyData => localFACEY
+
+   solnData(TOLD_VAR,:,:) = solnData(TEMP_VAR,:,:) 
 
 #ifdef SINGLEPHASE
 
@@ -65,5 +70,7 @@ subroutine HeatAD_solver(tstep)
 #endif
 
 #endif
+
+   nullify(solnData,facexData,faceyData)
 
 end subroutine

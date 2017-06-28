@@ -7,7 +7,7 @@ subroutine Driver_init()
       use IncompNS_data
       use Multiphase_data
       use HeatAD_data, only : ht_Pr
-      use physicaldata, only: solnData,facexData,faceyData
+      use physicaldata, only: localCENTER,localFACEX,localFACEY
 
       implicit none
       
@@ -15,6 +15,12 @@ subroutine Driver_init()
       real :: velcoeff
       real, parameter :: eps = 1e-12
       real, parameter :: pi  = acos(-1.0)
+
+      real, pointer, dimension(:,:,:) :: solnData,facexData,faceyData
+
+      solnData  => localCENTER
+      facexData => localFACEX
+      faceyData => localFACEY
 
       dr_t   = TIME_END
 
@@ -77,5 +83,6 @@ subroutine Driver_init()
 
       dr_tile = (Nyb)/NTHREADS
       
-     
+      nullify(solnData,facexData,faceyData)
+
 end subroutine Driver_init

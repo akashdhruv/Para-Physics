@@ -4,7 +4,7 @@ subroutine IBM_solver(tstep)
 
    use IBM_interface, only: ibm_evolve
    use Driver_data, only: dr_dt
-   use physicaldata
+   use physicaldata, only: localCENTER,localFACEX,localFACEY
    use IBM_data
 
    implicit none
