@@ -148,6 +148,7 @@ subroutine heat_tempSolver_mph(tstep,T,T_old,mdot,smrh,u,v,a1x,a1y,a2x,a2y,s,pf,
 #endif
 
 #ifdef MPI_SHRD
+     call MPI_BARRIER(shared_comm,ierr)
      call MPI_applyBC_shared(TEMP_VAR,CENTER)
 #endif
 

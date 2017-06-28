@@ -188,7 +188,7 @@ _________________MPI with shared memory on/off_______________
 
 #if SHARE_TYPE == 3
 #define MPI_RMA
-#define MPI_RMA_PASSIVE
+#define MPI_RMA_ACTIVE
 #endif
 
 #if 0

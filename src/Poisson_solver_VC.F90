@@ -116,6 +116,7 @@ subroutine Poisson_solver_VC(ps_RHS,ps,ps_rx,ps_ry,ps_res,ps_counter,ps_quant)
 #endif
 
 #ifdef MPI_SHRD
+     call MPI_BARRIER(shared_comm,ierr)
      call MPI_applyBC_shared(ps_quant,CENTER)
 #endif
 

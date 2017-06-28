@@ -15,6 +15,8 @@ subroutine Multiphase_solver(tstep,solnX,jump_flag)
                              MPI_physicalBC_dfun,MPI_physicalBC_vel,&
                              MPI_applyBC_RMA
 
+    use MPI_data, only: shared_comm,ierr
+
     implicit none
 
     integer, intent(in) :: tstep
@@ -45,6 +47,7 @@ if (jump_flag .eqv. .FALSE.) then
 #endif
 
 #ifdef MPI_SHRD
+    call MPI_BARRIER(shared_comm,ierr)
     call MPI_applyBC_shared(VISC_VAR,CENTER)
     call MPI_applyBC_shared(RH2F_VAR,FACEX)
     call MPI_applyBC_shared(RH2F_VAR,FACEY)
@@ -83,6 +86,7 @@ if (jump_flag .eqv. .FALSE.) then
 #endif
 
 #ifdef MPI_SHRD
+      call MPI_BARRIER(shared_comm,ierr)
       call MPI_applyBC_shared(VELI_VAR,FACEX)
       call MPI_applyBC_shared(VELI_VAR,FACEY)
 #endif
@@ -118,6 +122,7 @@ else if (jump_flag .eqv. .TRUE.) then
 #endif
 
 #ifdef MPI_SHRD
+    call MPI_BARRIER(shared_comm,ierr)
     call MPI_applyBC_shared(RH1F_VAR,FACEX)
     call MPI_applyBC_shared(RH1F_VAR,FACEY)
     call MPI_applyBC_shared(RH2F_VAR,FACEX)

@@ -78,6 +78,7 @@ subroutine ins_momentum(tstep,p_counter,p,u,v,ut,vt,s,s2)
 #endif
 
 #ifdef MPI_SHRD
+       call MPI_BARRIER(shared_comm,ierr)
        call MPI_applyBC_shared(USTR_VAR,FACEX)
        call MPI_applyBC_shared(USTR_VAR,FACEY)
 #endif
@@ -115,6 +116,7 @@ subroutine ins_momentum(tstep,p_counter,p,u,v,ut,vt,s,s2)
 #endif
 
 #ifdef MPI_SHRD
+       call MPI_BARRIER(shared_comm,ierr)
        call MPI_applyBC_shared(VELC_VAR,FACEX)
        call MPI_applyBC_shared(VELC_VAR,FACEY)
 #endif
