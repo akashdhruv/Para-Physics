@@ -195,7 +195,7 @@ subroutine MPIsolver_init()
 #endif
 
 #ifdef MPI_RMA_PASSIVE
-    call MPI_WIN_ALLOCATE(RMA_size,disp_unit,mpi_info_key,solver_comm,RMA_ptr,RMA_win,ierr)
+    call MPI_WIN_ALLOCATE(RMA_size,disp_unit,MPI_INFO_NULL,solver_comm,RMA_ptr,RMA_win,ierr)
     call C_F_POINTER(RMA_ptr,dataTARGET,[Nyb+2+Nyb+2+Nxb+2+Nxb+2])
 #endif
 

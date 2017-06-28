@@ -13,8 +13,7 @@ subroutine MPI_applyBC_shared(ivar,datatype)
 
         if(datatype == CENTER) then
 
-                !call MPI_WIN_FENCE(0,center_win,ierr)
-                call MPI_BARRIER(solver_comm,ierr)
+                call MPI_WIN_FENCE(0,center_win,ierr)
 
                 !_______________________MPI BC for High X______________________________!
                 if(x_id < x_procs - 1) then
@@ -70,13 +69,12 @@ subroutine MPI_applyBC_shared(ivar,datatype)
                 end if
                 end if
 
-                !call MPI_WIN_FENCE(0,center_win,ierr)       
+                call MPI_WIN_FENCE(0,center_win,ierr)       
                 return
 
         else if(datatype == FACEX) then
 
-                !call MPI_WIN_FENCE(0,facex_win,ierr)
-                call MPI_BARRIER(solver_comm,ierr)
+                call MPI_WIN_FENCE(0,facex_win,ierr)
 
                 !_______________________MPI BC for High X______________________________!
                 if(x_id < x_procs - 1) then
@@ -132,14 +130,13 @@ subroutine MPI_applyBC_shared(ivar,datatype)
                 end if
                 end if
 
-                !call MPI_WIN_FENCE(0,facex_win,ierr)
+                call MPI_WIN_FENCE(0,facex_win,ierr)
                 return
 
 
         else if(datatype == FACEY) then
 
-                !call MPI_WIN_FENCE(0,facey_win,ierr)
-                call MPI_BARRIER(solver_comm,ierr)
+                call MPI_WIN_FENCE(0,facey_win,ierr)
 
                 !_______________________MPI BC for High X______________________________!
                 if(x_id < x_procs - 1) then
@@ -195,7 +192,7 @@ subroutine MPI_applyBC_shared(ivar,datatype)
                 end if
                 end if
 
-                !call MPI_WIN_FENCE(0,facey_win,ierr)       
+                call MPI_WIN_FENCE(0,facey_win,ierr)       
                 return
 
         end if
