@@ -14,8 +14,8 @@ subroutine MPIsolver_finalize(sim_Complete)
       exec_time = (finish - start)
 
 #ifdef MPI_DIST
-      deallocate(localCENTER,localFACEX,localFACEY)
-      deallocate(world_part)
+      nullify(localCENTER,localFACEX,localFACEY)
+      nullify(world_part)
 #endif
 
 #ifdef MPI_SHRD
@@ -30,8 +30,8 @@ subroutine MPIsolver_finalize(sim_Complete)
 
 #ifdef MPI_RMA
       call MPI_WIN_FREE(RMA_win,ierr)
-      deallocate(localCENTER,localFACEX,localFACEY)
-      deallocate(eastORIGIN,westORIGIN,northORIGIN,southORIGIN)
+      nullify(localCENTER,localFACEX,localFACEY)
+      nullify(eastORIGIN,westORIGIN,northORIGIN,southORIGIN)
       deallocate(world_part)
       deallocate(shared_part)
 #endif
