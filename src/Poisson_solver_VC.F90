@@ -40,7 +40,7 @@ subroutine Poisson_solver_VC(ps_RHS,ps,ps_rx,ps_ry,ps_res,ps_counter,ps_quant)
   !!DIR$ OFFLOAD BEGIN TARGET(mic) in(ps_old,gr_dy,gr_dx,ps_RHS,i,j,thread_id,ps_res1,ps_quant,dr_tile,ii,jj) inout(ps,ps_res,ps_counter)
 
   !$OMP PARALLEL PRIVATE(i,j,thread_id,ii,jj) DEFAULT(NONE) NUM_THREADS(NTHREADS) &
-  !$OMP SHARED(ps_old,ps_rx,ps_ry,gr_dy,gr_dx,ps_RHS,ps,ps_res,ps_counter,ps_res1,ps_quant,dr_tile)
+  !$OMP SHARED(ps_old,ps_rx,ps_ry,gr_dy,gr_dx,ps_RHS,ps,ps_res,ps_counter,ps_res1,ps_quant,dr_tile,shared_comm,ierr)
 
 #if NTHREADS > 1
   thread_id = OMP_GET_THREAD_NUM()
@@ -58,7 +58,6 @@ subroutine Poisson_solver_VC(ps_RHS,ps,ps_rx,ps_ry,ps_res,ps_counter,ps_quant)
      !$OMP BARRIER
 
 #ifdef POISSON_SOLVER_GS
-
      !$OMP DO COLLAPSE(2) SCHEDULE(STATIC)
  
      !do jj=2,Nyb+1,dr_tile
@@ -82,8 +81,23 @@ subroutine Poisson_solver_VC(ps_RHS,ps,ps_rx,ps_ry,ps_res,ps_counter,ps_quant)
      !$OMP END DO
 #endif
 
-#ifdef POISSON_SOLVER_GSOR
+#ifdef POISSON_SOLVER_GS_SKEW
+     !$OMP DO SCHEDULE(STATIC)
+     do j=4,Nxb+Nyb+2 
+        do i=max(2,j-Nyb-1),min(Nxb+1,j-2)
 
+           ps(i,j-i)=((ps_old(i,j-i+1)/(ps_ry(i,j-i)*gr_dy*gr_dy))+(ps(i,j-i-1)/(ps_ry(i,j-i-1)*gr_dy*gr_dy))&
+                     +(ps_old(i+1,j-i)/(ps_rx(i,j-i)*gr_dx*gr_dx))+(ps(i-1,j-i)/(ps_rx(i-1,j-i)*gr_dx*gr_dx))&
+                      +ps_RHS(i-1,j-i-1))&
+                      *(1/((1/(ps_rx(i,j-i)*gr_dx*gr_dx))+(1/(ps_ry(i,j-i)*gr_dy*gr_dy))+&
+                           (1/(ps_rx(i-1,j-i)*gr_dx*gr_dx))+(1/(ps_ry(i,j-i-1)*gr_dy*gr_dy))))
+
+        end do
+     end do
+     !$OMP END DO
+#endif
+
+#ifdef POISSON_SOLVER_GS_SOR
      !$OMP DO COLLAPSE(2) SCHEDULE(STATIC)
 
      !do jj=2,Nyb+1,dr_tile
@@ -97,7 +111,7 @@ subroutine Poisson_solver_VC(ps_RHS,ps,ps_rx,ps_ry,ps_res,ps_counter,ps_quant)
                    +(ps_old(i+1,j)/(ps_rx(i,j)*gr_dx*gr_dx))+(ps(i-1,j)/(ps_rx(i-1,j)*gr_dx*gr_dx))&
                    +ps_RHS(i-1,j-1))&
                    *(1/((1/(ps_rx(i,j)*gr_dx*gr_dx))+(1/(ps_ry(i,j)*gr_dy*gr_dy))+&
-                        (1/(ps_rx(i-1,j)*gr_dx*gr_dx))+(1/(ps_ry(i,j-1)*gr_dy*gr_dy))))*omega + (1-omega)*ps(i,j)
+                        (1/(ps_rx(i-1,j)*gr_dx*gr_dx))+(1/(ps_ry(i,j-1)*gr_dy*gr_dy))))*omega + (1-omega)*ps_old(i,j)
 
         end do
      end do
@@ -145,8 +159,8 @@ subroutine Poisson_solver_VC(ps_RHS,ps,ps_rx,ps_ry,ps_res,ps_counter,ps_quant)
   !$OMP END PARALLEL
 
   !!DIR$ END OFFLOAD
-   poisson_finish = MPI_Wtime()
+  poisson_finish = MPI_Wtime()
 
-   ins_timePoisson = ins_timePoisson + (poisson_finish - poisson_start)
+  ins_timePoisson = ins_timePoisson + (poisson_finish - poisson_start)
 
 end subroutine Poisson_solver_VC

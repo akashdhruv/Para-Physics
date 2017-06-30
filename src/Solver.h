@@ -13,7 +13,11 @@ _____________Defining Poisson Solver Parameters_________________
 #endif
 
 #if POIS_SOLVER == 3
-#define POISSON_SOLVER_GSOR
+#define POISSON_SOLVER_GS_SKEW
+#endif
+
+#if POIS_SOLVER == 4
+#define POISSON_SOLVER_GS_SOR
 #define omega 1.1
 #endif
 

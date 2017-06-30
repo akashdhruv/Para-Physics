@@ -39,7 +39,7 @@ subroutine Poisson_solver(ps_RHS,ps,ps_res,ps_counter,ps_quant)
   !!DIR$ OFFLOAD BEGIN TARGET(mic) in(ps_old,gr_dy,gr_dx,ps_RHS,i,j,thread_id,ps_res1,ps_quant,dr_tile,ii,jj) inout(ps,ps_res,ps_counter)
 
   !$OMP PARALLEL PRIVATE(i,j,thread_id,ii,jj) DEFAULT(NONE) NUM_THREADS(NTHREADS) &
-  !$OMP SHARED(ps_old,gr_dy,gr_dx,ps_RHS,ps,ps_res,ps_counter,ps_res1,ps_quant,dr_tile)
+  !$OMP SHARED(ps_old,gr_dy,gr_dx,ps_RHS,ps,ps_res,ps_counter,ps_res1,ps_quant,dr_tile,shared_comm,ierr)
 
 #if NTHREADS > 1
   thread_id = OMP_GET_THREAD_NUM()
@@ -57,7 +57,6 @@ subroutine Poisson_solver(ps_RHS,ps,ps_res,ps_counter,ps_quant)
      !$OMP BARRIER
 
 #ifdef POISSON_SOLVER_JACOBI
-
      ps(2:Nxb+1,2:Nyb+1)= ((ps_old(2:Nxb+1,3:Nyb+2)/(gr_dy*gr_dy))&
                           +(ps_old(2:Nxb+1,1:Nyb)/(gr_dy*gr_dy))&
                           +(ps_old(3:Nxb+2,2:Nyb+1)/(gr_dx*gr_dx))&
@@ -67,11 +66,9 @@ subroutine Poisson_solver(ps_RHS,ps,ps_res,ps_counter,ps_quant)
                           +(1/(gr_dy*gr_dy))&
                           +(1/(gr_dx*gr_dx))&
                           +(1/(gr_dy*gr_dy))))
-
 #endif
 
 #ifdef POISSON_SOLVER_GS
-
      !$OMP DO COLLAPSE(2) SCHEDULE(STATIC) 
 
      !___Double Tile____
@@ -113,27 +110,38 @@ subroutine Poisson_solver(ps_RHS,ps,ps_res,ps_counter,ps_quant)
      !__Double Tile___
 
      !$OMP END DO
-
 #endif
 
-#ifdef POISSON_SOLVER_GSOR
+#ifdef POISSON_SOLVER_GS_SKEW
+     !$OMP DO SCHEDULE(STATIC)
+     do j=4,Nxb+Nyb+2
+        do i=max(2,j-Nyb-1),min(Nxb+1,j-2)
+           ps(i,j-i)=((ps_old(i,j-i+1)/(gr_dy*gr_dy))+(ps(i,j-i-1)/(gr_dy*gr_dy))&
+                     +(ps_old(i+1,j-i)/(gr_dx*gr_dx))+(ps(i-1,j-i)/(gr_dx*gr_dx))&
+                     +ps_RHS(i-1,j-i-1))&
+                     *(1/((1/(gr_dx*gr_dx))+(1/(gr_dy*gr_dy))+&
+                          (1/(gr_dx*gr_dx))+(1/(gr_dy*gr_dy))))     
+        end do
+     end do
+     !$OMP END DO
+#endif
 
+#ifdef POISSON_SOLVER_GS_SOR
      !$OMP DO COLLAPSE(2) SCHEDULE(STATIC)
 
      do j=2,Nyb+1
         do i=2,Nxb+1
 
            ps(i,j)=((ps_old(i,j+1)/(gr_dy*gr_dy))+(ps(i,j-1)/(gr_dy*gr_dy))&
-                  +(ps_old(i+1,j)/(gr_dx*gr_dx))+(ps(i-1,j)/(gr_dx*gr_dx))&
-                  +ps_RHS(i-1,j-1))&
-                  *(1/((1/(gr_dx*gr_dx))+(1/(gr_dy*gr_dy))+&
-                   (1/(gr_dx*gr_dx))+(1/(gr_dy*gr_dy))))*omega + (1-omega)*ps(i,j)
+                   +(ps_old(i+1,j)/(gr_dx*gr_dx))+(ps(i-1,j)/(gr_dx*gr_dx))&
+                   +ps_RHS(i-1,j-1))&
+                   *(1/((1/(gr_dx*gr_dx))+(1/(gr_dy*gr_dy))+&
+                        (1/(gr_dx*gr_dx))+(1/(gr_dy*gr_dy))))*omega + (1-omega)*ps_old(i,j)
                   
         end do
      end do
 
      !$OMP END DO
-
 #endif
 
      ! Pressure BC
