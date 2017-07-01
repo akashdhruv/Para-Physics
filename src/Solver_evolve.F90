@@ -2,7 +2,7 @@ subroutine Solver_evolve
 
 #include "Solver.h"
 
-!#define SOLVER_DEBUG
+#define SOLVER_DEBUG
 
     use IncompNS_interface, only: IncompNS_solver
     use HeatAD_interface, only: HeatAD_solver
@@ -71,21 +71,21 @@ subroutine Solver_evolve
           facexData => localFACEX
           faceyData => localFACEY     
 
-          uu = (facexData(VELC_VAR,1:Nxb+1,1:Nyb+1)+facexData(VELC_VAR,1:Nxb+1,2:Nyb+2))/2 
+          uu = (facexData(1:Nxb+1,1:Nyb+1,VELC_VAR)+facexData(1:Nxb+1,2:Nyb+2,VELC_VAR))/2 
 
-          vv = (faceyData(VELC_VAR,1:Nxb+1,1:Nyb+1)+faceyData(VELC_VAR,2:Nxb+2,1:Nyb+1))/2
+          vv = (faceyData(1:Nxb+1,1:Nyb+1,VELC_VAR)+faceyData(2:Nxb+2,1:Nyb+1,VELC_VAR))/2
 
-          pp = ((solnData(PRES_VAR,1:Nxb+1,1:Nyb+1)+solnData(PRES_VAR,2:Nxb+2,1:Nyb+1))/2 &
-               +(solnData(PRES_VAR,1:Nxb+1,2:Nyb+2)+solnData(PRES_VAR,2:Nxb+2,2:Nyb+2))/2)/2
+          pp = ((solnData(1:Nxb+1,1:Nyb+1,PRES_VAR)+solnData(2:Nxb+2,1:Nyb+1,PRES_VAR))/2 &
+               +(solnData(1:Nxb+1,2:Nyb+2,PRES_VAR)+solnData(2:Nxb+2,2:Nyb+2,PRES_VAR))/2)/2
 
-          tt = ((solnData(TEMP_VAR,1:Nxb+1,1:Nyb+1)+solnData(TEMP_VAR,2:Nxb+2,1:Nyb+1))/2 &
-               +(solnData(TEMP_VAR,1:Nxb+1,2:Nyb+2)+solnData(TEMP_VAR,2:Nxb+2,2:Nyb+2))/2)/2
+          tt = ((solnData(1:Nxb+1,1:Nyb+1,TEMP_VAR)+solnData(2:Nxb+2,1:Nyb+1,TEMP_VAR))/2 &
+               +(solnData(1:Nxb+1,2:Nyb+2,TEMP_VAR)+solnData(2:Nxb+2,2:Nyb+2,TEMP_VAR))/2)/2
 
-          ww = ((solnData(VISC_VAR,1:Nxb+1,1:Nyb+1)+solnData(VISC_VAR,2:Nxb+2,1:Nyb+1))/2 &
-               +(solnData(VISC_VAR,1:Nxb+1,2:Nyb+2)+solnData(VISC_VAR,2:Nxb+2,2:Nyb+2))/2)/2
+          ww = ((solnData(1:Nxb+1,1:Nyb+1,VISC_VAR)+solnData(2:Nxb+2,1:Nyb+1,VISC_VAR))/2 &
+               +(solnData(1:Nxb+1,2:Nyb+2,VISC_VAR)+solnData(2:Nxb+2,2:Nyb+2,VISC_VAR))/2)/2
 
-          rr = ((facexData(RH1F_VAR,1:Nxb+1,1:Nyb+1)+facexData(RH2F_VAR,1:Nxb+1,2:Nyb+2)) + &
-                (faceyData(RH1F_VAR,1:Nxb+1,1:Nyb+1)+faceyData(RH2F_VAR,2:Nxb+2,1:Nyb+1)))/2
+          rr = ((facexData(1:Nxb+1,1:Nyb+1,RH1F_VAR)+facexData(1:Nxb+1,2:Nyb+2,RH2F_VAR)) + &
+                (faceyData(1:Nxb+1,1:Nyb+1,RH1F_VAR)+faceyData(2:Nxb+2,1:Nyb+1,RH2F_VAR)))/2
 
          call IO_write(gr_x,gr_y,uu,vv,pp,tt,ww,rr,myid)
 
@@ -103,21 +103,21 @@ subroutine Solver_evolve
     facexData => localFACEX
     faceyData => localFACEY
 
-    uu = (facexData(VELC_VAR,1:Nxb+1,1:Nyb+1)+facexData(VELC_VAR,1:Nxb+1,2:Nyb+2))/2
+    uu = (facexData(1:Nxb+1,1:Nyb+1,VELC_VAR)+facexData(1:Nxb+1,2:Nyb+2,VELC_VAR))/2 
 
-    vv = (faceyData(VELC_VAR,1:Nxb+1,1:Nyb+1)+faceyData(VELC_VAR,2:Nxb+2,1:Nyb+1))/2
+    vv = (faceyData(1:Nxb+1,1:Nyb+1,VELC_VAR)+faceyData(2:Nxb+2,1:Nyb+1,VELC_VAR))/2
 
-    pp = ((solnData(PRES_VAR,1:Nxb+1,1:Nyb+1)+solnData(PRES_VAR,2:Nxb+2,1:Nyb+1))/2 + &
-          (solnData(PRES_VAR,1:Nxb+1,2:Nyb+2)+solnData(PRES_VAR,2:Nxb+2,2:Nyb+2))/2)/2
+    pp = ((solnData(1:Nxb+1,1:Nyb+1,PRES_VAR)+solnData(2:Nxb+2,1:Nyb+1,PRES_VAR))/2 &
+         +(solnData(1:Nxb+1,2:Nyb+2,PRES_VAR)+solnData(2:Nxb+2,2:Nyb+2,PRES_VAR))/2)/2
 
-    tt = ((solnData(TEMP_VAR,1:Nxb+1,1:Nyb+1)+solnData(TEMP_VAR,2:Nxb+2,1:Nyb+1))/2 + &
-          (solnData(TEMP_VAR,1:Nxb+1,2:Nyb+2)+solnData(TEMP_VAR,2:Nxb+2,2:Nyb+2))/2)/2
+    tt = ((solnData(1:Nxb+1,1:Nyb+1,TEMP_VAR)+solnData(2:Nxb+2,1:Nyb+1,TEMP_VAR))/2 &
+         +(solnData(1:Nxb+1,2:Nyb+2,TEMP_VAR)+solnData(2:Nxb+2,2:Nyb+2,TEMP_VAR))/2)/2
 
-    ww = ((solnData(VISC_VAR,1:Nxb+1,1:Nyb+1)+solnData(VISC_VAR,2:Nxb+2,1:Nyb+1))/2 &
-         +(solnData(VISC_VAR,1:Nxb+1,2:Nyb+2)+solnData(VISC_VAR,2:Nxb+2,2:Nyb+2))/2)/2
+    ww = ((solnData(1:Nxb+1,1:Nyb+1,VISC_VAR)+solnData(2:Nxb+2,1:Nyb+1,VISC_VAR))/2 &
+         +(solnData(1:Nxb+1,2:Nyb+2,VISC_VAR)+solnData(2:Nxb+2,2:Nyb+2,VISC_VAR))/2)/2
 
-    rr = ((facexData(RH1F_VAR,1:Nxb+1,1:Nyb+1)+facexData(RH2F_VAR,1:Nxb+1,2:Nyb+2)) + &
-          (faceyData(RH1F_VAR,1:Nxb+1,1:Nyb+1)+faceyData(RH2F_VAR,2:Nxb+2,1:Nyb+1)))/2
+    rr = ((facexData(1:Nxb+1,1:Nyb+1,RH1F_VAR)+facexData(1:Nxb+1,2:Nyb+2,RH2F_VAR)) + &
+          (faceyData(1:Nxb+1,1:Nyb+1,RH1F_VAR)+faceyData(2:Nxb+2,1:Nyb+1,RH2F_VAR)))/2
 
     call IO_write(gr_x,gr_y,uu,vv,pp,tt,ww,rr,myid)
 
