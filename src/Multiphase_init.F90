@@ -34,31 +34,31 @@ subroutine Multiphase_init()
    mph_beta  = 0.1
    mph_sten  = 1.0
 
-   solnData(:,:,DFUN_VAR,blockCount)  = 0.0
-   solnData(:,:,PFUN_VAR,blockCount)  = 0.0
-   solnData(:,:,NRMX_VAR,blockCount)  = 0.0
-   solnData(:,:,NRMY_VAR,blockCount)  = 0.0
-   solnData(:,:,VISC_VAR,blockCount)  = 1.0
-   solnData(:,:,THCO_VAR,blockCount)  = 1.0
-   solnData(:,:,CPRS_VAR,blockCount)  = 1.0
-   solnData(:,:,SMHV_VAR,blockCount)  = 0.0
-   solnData(:,:,SMRH_VAR,blockCount)  = 0.0
-   solnData(:,:,SIGP_VAR,blockCount)  = 0.0
-   solnData(:,:,CURV_VAR,blockCount)  = 0.0
-   solnData(:,:,MDOT_VAR,blockCount)  = 0.0
+   solnData(:,:,blockCount,DFUN_VAR)  = 0.0
+   solnData(:,:,blockCount,PFUN_VAR)  = 0.0
+   solnData(:,:,blockCount,NRMX_VAR)  = 0.0
+   solnData(:,:,blockCount,NRMY_VAR)  = 0.0
+   solnData(:,:,blockCount,VISC_VAR)  = 1.0
+   solnData(:,:,blockCount,THCO_VAR)  = 1.0
+   solnData(:,:,blockCount,CPRS_VAR)  = 1.0
+   solnData(:,:,blockCount,SMHV_VAR)  = 0.0
+   solnData(:,:,blockCount,SMRH_VAR)  = 0.0
+   solnData(:,:,blockCount,SIGP_VAR)  = 0.0
+   solnData(:,:,blockCount,CURV_VAR)  = 0.0
+   solnData(:,:,blockCount,MDOT_VAR)  = 0.0
 
-   facexData(:,:,RH1F_VAR,blockCount) = 0.0
-   faceyData(:,:,RH1F_VAR,blockCount) = 0.0
-   facexData(:,:,RH2F_VAR,blockCount) = 1.0
-   faceyData(:,:,RH2F_VAR,blockCount) = 1.0
-   facexData(:,:,AL1F_VAR,blockCount) = 0.0
-   faceyData(:,:,AL1F_VAR,blockCount) = 0.0
-   facexData(:,:,AL2F_VAR,blockCount) = 1.0
-   faceyData(:,:,AL2F_VAR,blockCount) = 1.0
-   facexData(:,:,SIGM_VAR,blockCount) = 0.0
-   faceyData(:,:,SIGM_VAR,blockCount) = 0.0
-   facexData(:,:,VELI_VAR,blockCount) = 0.0
-   faceyData(:,:,VELI_VAR,blockCount) = 0.0
+   facexData(:,:,blockCount,RH1F_VAR) = 0.0
+   faceyData(:,:,blockCount,RH1F_VAR) = 0.0
+   facexData(:,:,blockCount,RH2F_VAR) = 1.0
+   faceyData(:,:,blockCount,RH2F_VAR) = 1.0
+   facexData(:,:,blockCount,AL1F_VAR) = 0.0
+   faceyData(:,:,blockCount,AL1F_VAR) = 0.0
+   facexData(:,:,blockCount,AL2F_VAR) = 1.0
+   faceyData(:,:,blockCount,AL2F_VAR) = 1.0
+   facexData(:,:,blockCount,SIGM_VAR) = 0.0
+   faceyData(:,:,blockCount,SIGM_VAR) = 0.0
+   facexData(:,:,blockCount,VELI_VAR) = 0.0
+   faceyData(:,:,blockCount,VELI_VAR) = 0.0
 
 
    !___Vorticity Test__!
@@ -102,7 +102,7 @@ subroutine Multiphase_init()
 
          end if
 
-              solnData(i,j,DFUN_VAR,blockCount) = mph_r0 - sqrt((xcell-mph_x0)**2+(ycell-mph_y0)**2)
+              solnData(i,j,blockCount,DFUN_VAR) = mph_r0 - sqrt((xcell-mph_x0)**2+(ycell-mph_y0)**2)
 
       end do
 

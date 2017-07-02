@@ -18,22 +18,22 @@ subroutine IncompNS_solver(tstep,p_counter)
     faceyData => localFACEY
 
 #ifdef SINGLEPHASE
-    call ins_momentum(tstep,p_counter,solnData(:,:,PRES_VAR,blockCount),&
-                      facexData(:,:,VELC_VAR,blockCount),faceyData(:,:,VELC_VAR,blockCount),&
-                      facexData(:,:,USTR_VAR,blockCount),faceyData(:,:,USTR_VAR,blockCount),&
-                      facexData(:,:,IBMF_VAR,blockCount),faceyData(:,:,IBMF_VAR,blockCount))
+    call ins_momentum(tstep,p_counter,solnData(:,:,blockCount,PRES_VAR),&
+                      facexData(:,:,blockCount,VELC_VAR),faceyData(:,:,blockCount,VELC_VAR),&
+                      facexData(:,:,blockCount,USTR_VAR),faceyData(:,:,blockCount,USTR_VAR),&
+                      facexData(:,:,blockCount,IBMF_VAR),faceyData(:,:,blockCount,IBMF_VAR))
 #endif
 
 #ifdef MULTIPHASE
-    call ins_momentum_VD(tstep,p_counter,solnData(:,:,PRES_VAR,blockCount),&
-                         facexData(:,:,VELC_VAR,blockCount),faceyData(:,:,VELC_VAR,blockCount),&
-                         facexData(:,:,USTR_VAR,blockCount),faceyData(:,:,USTR_VAR,blockCount),&
-                         solnData(:,:,VISC_VAR,blockCount),&
-                         facexData(:,:,RH1F_VAR,blockCount),faceyData(:,:,RH1F_VAR,blockCount),&                                       
-                         facexData(:,:,RH2F_VAR,blockCount),faceyData(:,:,RH2F_VAR,blockCount),&
-                         facexData(:,:,IBMF_VAR,blockCount),faceyData(:,:,IBMF_VAR,blockCount),&
-                         solnData(:,:,SIGP_VAR,blockCount),&
-                         facexData(:,:,SIGM_VAR,blockCount),faceyData(:,:,SIGM_VAR,blockCount))
+    call ins_momentum_VD(tstep,p_counter,solnData(:,:,blockCount,PRES_VAR),&
+                         facexData(:,:,blockCount,VELC_VAR),faceyData(:,:,blockCount,VELC_VAR),&
+                         facexData(:,:,blockCount,USTR_VAR),faceyData(:,:,blockCount,USTR_VAR),&
+                         solnData(:,:,blockCount,VISC_VAR),&
+                         facexData(:,:,blockCount,RH1F_VAR),faceyData(:,:,blockCount,RH1F_VAR),&                                       
+                         facexData(:,:,blockCount,RH2F_VAR),faceyData(:,:,blockCount,RH2F_VAR),&
+                         facexData(:,:,blockCount,IBMF_VAR),faceyData(:,:,blockCount,IBMF_VAR),&
+                         solnData(:,:,blockCount,SIGP_VAR),&
+                         facexData(:,:,blockCount,SIGM_VAR),faceyData(:,:,blockCount,SIGM_VAR))
 
 #endif
 

@@ -29,8 +29,8 @@ subroutine Driver_init()
       dy_min = gr_dy
 
 
-      velcoeff =  MAX( MAXVAL(ABS(facexData(:,:,VELC_VAR,blockCount))/gr_dx), &
-                       MAXVAL(ABS(faceyData(:,:,VELC_VAR,blockCount))/gr_dy))
+      velcoeff =  MAX( MAXVAL(ABS(facexData(:,:,blockCount,VELC_VAR))/gr_dx), &
+                       MAXVAL(ABS(faceyData(:,:,blockCount,VELC_VAR))/gr_dy))
 
       dt_cfl = ins_cfl*min(gr_dx,gr_dy)
 

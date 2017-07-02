@@ -71,21 +71,21 @@ subroutine Solver_evolve
           facexData => localFACEX
           faceyData => localFACEY     
 
-          uu = (facexData(1:Nxb+1,1:Nyb+1,VELC_VAR,blockCount)+facexData(1:Nxb+1,2:Nyb+2,VELC_VAR,blockCount))/2 
+          uu = (facexData(1:Nxb+1,1:Nyb+1,blockCount,VELC_VAR)+facexData(1:Nxb+1,2:Nyb+2,blockCount,VELC_VAR))/2 
 
-          vv = (faceyData(1:Nxb+1,1:Nyb+1,VELC_VAR,blockCount)+faceyData(2:Nxb+2,1:Nyb+1,VELC_VAR,blockCount))/2
+          vv = (faceyData(1:Nxb+1,1:Nyb+1,blockCount,VELC_VAR)+faceyData(2:Nxb+2,1:Nyb+1,blockCount,VELC_VAR))/2
 
-          pp = ((solnData(1:Nxb+1,1:Nyb+1,PRES_VAR,blockCount)+solnData(2:Nxb+2,1:Nyb+1,PRES_VAR,blockCount))/2 &
-               +(solnData(1:Nxb+1,2:Nyb+2,PRES_VAR,blockCount)+solnData(2:Nxb+2,2:Nyb+2,PRES_VAR,blockCount))/2)/2
+          pp = ((solnData(1:Nxb+1,1:Nyb+1,blockCount,PRES_VAR)+solnData(2:Nxb+2,1:Nyb+1,blockCount,PRES_VAR))/2 &
+               +(solnData(1:Nxb+1,2:Nyb+2,blockCount,PRES_VAR)+solnData(2:Nxb+2,2:Nyb+2,blockCount,PRES_VAR))/2)/2
 
-          tt = ((solnData(1:Nxb+1,1:Nyb+1,TEMP_VAR,blockCount)+solnData(2:Nxb+2,1:Nyb+1,TEMP_VAR,blockCount))/2 &
-               +(solnData(1:Nxb+1,2:Nyb+2,TEMP_VAR,blockCount)+solnData(2:Nxb+2,2:Nyb+2,TEMP_VAR,blockCount))/2)/2
+          tt = ((solnData(1:Nxb+1,1:Nyb+1,blockCount,TEMP_VAR)+solnData(2:Nxb+2,1:Nyb+1,blockCount,TEMP_VAR))/2 &
+               +(solnData(1:Nxb+1,2:Nyb+2,blockCount,TEMP_VAR)+solnData(2:Nxb+2,2:Nyb+2,blockCount,TEMP_VAR))/2)/2
 
-          ww = ((solnData(1:Nxb+1,1:Nyb+1,VISC_VAR,blockCount)+solnData(2:Nxb+2,1:Nyb+1,VISC_VAR,blockCount))/2 &
-               +(solnData(1:Nxb+1,2:Nyb+2,VISC_VAR,blockCount)+solnData(2:Nxb+2,2:Nyb+2,VISC_VAR,blockCount))/2)/2
+          ww = ((solnData(1:Nxb+1,1:Nyb+1,blockCount,VISC_VAR)+solnData(2:Nxb+2,1:Nyb+1,blockCount,VISC_VAR))/2 &
+               +(solnData(1:Nxb+1,2:Nyb+2,blockCount,VISC_VAR)+solnData(2:Nxb+2,2:Nyb+2,blockCount,VISC_VAR))/2)/2
 
-          rr = ((facexData(1:Nxb+1,1:Nyb+1,RH1F_VAR,blockCount)+facexData(1:Nxb+1,2:Nyb+2,RH2F_VAR,blockCount)) + &
-                (faceyData(1:Nxb+1,1:Nyb+1,RH1F_VAR,blockCount)+faceyData(2:Nxb+2,1:Nyb+1,RH2F_VAR,blockCount)))/2
+          rr = ((facexData(1:Nxb+1,1:Nyb+1,blockCount,RH1F_VAR)+facexData(1:Nxb+1,2:Nyb+2,blockCount,RH2F_VAR)) + &
+                (faceyData(1:Nxb+1,1:Nyb+1,blockCount,RH1F_VAR)+faceyData(2:Nxb+2,1:Nyb+1,blockCount,RH2F_VAR)))/2
 
          call IO_write(gr_x,gr_y,uu,vv,pp,tt,ww,rr,myid)
 
@@ -103,21 +103,21 @@ subroutine Solver_evolve
     facexData => localFACEX
     faceyData => localFACEY
 
-    uu = (facexData(1:Nxb+1,1:Nyb+1,VELC_VAR,blockCount)+facexData(1:Nxb+1,2:Nyb+2,VELC_VAR,blockCount))/2 
+    uu = (facexData(1:Nxb+1,1:Nyb+1,blockCount,VELC_VAR)+facexData(1:Nxb+1,2:Nyb+2,blockCount,VELC_VAR))/2 
 
-    vv = (faceyData(1:Nxb+1,1:Nyb+1,VELC_VAR,blockCount)+faceyData(2:Nxb+2,1:Nyb+1,VELC_VAR,blockCount))/2
+    vv = (faceyData(1:Nxb+1,1:Nyb+1,blockCount,VELC_VAR)+faceyData(2:Nxb+2,1:Nyb+1,blockCount,VELC_VAR))/2
 
-    pp = ((solnData(1:Nxb+1,1:Nyb+1,PRES_VAR,blockCount)+solnData(2:Nxb+2,1:Nyb+1,PRES_VAR,blockCount))/2 &
-         +(solnData(1:Nxb+1,2:Nyb+2,PRES_VAR,blockCount)+solnData(2:Nxb+2,2:Nyb+2,PRES_VAR,blockCount))/2)/2
+    pp = ((solnData(1:Nxb+1,1:Nyb+1,blockCount,PRES_VAR)+solnData(2:Nxb+2,1:Nyb+1,blockCount,PRES_VAR))/2 &
+         +(solnData(1:Nxb+1,2:Nyb+2,blockCount,PRES_VAR)+solnData(2:Nxb+2,2:Nyb+2,blockCount,PRES_VAR))/2)/2
 
-    tt = ((solnData(1:Nxb+1,1:Nyb+1,TEMP_VAR,blockCount)+solnData(2:Nxb+2,1:Nyb+1,TEMP_VAR,blockCount))/2 &
-         +(solnData(1:Nxb+1,2:Nyb+2,TEMP_VAR,blockCount)+solnData(2:Nxb+2,2:Nyb+2,TEMP_VAR,blockCount))/2)/2
+    tt = ((solnData(1:Nxb+1,1:Nyb+1,blockCount,TEMP_VAR)+solnData(2:Nxb+2,1:Nyb+1,blockCount,TEMP_VAR))/2 &
+         +(solnData(1:Nxb+1,2:Nyb+2,blockCount,TEMP_VAR)+solnData(2:Nxb+2,2:Nyb+2,blockCount,TEMP_VAR))/2)/2
 
-    ww = ((solnData(1:Nxb+1,1:Nyb+1,VISC_VAR,blockCount)+solnData(2:Nxb+2,1:Nyb+1,VISC_VAR,blockCount))/2 &
-         +(solnData(1:Nxb+1,2:Nyb+2,VISC_VAR,blockCount)+solnData(2:Nxb+2,2:Nyb+2,VISC_VAR,blockCount))/2)/2
+    ww = ((solnData(1:Nxb+1,1:Nyb+1,blockCount,VISC_VAR)+solnData(2:Nxb+2,1:Nyb+1,blockCount,VISC_VAR))/2 &
+         +(solnData(1:Nxb+1,2:Nyb+2,blockCount,VISC_VAR)+solnData(2:Nxb+2,2:Nyb+2,blockCount,VISC_VAR))/2)/2
 
-    rr = ((facexData(1:Nxb+1,1:Nyb+1,RH1F_VAR,blockCount)+facexData(1:Nxb+1,2:Nyb+2,RH2F_VAR,blockCount)) + &
-          (faceyData(1:Nxb+1,1:Nyb+1,RH1F_VAR,blockCount)+faceyData(2:Nxb+2,1:Nyb+1,RH2F_VAR,blockCount)))/2
+    rr = ((facexData(1:Nxb+1,1:Nyb+1,blockCount,RH1F_VAR)+facexData(1:Nxb+1,2:Nyb+2,blockCount,RH2F_VAR)) + &
+          (faceyData(1:Nxb+1,1:Nyb+1,blockCount,RH1F_VAR)+faceyData(2:Nxb+2,1:Nyb+1,blockCount,RH2F_VAR)))/2
 
     call IO_write(gr_x,gr_y,uu,vv,pp,tt,ww,rr,myid)
 

@@ -17,17 +17,17 @@ subroutine HeatAD_solver(tstep)
    facexData => localFACEX
    faceyData => localFACEY
 
-   solnData(:,:,TOLD_VAR,blockCount) = solnData(:,:,TEMP_VAR,blockCount) 
+   solnData(:,:,blockCount,TOLD_VAR) = solnData(:,:,blockCount,TEMP_VAR) 
 
 #ifdef SINGLEPHASE
 
-   call heat_tempSolver(tstep,solnData(:,:,TEMP_VAR,blockCount),solnData(:,:,TOLD_VAR,blockCount),&
-                         solnData(:,:,MDOT_VAR,blockCount),solnData(:,:,SMRH_VAR,blockCount),&
-                         facexData(:,:,VELC_VAR,blockCount),faceyData(:,:,VELC_VAR,blockCount),&
-                         facexData(:,:,AL1F_VAR,blockCount),faceyData(:,:,AL1F_VAR,blockCount),&
-                         facexData(:,:,AL2F_VAR,blockCount),faceyData(:,:,AL2F_VAR,blockCount),&
-                         solnData(:,:,DFUN_VAR,blockCount),solnData(:,:,PFUN_VAR,blockCount),&
-                         solnData(:,:,THCO_VAR,blockCount),solnData(:,:,CPRS_VAR,blockCount))
+   call heat_tempSolver(tstep,solnData(:,:,blockCount,TEMP_VAR),solnData(:,:,blockCount,TOLD_VAR),&
+                         solnData(:,:,blockCount,MDOT_VAR),solnData(:,:,blockCount,SMRH_VAR),&
+                         facexData(:,:,blockCount,VELC_VAR),faceyData(:,:,blockCount,VELC_VAR),&
+                         facexData(:,:,blockCount,AL1F_VAR),faceyData(:,:,blockCount,AL1F_VAR),&
+                         facexData(:,:,blockCount,AL2F_VAR),faceyData(:,:,blockCount,AL2F_VAR),&
+                         solnData(:,:,blockCount,DFUN_VAR),solnData(:,:,blockCount,PFUN_VAR),&
+                         solnData(:,:,blockCount,THCO_VAR),solnData(:,:,blockCount,CPRS_VAR))
 
 #endif
 
@@ -35,34 +35,33 @@ subroutine HeatAD_solver(tstep)
 
 #ifdef IBM
 
-   call heat_tempSolver_ibm(tstep,solnData(:,:,TEMP_VAR,blockCount),solnData(:,:,TOLD_VAR,blockCount),&
-                         solnData(:,:,MDOT_VAR,blockCount),solnData(:,:,SMRH_VAR,blockCount),&
-                         facexData(:,:,VELC_VAR,blockCount),faceyData(:,:,VELC_VAR,blockCount),&
-                         facexData(:,:,AL1F_VAR,blockCount),faceyData(:,:,AL1F_VAR,blockCount),&
-                         facexData(:,:,AL2F_VAR,blockCount),faceyData(:,:,AL2F_VAR,blockCount),&
-                         solnData(:,:,DFUN_VAR,blockCount),solnData(:,:,PFUN_VAR,blockCount),&
-                         solnData(:,:,THCO_VAR,blockCount),solnData(:,:,CPRS_VAR,blockCount))
+   call heat_tempSolver_ibm(tstep,solnData(:,:,blockCount,TEMP_VAR),solnData(:,:,blockCount,TOLD_VAR),&
+                         solnData(:,:,blockCount,MDOT_VAR),solnData(:,:,blockCount,SMRH_VAR),&
+                         facexData(:,:,blockCount,VELC_VAR),faceyData(:,:,blockCount,VELC_VAR),&
+                         facexData(:,:,blockCount,AL1F_VAR),faceyData(:,:,blockCount,AL1F_VAR),&
+                         facexData(:,:,blockCount,AL2F_VAR),faceyData(:,:,blockCount,AL2F_VAR),&
+                         solnData(:,:,blockCount,DFUN_VAR),solnData(:,:,blockCount,PFUN_VAR),&
+                         solnData(:,:,blockCount,THCO_VAR),solnData(:,:,blockCount,CPRS_VAR))
 #else
 
 #ifdef MPH_DEBUG
 
-   call heat_tempSolver(tstep,solnData(:,:,TEMP_VAR,blockCount),solnData(:,:,TOLD_VAR,blockCount),&
-                         solnData(:,:,MDOT_VAR,blockCount),solnData(:,:,SMRH_VAR,blockCount),&
-                         facexData(:,:,VELC_VAR,blockCount),faceyData(:,:,VELC_VAR,blockCount),&
-                         facexData(:,:,AL1F_VAR,blockCount),faceyData(:,:,AL1F_VAR,blockCount),&
-                         facexData(:,:,AL2F_VAR,blockCount),faceyData(:,:,AL2F_VAR,blockCount),&
-                         solnData(:,:,DFUN_VAR,blockCount),solnData(:,:,PFUN_VAR,blockCount),&
-                         solnData(:,:,THCO_VAR,blockCount),solnData(:,:,CPRS_VAR,blockCount))
+   call heat_tempSolver(tstep,solnData(:,:,blockCount,TEMP_VAR),solnData(:,:,blockCount,TOLD_VAR),&
+                         solnData(:,:,blockCount,MDOT_VAR),solnData(:,:,blockCount,SMRH_VAR),&
+                         facexData(:,:,blockCount,VELC_VAR),faceyData(:,:,blockCount,VELC_VAR),&
+                         facexData(:,:,blockCount,AL1F_VAR),faceyData(:,:,blockCount,AL1F_VAR),&
+                         facexData(:,:,blockCount,AL2F_VAR),faceyData(:,:,blockCount,AL2F_VAR),&
+                         solnData(:,:,blockCount,DFUN_VAR),solnData(:,:,blockCount,PFUN_VAR),&
+                         solnData(:,:,blockCount,THCO_VAR),solnData(:,:,blockCount,CPRS_VAR))
 #else
 
-   call heat_tempSolver_mph(tstep,solnData(:,:,TEMP_VAR,blockCount),solnData(:,:,TOLD_VAR,blockCount),&
-                         solnData(:,:,MDOT_VAR,blockCount),solnData(:,:,SMRH_VAR,blockCount),&
-                         facexData(:,:,VELC_VAR,blockCount),faceyData(:,:,VELC_VAR,blockCount),&
-                         facexData(:,:,AL1F_VAR,blockCount),faceyData(:,:,AL1F_VAR,blockCount),&
-                         facexData(:,:,AL2F_VAR,blockCount),faceyData(:,:,AL2F_VAR,blockCount),&
-                         solnData(:,:,DFUN_VAR,blockCount),solnData(:,:,PFUN_VAR,blockCount),&
-                         solnData(:,:,THCO_VAR,blockCount),solnData(:,:,CPRS_VAR,blockCount))
-
+   call heat_tempSolver_mph(tstep,solnData(:,:,blockCount,TEMP_VAR),solnData(:,:,blockCount,TOLD_VAR),&
+                         solnData(:,:,blockCount,MDOT_VAR),solnData(:,:,blockCount,SMRH_VAR),&
+                         facexData(:,:,blockCount,VELC_VAR),faceyData(:,:,blockCount,VELC_VAR),&
+                         facexData(:,:,blockCount,AL1F_VAR),faceyData(:,:,blockCount,AL1F_VAR),&
+                         facexData(:,:,blockCount,AL2F_VAR),faceyData(:,:,blockCount,AL2F_VAR),&
+                         solnData(:,:,blockCount,DFUN_VAR),solnData(:,:,blockCount,PFUN_VAR),&
+                         solnData(:,:,blockCount,THCO_VAR),solnData(:,:,blockCount,CPRS_VAR))
 #endif
 
 #endif

@@ -32,8 +32,8 @@ subroutine IBM_init()
 
    ibm_omega = 1.0
 
-   facexData(:,:,IBMF_VAR,blockCount) = 0.0
-   faceyData(:,:,IBMF_VAR,blockCount) = 0.0
+   facexData(:,:,blockCount,IBMF_VAR) = 0.0
+   faceyData(:,:,blockCount,IBMF_VAR) = 0.0
 
    ibm_x0 = 0.0
    ibm_y0 = 0.5
@@ -62,7 +62,7 @@ subroutine IBM_init()
 
      end if
 
-     facexData(i,j,IBMF_VAR,blockCount) = ibm_r0 - sqrt((xcell-ibm_x0)**2+(ycell-ibm_y0)**2)
+     facexData(i,j,blockCount,IBMF_VAR) = ibm_r0 - sqrt((xcell-ibm_x0)**2+(ycell-ibm_y0)**2)
 
      end do
 
@@ -91,7 +91,7 @@ subroutine IBM_init()
 
     end if
 
-    faceyData(i,j,IBMF_VAR,blockCount) = ibm_r0 - sqrt((xcell-ibm_x0)**2+(ycell-ibm_y0)**2)
+    faceyData(i,j,blockCount,IBMF_VAR) = ibm_r0 - sqrt((xcell-ibm_x0)**2+(ycell-ibm_y0)**2)
 
     end do
    end do

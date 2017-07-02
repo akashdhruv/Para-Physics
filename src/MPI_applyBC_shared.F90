@@ -23,11 +23,11 @@ subroutine MPI_applyBC_shared(ivar,datatype)
 
                 if(shared_part(myid+1+1) /= MPI_UNDEFINED) then
 
-                        localCENTER(Nxb+2,:,ivar,blockCount) = eastCENTER(2,:,ivar,blockCount)
+                        localCENTER(Nxb+2,:,blockCount,ivar) = eastCENTER(2,:,blockCount,ivar)
                 else
   
-                        call MPI_SENDRECV(localCENTER(Nxb+1,:,ivar,blockCount), Nyb+2, MPI_REAL, x_id+1, 2,&
-                                          localCENTER(Nxb+2,:,ivar,blockCount), Nyb+2, MPI_REAL, x_id+1, 1, x_comm, status, ierr)
+                        call MPI_SENDRECV(localCENTER(Nxb+1,:,blockCount,ivar), Nyb+2, MPI_REAL, x_id+1, 2,&
+                                          localCENTER(Nxb+2,:,blockCount,ivar), Nyb+2, MPI_REAL, x_id+1, 1, x_comm, status, ierr)
 
                 end if
                 end if
@@ -37,10 +37,10 @@ subroutine MPI_applyBC_shared(ivar,datatype)
 
                 if(shared_part(myid+1-1) /= MPI_UNDEFINED) then
 
-                        localCENTER(1,:,ivar,blockCount) = westCENTER(Nxb+1,:,ivar,blockCount)
+                        localCENTER(1,:,blockCount,ivar) = westCENTER(Nxb+1,:,blockCount,ivar)
                 else
-                        call MPI_SENDRECV(localCENTER(2,:,ivar,blockCount), Nyb+2, MPI_REAL, x_id-1, 1,&
-                                          localCENTER(1,:,ivar,blockCount), Nyb+2, MPI_REAL, x_id-1, 2, x_comm, status, ierr)
+                        call MPI_SENDRECV(localCENTER(2,:,blockCount,ivar), Nyb+2, MPI_REAL, x_id-1, 1,&
+                                          localCENTER(1,:,blockCount,ivar), Nyb+2, MPI_REAL, x_id-1, 2, x_comm, status, ierr)
 
                 end if
                 end if
@@ -50,10 +50,10 @@ subroutine MPI_applyBC_shared(ivar,datatype)
 
                 if(shared_part(myid+1+x_procs) /= MPI_UNDEFINED) then
 
-                        localCENTER(:,Nyb+2,ivar,blockCount) = northCENTER(:,2,ivar,blockCount)
+                        localCENTER(:,Nyb+2,blockCount,ivar) = northCENTER(:,2,blockCount,ivar)
                 else
-                        call MPI_SENDRECV(localCENTER(:,Nyb+1,ivar,blockCount), Nxb+2, MPI_REAL, y_id+1, 4,& 
-                                          localCENTER(:,Nyb+2,ivar,blockCount), Nxb+2, MPI_REAL, y_id+1, 3, y_comm, status, ierr)
+                        call MPI_SENDRECV(localCENTER(:,Nyb+1,blockCount,ivar), Nxb+2, MPI_REAL, y_id+1, 4,& 
+                                          localCENTER(:,Nyb+2,blockCount,ivar), Nxb+2, MPI_REAL, y_id+1, 3, y_comm, status, ierr)
 
 
                 end if
@@ -64,10 +64,10 @@ subroutine MPI_applyBC_shared(ivar,datatype)
 
                 if(shared_part(myid+1-x_procs) /= MPI_UNDEFINED) then
 
-                        localCENTER(:,1,ivar,blockCount) = southCENTER(:,Nyb+1,ivar,blockCount)
+                        localCENTER(:,1,blockCount,ivar) = southCENTER(:,Nyb+1,blockCount,ivar)
                 else
-                        call MPI_SENDRECV(localCENTER(:,2,ivar,blockCount), Nxb+2, MPI_REAL, y_id-1, 3,&
-                                          localCENTER(:,1,ivar,blockCount), Nxb+2, MPI_REAL, y_id-1, 4, y_comm, status, ierr)
+                        call MPI_SENDRECV(localCENTER(:,2,blockCount,ivar), Nxb+2, MPI_REAL, y_id-1, 3,&
+                                          localCENTER(:,1,blockCount,ivar), Nxb+2, MPI_REAL, y_id-1, 4, y_comm, status, ierr)
 
                 end if
                 end if
@@ -84,11 +84,11 @@ subroutine MPI_applyBC_shared(ivar,datatype)
 
                 if(shared_part(myid+1+1) /= MPI_UNDEFINED) then
 
-                        localFACEX(Nxb+2,:,ivar,blockCount) = eastFACEX(2,:,ivar,blockCount)
+                        localFACEX(Nxb+2,:,blockCount,ivar) = eastFACEX(2,:,blockCount,ivar)
                 else
   
-                        call MPI_SENDRECV(localFACEX(Nxb+1,:,ivar,blockCount), Nyb+2, MPI_REAL, x_id+1, 2,&
-                                          localFACEX(Nxb+2,:,ivar,blockCount), Nyb+2, MPI_REAL, x_id+1, 1, x_comm, status, ierr)
+                        call MPI_SENDRECV(localFACEX(Nxb+1,:,blockCount,ivar), Nyb+2, MPI_REAL, x_id+1, 2,&
+                                          localFACEX(Nxb+2,:,blockCount,ivar), Nyb+2, MPI_REAL, x_id+1, 1, x_comm, status, ierr)
 
                 end if
                 end if
@@ -98,10 +98,10 @@ subroutine MPI_applyBC_shared(ivar,datatype)
 
                 if(shared_part(myid+1-1) /= MPI_UNDEFINED) then
 
-                        localFACEX(1,:,ivar,blockCount) = westFACEX(Nxb+1,:,ivar,blockCount)
+                        localFACEX(1,:,blockCount,ivar) = westFACEX(Nxb+1,:,blockCount,ivar)
                 else
-                        call MPI_SENDRECV(localFACEX(2,:,ivar,blockCount), Nyb+2, MPI_REAL, x_id-1, 1,&
-                                          localFACEX(1,:,ivar,blockCount), Nyb+2, MPI_REAL, x_id-1, 2, x_comm, status, ierr)
+                        call MPI_SENDRECV(localFACEX(2,:,blockCount,ivar), Nyb+2, MPI_REAL, x_id-1, 1,&
+                                          localFACEX(1,:,blockCount,ivar), Nyb+2, MPI_REAL, x_id-1, 2, x_comm, status, ierr)
 
                 end if
                 end if
@@ -111,10 +111,10 @@ subroutine MPI_applyBC_shared(ivar,datatype)
 
                 if(shared_part(myid+1+x_procs) /= MPI_UNDEFINED) then
 
-                        localFACEX(:,Nyb+2,ivar,blockCount) = northFACEX(:,2,ivar,blockCount)
+                        localFACEX(:,Nyb+2,blockCount,ivar) = northFACEX(:,2,blockCount,ivar)
                 else
-                        call MPI_SENDRECV(localFACEX(:,Nyb+1,ivar,blockCount), Nxb+2, MPI_REAL, y_id+1, 4,& 
-                                          localFACEX(:,Nyb+2,ivar,blockCount), Nxb+2, MPI_REAL, y_id+1, 3, y_comm, status, ierr)
+                        call MPI_SENDRECV(localFACEX(:,Nyb+1,blockCount,ivar), Nxb+2, MPI_REAL, y_id+1, 4,& 
+                                          localFACEX(:,Nyb+2,blockCount,ivar), Nxb+2, MPI_REAL, y_id+1, 3, y_comm, status, ierr)
 
 
                 end if
@@ -125,10 +125,10 @@ subroutine MPI_applyBC_shared(ivar,datatype)
 
                 if(shared_part(myid+1-x_procs) /= MPI_UNDEFINED) then
 
-                        localFACEX(:,1,ivar,blockCount) = southFACEX(:,Nyb+1,ivar,blockCount)
+                        localFACEX(:,1,blockCount,ivar) = southFACEX(:,Nyb+1,blockCount,ivar)
                 else
-                        call MPI_SENDRECV(localFACEX(:,2,ivar,blockCount), Nxb+2, MPI_REAL, y_id-1, 3,&
-                                          localFACEX(:,1,ivar,blockCount), Nxb+2, MPI_REAL, y_id-1, 4, y_comm, status, ierr)
+                        call MPI_SENDRECV(localFACEX(:,2,blockCount,ivar), Nxb+2, MPI_REAL, y_id-1, 3,&
+                                          localFACEX(:,1,blockCount,ivar), Nxb+2, MPI_REAL, y_id-1, 4, y_comm, status, ierr)
 
                 end if
                 end if
@@ -146,11 +146,11 @@ subroutine MPI_applyBC_shared(ivar,datatype)
 
                 if(shared_part(myid+1+1) /= MPI_UNDEFINED) then
 
-                        localFACEY(Nxb+2,:,ivar,blockCount) = eastFACEY(2,:,ivar,blockCount)
+                        localFACEY(Nxb+2,:,blockCount,ivar) = eastFACEY(2,:,blockCount,ivar)
                 else
   
-                        call MPI_SENDRECV(localFACEY(Nxb+1,:,ivar,blockCount), Nyb+2, MPI_REAL, x_id+1, 2,&
-                                          localFACEY(Nxb+2,:,ivar,blockCount), Nyb+2, MPI_REAL, x_id+1, 1, x_comm, status, ierr)
+                        call MPI_SENDRECV(localFACEY(Nxb+1,:,blockCount,ivar), Nyb+2, MPI_REAL, x_id+1, 2,&
+                                          localFACEY(Nxb+2,:,blockCount,ivar), Nyb+2, MPI_REAL, x_id+1, 1, x_comm, status, ierr)
 
                 end if
                 end if
@@ -160,10 +160,10 @@ subroutine MPI_applyBC_shared(ivar,datatype)
 
                 if(shared_part(myid+1-1) /= MPI_UNDEFINED) then
 
-                        localFACEY(1,:,ivar,blockCount) = westFACEY(Nxb+1,:,ivar,blockCount)
+                        localFACEY(1,:,blockCount,ivar) = westFACEY(Nxb+1,:,blockCount,ivar)
                 else
-                        call MPI_SENDRECV(localFACEY(2,:,ivar,blockCount), Nyb+2, MPI_REAL, x_id-1, 1,&
-                                          localFACEY(1,:,ivar,blockCount), Nyb+2, MPI_REAL, x_id-1, 2, x_comm, status, ierr)
+                        call MPI_SENDRECV(localFACEY(2,:,blockCount,ivar), Nyb+2, MPI_REAL, x_id-1, 1,&
+                                          localFACEY(1,:,blockCount,ivar), Nyb+2, MPI_REAL, x_id-1, 2, x_comm, status, ierr)
 
                 end if
                 end if
@@ -173,10 +173,10 @@ subroutine MPI_applyBC_shared(ivar,datatype)
 
                 if(shared_part(myid+1+x_procs) /= MPI_UNDEFINED) then
 
-                        localFACEY(:,Nyb+2,ivar,blockCount) = northFACEY(:,2,ivar,blockCount)
+                        localFACEY(:,Nyb+2,blockCount,ivar) = northFACEY(:,2,blockCount,ivar)
                 else
-                        call MPI_SENDRECV(localFACEY(:,Nyb+1,ivar,blockCount), Nxb+2, MPI_REAL, y_id+1, 4,& 
-                                          localFACEY(:,Nyb+2,ivar,blockCount), Nxb+2, MPI_REAL, y_id+1, 3, y_comm, status, ierr)
+                        call MPI_SENDRECV(localFACEY(:,Nyb+1,blockCount,ivar), Nxb+2, MPI_REAL, y_id+1, 4,& 
+                                          localFACEY(:,Nyb+2,blockCount,ivar), Nxb+2, MPI_REAL, y_id+1, 3, y_comm, status, ierr)
 
 
                 end if
@@ -187,10 +187,10 @@ subroutine MPI_applyBC_shared(ivar,datatype)
 
                 if(shared_part(myid+1-x_procs) /= MPI_UNDEFINED) then
 
-                        localFACEY(:,1,ivar,blockCount) = southFACEY(:,Nyb+1,ivar,blockCount)
+                        localFACEY(:,1,blockCount,ivar) = southFACEY(:,Nyb+1,blockCount,ivar)
                 else
-                        call MPI_SENDRECV(localFACEY(:,2,ivar,blockCount), Nxb+2, MPI_REAL, y_id-1, 3,&
-                                          localFACEY(:,1,ivar,blockCount), Nxb+2, MPI_REAL, y_id-1, 4, y_comm, status, ierr)
+                        call MPI_SENDRECV(localFACEY(:,2,blockCount,ivar), Nxb+2, MPI_REAL, y_id-1, 3,&
+                                          localFACEY(:,1,blockCount,ivar), Nxb+2, MPI_REAL, y_id-1, 4, y_comm, status, ierr)
 
                 end if
                 end if
