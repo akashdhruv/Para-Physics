@@ -55,7 +55,7 @@ subroutine MPIsolver_init()
 
     !_______________Apply Refinement Using AMR - still in debug_________!
 
-    call morton_sort(blockCount,myid,procs,blockID,blockLC)
+    !call morton_sort(blockCount,myid,procs,blockID,blockLC)
  
     !_________Define Communication Based On Grid______________!
     call MPI_COMM_SPLIT(solver_comm,myid/nblockx,myid,x_comm,ierr)
