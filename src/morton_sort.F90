@@ -1,10 +1,10 @@
-subroutine morton_sort(blockCount,myid,procs,blockLC)
+subroutine morton_sort(blockCount,myid,procs,blockID,blockLC)
 
 #include "Solver.h"
 
    implicit none
 
-   integer, dimension(:,:), intent(inout) :: blockLC
+   integer, dimension(:), intent(inout) :: blockID,blockLC
    integer,intent(in) :: blockCount 
    integer,intent(in) :: myid
    integer,intent(in) :: procs
@@ -72,11 +72,11 @@ subroutine morton_sort(blockCount,myid,procs,blockLC)
 
    end do
 
-   blockLC(:,1) = morton_blks
+   blockID = morton_blks
 
    do i=0,procs-1
 
-      blockLC((i)*blockCount+1:(i)*blockCount+1+blockCount,2) = i
+      blockLC((i)*blockCount+1:(i)*blockCount+1+blockCount) = i
 
    end do
 

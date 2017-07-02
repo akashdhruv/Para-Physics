@@ -17,8 +17,8 @@ module MPI_data
 
       double precision, save :: start, finish, exec_time
 
-      integer,save :: blockID(MAX_BLOCKS),blockLC(nblockx*nblocky,2)
-      integer,save :: blockCount
+      integer, allocatable, save, dimension(:) :: blockID,blockLC
+      integer,save :: blockCount,blockOffset
 
       integer(kind=MPI_ADDRESS_KIND), save :: center_size,facex_size,facey_size,RMA_size
       integer, save :: disp_unit

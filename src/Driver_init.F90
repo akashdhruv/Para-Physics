@@ -8,6 +8,7 @@ subroutine Driver_init()
       use Multiphase_data
       use HeatAD_data, only : ht_Pr
       use physicaldata, only: localCENTER,localFACEX,localFACEY
+      use MPI_data, only: blockCount
 
       implicit none
       
@@ -16,7 +17,7 @@ subroutine Driver_init()
       real, parameter :: eps = 1e-12
       real, parameter :: pi  = acos(-1.0)
 
-      real, pointer, dimension(:,:,:) :: solnData,facexData,faceyData
+      real, pointer, dimension(:,:,:,:) :: solnData,facexData,faceyData
 
       solnData  => localCENTER
       facexData => localFACEX
@@ -28,8 +29,8 @@ subroutine Driver_init()
       dy_min = gr_dy
 
 
-      velcoeff =  MAX( MAXVAL(ABS(facexData(:,:,VELC_VAR))/gr_dx), &
-                       MAXVAL(ABS(faceyData(:,:,VELC_VAR))/gr_dy))
+      velcoeff =  MAX( MAXVAL(ABS(facexData(:,:,VELC_VAR,blockCount))/gr_dx), &
+                       MAXVAL(ABS(faceyData(:,:,VELC_VAR,blockCount))/gr_dy))
 
       dt_cfl = ins_cfl*min(gr_dx,gr_dy)
 

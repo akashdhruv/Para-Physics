@@ -23,7 +23,6 @@ subroutine MPIsolver_finalize(sim_Complete)
       call MPI_WIN_FREE(facex_win,ierr)
       call MPI_WIN_FREE(facey_win,ierr)
       call MPI_COMM_FREE(shared_comm,ierr)
-
       deallocate(world_part)
       deallocate(shared_part)
 #endif
@@ -35,6 +34,9 @@ subroutine MPIsolver_finalize(sim_Complete)
       deallocate(world_part)
       deallocate(shared_part)
 #endif
+
+      deallocate(blockID)
+      deallocate(blockLC)
 
       call MPI_COMM_FREE(x_comm,ierr)
       call MPI_COMM_FREE(y_comm,ierr)

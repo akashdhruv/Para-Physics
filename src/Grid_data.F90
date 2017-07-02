@@ -13,7 +13,7 @@ module Grid_data
        real, save :: gr_dx
        real, save :: gr_dy
 
-       real, save, allocatable, dimension(:,:) :: gr_x
-       real, save, allocatable, dimension(:,:) :: gr_y
+       real, save, allocatable, dimension(:,:,:) :: gr_x
+       real, save, allocatable, dimension(:,:,:) :: gr_y
 
 end module Grid_data 

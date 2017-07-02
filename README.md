@@ -2,25 +2,31 @@
 
 ### Important Information
 
-  1. This is version 2.0 of the software, previous versions can be found in the releases.
-  2. Single phase heat equation, Navier-Stokes and Poisson solver modules are working.
-  3. Immersed boundary module is working.
-  4. Conjugate heat transfer is in beta.
-  5. AMR module not yet implemented.
-  6. Multiphase module is in beta.
+  1. This is version 2.0 of the software, previous versions can be found in the releases
+  2. Single phase heat equation, Navier-Stokes and Poisson solver modules are working
+  3. Immersed boundary module is working
+  4. Conjugate heat transfer is in beta
+  5. AMR module not yet implemented
+  6. Multiphase module is in beta
 
 ### Parallelization Options
 
-  1. Standard MPI distributed memory model.
-  2. MPI Remote Memory Access (RMA) model.
-  3. MPI Shared Memory (SHM) model.
-  4. Multithreading using OpenMP.
+  1. Standard MPI distributed memory model
+  2. MPI Remote Memory Access (RMA) model
+  3. MPI Shared Memory (SHM) model
+  4. Hyper-threading using OpenMP
+
+### Cache Optimization Features
+
+  1. Loop tiling for linear algebra solvers
+  2. Array padding for spatial data
+  3. Blocked data storage for stencil computations
 
 ### Execution instructions
 
-  1. Download the source code 
+  1. Download the source code.
   2. Make sure you have make utility and the latest version of GNU and MPI-3 or higher installed
-  3. Edit the Makefile in ./src to include your MPI path.
+  3. Edit the Makefile in ./src to include your MPI path
 
      ~~~terminal 
         cd src
@@ -32,7 +38,7 @@
 
   4. Note that the total number of MPI processes must be equal to the total number of blocks (nblockx X nblocky) defined in Solver.h
 
-  5. You can also optimize Poisson solver and heat equation by multi-threading using OpenMP on each MPI process. The number of threads are specified 
+  5. You can also optimize Poisson solver and heat equation by hyper-threading using OpenMP on each core. The number of threads are specified 
      in Solver.h
 
   6. To plot results, edit the python file (plot.py) to match your grid size and simply type (make sure k = nblockx and d = nblocky)
@@ -41,21 +47,21 @@
         python plot.py
      ~~~ 
 
-  7. Use make clean in src and working folder to remove rebuildables.
+  7. Use make clean in src and working folder to remove rebuildables
 
 ### Software outline
 
-  1. The header file Solver.h handles simulation parameters like number of grid points per block, total number of blocks, module on/off, etc.
+  1. The header file Solver.h handles simulation parameters like number of grid points per block, total number of blocks, module on/off, etc
 
   2. The main program file is Solver.F90, which calls the functions Solver_init, Solver_evolve and Solver_finalize, which in turn calls
-     module specific subroutines (module_init, module_solver, module_finalize).
+     module specific subroutines (module_init, module_solver, module_finalize)
 
-  3. The best way to understand the code is to start with Solver.F90 and follow function calls one by one.
+  3. The best way to understand the code is to start with Solver.F90 and follow function calls one by one
 
   4. All Grid data is stored in separate multi-dimensional arrays for cell-centers and faces located in the module, physicaldata.F90
 
   5. Module specific data is stored in files named module_data.F90. The interface for a given module, module_interface.F90 contains function
-     definitions.
+     definitions
 
 ### Solver capabilities
 
@@ -68,7 +74,7 @@
 </p>
 
 <p align="center">
-  Figure 1. Velocity Streamlines and Temperature Contours, Re = 500, t = 30.0 s. 
+  Figure 1. Velocity Streamlines and Temperature Contours, Re = 500, t = 30.0 s
 </p>
 
 <p align="center">
@@ -90,7 +96,7 @@
 </p>
 
 <p align="center">
-  Figure 3. Velocity Streamlines and Pressure and Temperature Contours for Lid Driven Cavity flow, Re = 1000.
+  Figure 3. Velocity Streamlines and Pressure and Temperature Contours for Lid Driven Cavity flow, Re = 1000
 </p>
 
 #### CASE 3 - Conjugate Heat Transfer between fluid and multiple immersed boundaries, Re = 500
@@ -101,7 +107,7 @@
 </p>
 
 <p align="center">
-  Figure 4. Conjugate Heat Transfer between air and three solid cylinders, Re = 500, t=25 s.
+  Figure 4. Conjugate Heat Transfer between air and three solid cylinders, Re = 500, t=25 s
 </p>
 
 ### Author - Akash V. Dhruv  

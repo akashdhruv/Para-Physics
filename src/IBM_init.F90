@@ -6,6 +6,7 @@ subroutine IBM_init()
    use Grid_data
    use IBM_data
    use Multiphase_interface, only: mph_FillVars
+   use MPI_data, only: blockCount
 
    implicit none
 
@@ -14,7 +15,7 @@ subroutine IBM_init()
 
    integer :: i,j
 
-   real,pointer,dimension(:,:,:) :: facexData,faceyData
+   real,pointer,dimension(:,:,:,:) :: facexData,faceyData
 
    facexData => localFACEX
    faceyData => localFACEY  
@@ -31,8 +32,8 @@ subroutine IBM_init()
 
    ibm_omega = 1.0
 
-   facexData(:,:,IBMF_VAR) = 0.0
-   faceyData(:,:,IBMF_VAR) = 0.0
+   facexData(:,:,IBMF_VAR,blockCount) = 0.0
+   faceyData(:,:,IBMF_VAR,blockCount) = 0.0
 
    ibm_x0 = 0.0
    ibm_y0 = 0.5
@@ -41,27 +42,27 @@ subroutine IBM_init()
    do j=1,Nyb+2
 
     if(j==1) then
-        ycell = gr_y(1,j) - 0.5*gr_dy
+        ycell = gr_y(1,j,blockCount) - 0.5*gr_dy
 
     else if(j==Nyb+2) then
-        ycell = gr_y(1,Nyb+1) + 0.5*gr_dy
+        ycell = gr_y(1,Nyb+1,blockCount) + 0.5*gr_dy
 
     else
-        ycell = 0.5*(gr_y(1,j) + gr_y(1,j-1))
+        ycell = 0.5*(gr_y(1,j,blockCount) + gr_y(1,j-1,blockCount))
 
     end if
 
     do i=1,Nxb+2
 
      if(i==Nxb+2) then
-          xcell = gr_x(Nxb+1,1) + gr_dx
+          xcell = gr_x(Nxb+1,1,blockCount) + gr_dx
 
      else
-          xcell = gr_x(i,1)
+          xcell = gr_x(i,1,blockCount)
 
      end if
 
-     facexData(i,j,IBMF_VAR) = ibm_r0 - sqrt((xcell-ibm_x0)**2+(ycell-ibm_y0)**2)
+     facexData(i,j,IBMF_VAR,blockCount) = ibm_r0 - sqrt((xcell-ibm_x0)**2+(ycell-ibm_y0)**2)
 
      end do
 
@@ -70,27 +71,27 @@ subroutine IBM_init()
    do j=1,Nyb+2
 
     if(j==Nyb+2) then
-        ycell = gr_y(1,Nyb+1) + gr_dy
+        ycell = gr_y(1,Nyb+1,blockCount) + gr_dy
 
     else
-        ycell = gr_y(1,j)
+        ycell = gr_y(1,j,blockCount)
 
     end if
 
     do i=1,Nxb+2
 
     if(i==1) then
-          xcell = gr_x(i,1) - 0.5*gr_dx
+          xcell = gr_x(i,1,blockCount) - 0.5*gr_dx
 
     else if(i==Nxb+2) then
-          xcell = gr_x(Nxb+1,1) + 0.5*gr_dx
+          xcell = gr_x(Nxb+1,1,blockCount) + 0.5*gr_dx
 
     else
-          xcell = 0.5*(gr_x(i,1) + gr_x(i-1,1))
+          xcell = 0.5*(gr_x(i,1,blockCount) + gr_x(i-1,1,blockCount))
 
     end if
 
-    faceyData(i,j,IBMF_VAR) = ibm_r0 - sqrt((xcell-ibm_x0)**2+(ycell-ibm_y0)**2)
+    faceyData(i,j,IBMF_VAR,blockCount) = ibm_r0 - sqrt((xcell-ibm_x0)**2+(ycell-ibm_y0)**2)
 
     end do
    end do

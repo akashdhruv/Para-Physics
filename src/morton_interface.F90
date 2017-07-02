@@ -1,9 +1,9 @@
 module morton_interface
 
    interface 
-     subroutine morton_sort(blockCount,myid,procs,blockLC)
+     subroutine morton_sort(blockCount,myid,procs,blockID,blockLC)
      implicit none
-     integer,dimension(:,:),intent(inout) :: blockLC
+     integer,dimension(:),intent(inout) :: blockID,blockLC
      integer,intent(in) :: blockCount
      integer,intent(in) :: myid
      integer,intent(in) :: procs

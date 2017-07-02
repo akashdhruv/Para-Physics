@@ -20,15 +20,15 @@ subroutine Grid_init()
      gr_dx = gr_Lx/Nxb
      gr_dy = gr_Ly/Nyb
     
-     allocate(gr_x(Nxb+1,Nyb+1))
-     allocate(gr_y(Nxb+1,Nyb+1))
+     allocate(gr_x(Nxb+1,Nyb+1,blockCount))
+     allocate(gr_y(Nxb+1,Nyb+1,blockCount))
 
      do i=1,Nyb+1
-        gr_x(:,i)=D_xmin+mod(myid,nblockx)*gr_Lx+gr_dx*(/(I,I=0,Nxb)/)
+        gr_x(:,i,blockCount)=D_xmin+mod(myid,nblockx)*gr_Lx+gr_dx*(/(I,I=0,Nxb)/)
      enddo
 
      do i=1,Nxb+1
-        gr_y(i,:)=D_ymin+(myid/nblockx)*gr_Ly+gr_dy*(/(I,I=0,Nyb)/)
+        gr_y(i,:,blockCount)=D_ymin+(myid/nblockx)*gr_Ly+gr_dy*(/(I,I=0,Nyb)/)
     enddo
 
 end subroutine Grid_init

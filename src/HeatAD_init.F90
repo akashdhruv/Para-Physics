@@ -5,10 +5,11 @@ subroutine HeatAD_init()
    use HeatAD_data
    use IncompNS_data
    use physicaldata, only: localCENTER
+   use MPI_data, only: blockCount
 
    implicit none
 
-   real,pointer,dimension(:,:,:) :: solnData
+   real,pointer,dimension(:,:,:,:) :: solnData
 
    integer :: j,i
    real :: solnX
@@ -22,8 +23,8 @@ subroutine HeatAD_init()
    ht_src = 0.0
    ht_St  = 1.0
 
-   solnData(:,:,TEMP_VAR) = 0.0
-   solnData(:,:,TOLD_VAR) = 0.0
+   solnData(:,:,TEMP_VAR,blockCount) = 0.0
+   solnData(:,:,TOLD_VAR,blockCount) = 0.0
 
    nullify(solnData)
 

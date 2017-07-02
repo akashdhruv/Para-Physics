@@ -26,40 +26,37 @@ subroutine MPIsolver_init()
     allocate(world_part(procs))
     world_part = (/(I,I=0,procs-1)/)
 
-    !_______________code for AMR - still in debug_________!
+    !_______________Split Domain Into Blocks For Cache Optimization_________!
 
     blockCount = ((nblockx*nblocky)/procs)
     checkSumMPI = blockCount*procs
+   
+    blockOffset = myid*blockCount
 
-    if(procs /= nblockx*nblocky) then
-
+    if (checkSumMPI /= nblockx*nblocky) then
+       
         call MPI_FINALIZE(ierr)
-
-        if (myid == 0) then
-        print *,"RUNTIME ERROR: The number of MPI processes must be equal to the total number of blocks."
-        end if
-
+        if (myid == 0) &
+        print *,"RUNTIME ERROR: The number of blocks should be greater than/equal to &
+                 and exactly divisible by total number of MPI processes."
         call exit(status)
 
     end if
 
+    allocate(blockID(nblockx*nblocky))
+    allocate(blockLC(nblockx*nblocky))
+   
+    do i=0,procs-1
 
-    !if (checkSumMPI /= nblockx*nblocky) then
-       
-    !    call MPI_FINALIZE(ierr)
+       blockLC(1+i*blockCount:blockCount+i*blockCount) = i
+       blockID(1+i*blockCount:blockCount+i*blockCount) = (/(I,I=1,blockCount)/)
 
-    !    if (myid == 0) then 
-    !    print *,"RUNTIME ERROR: The number blocks should be greater than and exactly divisible by total number of MPI processes."
-    !    end if
+    end do
 
-    !    call exit(status)
+    !_______________Apply Refinement Using AMR - still in debug_________!
 
-    !end if
-
-    blockID(1:blockCount) = (/(I,I=1,blockCount)/)
+    call morton_sort(blockCount,myid,procs,blockID,blockLC)
  
-    call morton_sort(blockCount,myid,procs,blockLC)
-
     !_________Define Communication Based On Grid______________!
     call MPI_COMM_SPLIT(solver_comm,myid/nblockx,myid,x_comm,ierr)
     call MPI_COMM_SPLIT(solver_comm,mod(myid,nblockx),myid,y_comm,ierr)
@@ -71,9 +68,9 @@ subroutine MPIsolver_init()
     call MPI_COMM_size(y_comm,y_procs,ierr)
 
 #ifdef MPI_DIST
-    allocate(localCENTER(Nxb+2,Nyb+2,CENT_VAR))
-    allocate(localFACEX(Nxb+2,Nyb+2,FACE_VAR))
-    allocate(localFACEY(Nxb+2,Nyb+2,FACE_VAR))
+    allocate(localCENTER(Nxb+2,Nyb+2,CENT_VAR,blockCount))
+    allocate(localFACEX(Nxb+2,Nyb+2,FACE_VAR,blockCount))
+    allocate(localFACEY(Nxb+2,Nyb+2,FACE_VAR,blockCount))
 #endif
 
 #ifdef MPI_SHRD
@@ -90,9 +87,9 @@ subroutine MPIsolver_init()
     call MPI_INFO_SET(mpi_info_key,"alloc_shared_noncontig","true",ierr)
 
    !_________Make on-node processes allocate their chunk of shared Memory____________________!
-    center_size = CENT_VAR*(Nxb+2)*(Nyb+2)*sizeof(A)
-    facex_size  = FACE_VAR*(Nxb+2)*(Nyb+2)*sizeof(A)
-    facey_size  = FACE_VAR*(Nxb+2)*(Nyb+2)*sizeof(A) 
+    center_size = blockCount*CENT_VAR*(Nxb+2)*(Nyb+2)*sizeof(A)
+    facex_size  = blockCount*FACE_VAR*(Nxb+2)*(Nyb+2)*sizeof(A)
+    facey_size  = blockCount*FACE_VAR*(Nxb+2)*(Nyb+2)*sizeof(A) 
 
     disp_unit = sizeof(A)
 
@@ -103,62 +100,62 @@ subroutine MPIsolver_init()
     !__________________Point to local chunk of the shared data_______________________________!
     call MPI_WIN_SHARED_QUERY(center_win, shared_id, center_size, disp_unit, center_ptr,ierr)
     call MPI_BARRIER(shared_comm,ierr)
-    call C_F_POINTER(center_ptr, localCENTER,[Nxb+2,Nyb+2,CENT_VAR])
+    call C_F_POINTER(center_ptr, localCENTER,[Nxb+2,Nyb+2,CENT_VAR,blockCount])
 
     call MPI_WIN_SHARED_QUERY(facex_win, shared_id, facex_size, disp_unit, facex_ptr,ierr)
     call MPI_BARRIER(shared_comm,ierr)
-    call C_F_POINTER(facex_ptr, localFACEX, [Nxb+2,Nyb+2,FACE_VAR])
+    call C_F_POINTER(facex_ptr, localFACEX, [Nxb+2,Nyb+2,FACE_VAR,blockCount])
 
     call MPI_WIN_SHARED_QUERY(facey_win, shared_id, facey_size, disp_unit, facey_ptr,ierr)
     call MPI_BARRIER(shared_comm,ierr)
-    call C_F_POINTER(facey_ptr, localFACEY, [Nxb+2,Nyb+2,FACE_VAR])
+    call C_F_POINTER(facey_ptr, localFACEY, [Nxb+2,Nyb+2,FACE_VAR,blockCount])
 
     !_____________________Point to the neighbour's data________________________________!
     if(x_id < x_procs-1 .and. shared_part(myid+1+1) /= MPI_UNDEFINED) then
     call MPI_WIN_SHARED_QUERY(center_win, shared_id+1 ,center_size,disp_unit,center_ptr,ierr)
-    call C_F_POINTER(center_ptr,eastCENTER,[Nxb+2,Nyb+2,CENT_VAR])
+    call C_F_POINTER(center_ptr,eastCENTER,[Nxb+2,Nyb+2,CENT_VAR,blockCount])
 
     call MPI_WIN_SHARED_QUERY(facex_win, shared_id+1,facex_size,disp_unit,facex_ptr,ierr)
-    call C_F_POINTER(facex_ptr,eastFACEX,[Nxb+2,Nyb+2,FACE_VAR])
+    call C_F_POINTER(facex_ptr,eastFACEX,[Nxb+2,Nyb+2,FACE_VAR,blockCount])
 
     call MPI_WIN_SHARED_QUERY(facey_win, shared_id+1,facey_size,disp_unit,facey_ptr,ierr)
-    call C_F_POINTER(facey_ptr,eastFACEY,[Nxb+2,Nyb+2,FACE_VAR])
+    call C_F_POINTER(facey_ptr,eastFACEY,[Nxb+2,Nyb+2,FACE_VAR,blockCount])
     end if
     call MPI_BARRIER(shared_comm,ierr)
 
     if(x_id > 0 .and. shared_part(myid+1-1) /= MPI_UNDEFINED) then
     call MPI_WIN_SHARED_QUERY(center_win, shared_id-1 ,center_size,disp_unit,center_ptr,ierr)
-    call C_F_POINTER(center_ptr,westCENTER,[Nxb+2,Nyb+2,CENT_VAR])
+    call C_F_POINTER(center_ptr,westCENTER,[Nxb+2,Nyb+2,CENT_VAR,blockCount])
 
     call MPI_WIN_SHARED_QUERY(facex_win, shared_id-1,facex_size,disp_unit,facex_ptr,ierr)
-    call C_F_POINTER(facex_ptr,westFACEX,[Nxb+2,Nyb+2,FACE_VAR])
+    call C_F_POINTER(facex_ptr,westFACEX,[Nxb+2,Nyb+2,FACE_VAR,blockCount])
 
     call MPI_WIN_SHARED_QUERY(facey_win, shared_id-1,facey_size,disp_unit,facey_ptr,ierr)
-    call C_F_POINTER(facey_ptr,westFACEY,[Nxb+2,Nyb+2,FACE_VAR])
+    call C_F_POINTER(facey_ptr,westFACEY,[Nxb+2,Nyb+2,FACE_VAR,blockCount])
     end if
     call MPI_BARRIER(shared_comm,ierr)
 
     if(y_id < y_procs-1 .and. shared_part(myid+1+x_procs) /= MPI_UNDEFINED) then
     call MPI_WIN_SHARED_QUERY(center_win, shared_id+x_procs ,center_size,disp_unit,center_ptr,ierr)
-    call C_F_POINTER(center_ptr,northCENTER,[Nxb+2,Nyb+2,CENT_VAR])
+    call C_F_POINTER(center_ptr,northCENTER,[Nxb+2,Nyb+2,CENT_VAR,blockCount])
 
     call MPI_WIN_SHARED_QUERY(facex_win, shared_id+x_procs,facex_size,disp_unit,facex_ptr,ierr)
-    call C_F_POINTER(facex_ptr,northFACEX,[Nxb+2,Nyb+2,FACE_VAR])
+    call C_F_POINTER(facex_ptr,northFACEX,[Nxb+2,Nyb+2,FACE_VAR,blockCount])
 
     call MPI_WIN_SHARED_QUERY(facey_win, shared_id+x_procs,facey_size,disp_unit,facey_ptr,ierr)
-    call C_F_POINTER(facey_ptr,northFACEY,[Nxb+2,Nyb+2,FACE_VAR])
+    call C_F_POINTER(facey_ptr,northFACEY,[Nxb+2,Nyb+2,FACE_VAR,blockCount])
     end if
     call MPI_BARRIER(shared_comm,ierr)
 
     if(y_id > 0 .and. shared_part(myid+1-x_procs) /= MPI_UNDEFINED) then
     call MPI_WIN_SHARED_QUERY(center_win, shared_id-x_procs ,center_size,disp_unit,center_ptr,ierr)
-    call C_F_POINTER(center_ptr,southCENTER,[Nxb+2,Nyb+2,CENT_VAR])
+    call C_F_POINTER(center_ptr,southCENTER,[Nxb+2,Nyb+2,CENT_VAR,blockCount])
 
     call MPI_WIN_SHARED_QUERY(facex_win, shared_id-x_procs,facex_size,disp_unit,facex_ptr,ierr)
-    call C_F_POINTER(facex_ptr,southFACEX,[Nxb+2,Nyb+2,FACE_VAR])
+    call C_F_POINTER(facex_ptr,southFACEX,[Nxb+2,Nyb+2,FACE_VAR,blockCount])
 
     call MPI_WIN_SHARED_QUERY(facey_win, shared_id-x_procs,facey_size,disp_unit,facey_ptr,ierr)
-    call C_F_POINTER(facey_ptr,southFACEY,[Nxb+2,Nyb+2,FACE_VAR])
+    call C_F_POINTER(facey_ptr,southFACEY,[Nxb+2,Nyb+2,FACE_VAR,blockCount])
     end if
     call MPI_BARRIER(shared_comm,ierr)
 #endif
@@ -176,9 +173,9 @@ subroutine MPIsolver_init()
     call MPI_INFO_CREATE(mpi_info_key,ierr)
     call MPI_INFO_SET(mpi_info_key,"no_locks","true",ierr)
 
-    allocate(localCENTER(Nxb+2,Nyb+2,CENT_VAR))
-    allocate(localFACEX(Nxb+2,Nyb+2,FACE_VAR))
-    allocate(localFACEY(Nxb+2,Nyb+2,FACE_VAR))
+    allocate(localCENTER(Nxb+2,Nyb+2,CENT_VAR,blockCount))
+    allocate(localFACEX(Nxb+2,Nyb+2,FACE_VAR,blockCount))
+    allocate(localFACEY(Nxb+2,Nyb+2,FACE_VAR,blockCount))
 
     allocate(eastORIGIN(Nyb+2))
     allocate(westORIGIN(Nyb+2))

@@ -4,6 +4,7 @@ subroutine Multiphase_init()
    use physicaldata, only: localCENTER,localFACEX,localFACEY
    use Grid_data
    use MPI_interface , only: MPI_CollectResiduals
+   use MPI_data, only: blockCount
 
 #include "Solver.h"
 
@@ -14,7 +15,7 @@ subroutine Multiphase_init()
 
    integer :: i,j
 
-   real,pointer,dimension(:,:,:) :: solnData,facexData,faceyData
+   real,pointer,dimension(:,:,:,:) :: solnData,facexData,faceyData
 
    solnData  => localCENTER
    facexData => localFACEX
@@ -33,31 +34,31 @@ subroutine Multiphase_init()
    mph_beta  = 0.1
    mph_sten  = 1.0
 
-   solnData(:,:,DFUN_VAR)  = 0.0
-   solnData(:,:,PFUN_VAR)  = 0.0
-   solnData(:,:,NRMX_VAR)  = 0.0
-   solnData(:,:,NRMY_VAR)  = 0.0
-   solnData(:,:,VISC_VAR)  = 1.0
-   solnData(:,:,THCO_VAR)  = 1.0
-   solnData(:,:,CPRS_VAR)  = 1.0
-   solnData(:,:,SMHV_VAR)  = 0.0
-   solnData(:,:,SMRH_VAR)  = 0.0
-   solnData(:,:,SIGP_VAR)  = 0.0
-   solnData(:,:,CURV_VAR)  = 0.0
-   solnData(:,:,MDOT_VAR)  = 0.0
+   solnData(:,:,DFUN_VAR,blockCount)  = 0.0
+   solnData(:,:,PFUN_VAR,blockCount)  = 0.0
+   solnData(:,:,NRMX_VAR,blockCount)  = 0.0
+   solnData(:,:,NRMY_VAR,blockCount)  = 0.0
+   solnData(:,:,VISC_VAR,blockCount)  = 1.0
+   solnData(:,:,THCO_VAR,blockCount)  = 1.0
+   solnData(:,:,CPRS_VAR,blockCount)  = 1.0
+   solnData(:,:,SMHV_VAR,blockCount)  = 0.0
+   solnData(:,:,SMRH_VAR,blockCount)  = 0.0
+   solnData(:,:,SIGP_VAR,blockCount)  = 0.0
+   solnData(:,:,CURV_VAR,blockCount)  = 0.0
+   solnData(:,:,MDOT_VAR,blockCount)  = 0.0
 
-   facexData(:,:,RH1F_VAR) = 0.0
-   faceyData(:,:,RH1F_VAR) = 0.0
-   facexData(:,:,RH2F_VAR) = 1.0
-   faceyData(:,:,RH2F_VAR) = 1.0
-   facexData(:,:,AL1F_VAR) = 0.0
-   faceyData(:,:,AL1F_VAR) = 0.0
-   facexData(:,:,AL2F_VAR) = 1.0
-   faceyData(:,:,AL2F_VAR) = 1.0
-   facexData(:,:,SIGM_VAR) = 0.0
-   faceyData(:,:,SIGM_VAR) = 0.0
-   facexData(:,:,VELI_VAR) = 0.0
-   faceyData(:,:,VELI_VAR) = 0.0
+   facexData(:,:,RH1F_VAR,blockCount) = 0.0
+   faceyData(:,:,RH1F_VAR,blockCount) = 0.0
+   facexData(:,:,RH2F_VAR,blockCount) = 1.0
+   faceyData(:,:,RH2F_VAR,blockCount) = 1.0
+   facexData(:,:,AL1F_VAR,blockCount) = 0.0
+   faceyData(:,:,AL1F_VAR,blockCount) = 0.0
+   facexData(:,:,AL2F_VAR,blockCount) = 1.0
+   faceyData(:,:,AL2F_VAR,blockCount) = 1.0
+   facexData(:,:,SIGM_VAR,blockCount) = 0.0
+   faceyData(:,:,SIGM_VAR,blockCount) = 0.0
+   facexData(:,:,VELI_VAR,blockCount) = 0.0
+   faceyData(:,:,VELI_VAR,blockCount) = 0.0
 
 
    !___Vorticity Test__!
@@ -78,30 +79,30 @@ subroutine Multiphase_init()
    do j=1,Nyb+2
 
       if(j==1) then     
-          ycell = gr_y(1,j) - 0.5*gr_dy
+          ycell = gr_y(1,j,blockCount) - 0.5*gr_dy
 
       else if(j==Nyb+2) then
-          ycell = gr_y(1,Nyb+1) + 0.5*gr_dy
+          ycell = gr_y(1,Nyb+1,blockCount) + 0.5*gr_dy
 
       else
-          ycell = 0.5*(gr_y(1,j) + gr_y(1,j-1))
+          ycell = 0.5*(gr_y(1,j,blockCount) + gr_y(1,j-1,blockCount))
 
       end if
 
       do i=1,Nxb+2
 
          if(i==1) then     
-              xcell = gr_x(i,1) - 0.5*gr_dx
+              xcell = gr_x(i,1,blockCount) - 0.5*gr_dx
 
          else if(i==Nxb+2) then
-              xcell = gr_x(Nxb+1,1) + 0.5*gr_dx
+              xcell = gr_x(Nxb+1,1,blockCount) + 0.5*gr_dx
 
          else
-              xcell = 0.5*(gr_x(i,1) + gr_x(i-1,1))
+              xcell = 0.5*(gr_x(i,1,blockCount) + gr_x(i-1,1,blockCount))
 
          end if
 
-              solnData(i,j,DFUN_VAR) = mph_r0 - sqrt((xcell-mph_x0)**2+(ycell-mph_y0)**2)
+              solnData(i,j,DFUN_VAR,blockCount) = mph_r0 - sqrt((xcell-mph_x0)**2+(ycell-mph_y0)**2)
 
       end do
 
