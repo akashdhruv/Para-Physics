@@ -37,9 +37,9 @@ subroutine IncompNS_solver(tstep,p_counter)
 
 #endif
 
-    !call ins_vorticity(tstep,solnData(:,:,VORT_VAR,blockCount),&
-    !                   facexData(:,:,VELC_VAR,blockCount),faceyData(:,:,VELC_VAR,blockCount),&
-    !                   solnData(:,:,DFUN_VAR,blockCount))
+    !call ins_vorticity(tstep,solnData(:,:,blockCount,VORT_VAR),&
+    !                   facexData(:,:,blockCount,VELC_VAR),faceyData(:,:,blockCount,VELC_VAR),&
+    !                   solnData(:,:,blockCount,DFUN_VAR))
 
 
     nullify(solnData,facexData,faceyData)
