@@ -64,11 +64,11 @@ if (jump_flag .eqv. .FALSE.) then
 #endif
 
 #ifdef MPI_RMA
-    call MPI_applyBC_RMA(VISC_VAR,CENTER)
-    call MPI_applyBC_RMA(RH2F_VAR,FACEX)
-    call MPI_applyBC_RMA(RH2F_VAR,FACEY)
-    call MPI_applyBC_RMA(AL2F_VAR,FACEX)
-    call MPI_applyBC_RMA(AL2F_VAR,FACEY)   
+    call MPI_applyBC_RMA(solnData(:,:,:,VISC_VAR))
+    call MPI_applyBC_RMA(facexData(:,:,:,RH2F_VAR))
+    call MPI_applyBC_RMA(faceyData(:,:,:,RH2F_VAR))
+    call MPI_applyBC_RMA(facexData(:,:,:,AL2F_VAR))
+    call MPI_applyBC_RMA(faceyData(:,:,:,AL2F_VAR))   
 #endif
 
     call MPI_physicalBC_dfun(solnData(:,:,:,VISC_VAR))
@@ -101,8 +101,8 @@ if (jump_flag .eqv. .FALSE.) then
 #endif
 
 #ifdef MPI_RMA
-      call MPI_applyBC_RMA(VELI_VAR,FACEX)
-      call MPI_applyBC_RMA(VELI_VAR,FACEY)
+      call MPI_applyBC_RMA(facexData(:,:,:,VELI_VAR))
+      call MPI_applyBC_RMA(faceyData(:,:,:,VELI_VAR))
 #endif
 
       call MPI_physicalBC_vel(facexData(:,:,:,VELI_VAR),faceyData(:,:,:,VELI_VAR))
@@ -141,10 +141,10 @@ else if (jump_flag .eqv. .TRUE.) then
 #endif
 
 #ifdef MPI_RMA
-    call MPI_applyBC_RMA(RH1F_VAR,FACEX)
-    call MPI_applyBC_RMA(RH1F_VAR,FACEY)
-    call MPI_applyBC_RMA(RH2F_VAR,FACEX)
-    call MPI_applyBC_RMA(RH2F_VAR,FACEY)
+    call MPI_applyBC_RMA(facexData(:,:,:,RH1F_VAR))
+    call MPI_applyBC_RMA(faceyData(:,:,:,RH1F_VAR))
+    call MPI_applyBC_RMA(facexData(:,:,:,RH2F_VAR))
+    call MPI_applyBC_RMA(faceyData(:,:,:,RH2F_VAR))
 #endif
 
     call MPI_physicalBC_dfun(facexData(:,:,:,RH1F_VAR))

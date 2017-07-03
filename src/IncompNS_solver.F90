@@ -8,6 +8,7 @@ subroutine IncompNS_solver(tstep,p_counter)
     use IncompNS_data, only: ins_v_res,ins_u_res,ins_maxdiv,ins_mindiv,ins_umaxmin,ins_vmaxmin,ins_w_res
     use Grid_data, only: gr_dx,gr_dy
     use Driver_data, only: dr_dt
+    use Poisson_interface, only: Poisson_solver, Poisson_solver_VC
     use MPI_interface, ONLY: MPI_applyBC, MPI_CollectResiduals,MPI_physicalBC_vort,MPI_physicalBC_vel,&
                              MPI_applyBC_shared,MPI_applyBC_RMA
 
@@ -19,6 +20,7 @@ subroutine IncompNS_solver(tstep,p_counter)
     real, pointer, dimension(:,:,:,:) :: solnData,facexData,faceyData
     integer :: blk,i,j
     real :: v_res1,u_res1,maxdiv,mindiv,umax,vmax,umin,vmin,w_res1
+    real, dimension(Nxb+2,Nyb+2) :: rhox,rhoy
 
     solnData  => localCENTER
     facexData => localFACEX
@@ -35,11 +37,22 @@ subroutine IncompNS_solver(tstep,p_counter)
     faceyData(:,:,:,UOLD_VAR) = faceyData(:,:,:,VELC_VAR)
     solnData(:,:,:,VORO_VAR)  = solnData(:,:,:,VORT_VAR)
 
+#ifdef SINGLEPHASE
     do blk=1,blockCount
        call ins_predictor(tstep,facexData(:,:,blk,VELC_VAR),faceyData(:,:,blk,VELC_VAR),&
                                 facexData(:,:,blk,USTR_VAR),faceyData(:,:,blk,USTR_VAR),&
                                 facexData(:,:,blk,GOLD_VAR),faceyData(:,:,blk,GOLD_VAR))
     end do
+#else
+    do blk=1,blockCount
+       call ins_predictor_VD(tstep,facexData(:,:,blk,VELC_VAR),faceyData(:,:,blk,VELC_VAR),&
+                                   facexData(:,:,blk,USTR_VAR),faceyData(:,:,blk,USTR_VAR),&
+                                   facexData(:,:,blk,GOLD_VAR),faceyData(:,:,blk,GOLD_VAR),&
+                                   solnData(:,:,blk,VISC_VAR),&
+                                   facexData(:,:,blk,RH1F_VAR),faceyData(:,:,blk,RH1F_VAR),&
+                                   facexData(:,:,blk,RH2F_VAR),faceyData(:,:,blk,RH2F_VAR))
+    end do
+#endif
 
 #ifdef MPI_DIST
     call MPI_applyBC(USTR_VAR,FACEX)
@@ -53,8 +66,8 @@ subroutine IncompNS_solver(tstep,p_counter)
 #endif
 
 #ifdef MPI_RMA
-    call MPI_applyBC_RMA(USTR_VAR,FACEX)
-    call MPI_applyBC_RMA(USTR_VAR,FACEY)
+    call MPI_applyBC_RMA(facexData(:,:,:,USTR_VAR))
+    call MPI_applyBC_RMA(faceyData(:,:,:,USTR_VAR))
 #endif
 
     call MPI_physicalBC_vel(facexData(:,:,:,USTR_VAR),faceyData(:,:,:,USTR_VAR))
@@ -66,21 +79,36 @@ subroutine IncompNS_solver(tstep,p_counter)
     end do
 #endif    
 
+#ifdef SINGLEPHASE
     do blk=1,blockCount
        solnData(2:Nxb+1,2:Nyb+1,blk,PRHS_VAR) = &
-
        -((1/(gr_dy*dr_dt))*(faceyData(2:Nxb+1,2:Nyb+1,blk,USTR_VAR)-faceyData(2:Nxb+1,1:Nyb,blk,USTR_VAR)))&
        -((1/(gr_dx*dr_dt))*(facexData(2:Nxb+1,2:Nyb+1,blk,USTR_VAR)-facexData(1:Nxb,2:Nyb+1,blk,USTR_VAR)))
     end do
 
+#else
+    do blk=1,blockCount
+       solnData(2:Nxb+1,2:Nyb+1,blk,PRHS_VAR) = &
+       -((1/(gr_dy*dr_dt))*(faceyData(2:Nxb+1,2:Nyb+1,blk,USTR_VAR)-faceyData(2:Nxb+1,1:Nyb,blk,USTR_VAR)))&
+       -((1/(gr_dx*dr_dt))*(facexData(2:Nxb+1,2:Nyb+1,blk,USTR_VAR)-facexData(1:Nxb,2:Nyb+1,blk,USTR_VAR)))&
+       -solnData(2:Nxb+1,2:Nyb+1,blk,SIGP_VAR)
+    end do
+
+#endif
+
     nullify(solnData,facexData,faceyData)
 
+#ifdef SINGLEPHASE
     call Poisson_solver(PRHS_VAR,PRES_VAR,p_counter)
+#else
+    call Poisson_solver_VC(PRHS_VAR,PRES_VAR,p_counter,RH1F_VAR,RH2F_VAR)
+#endif
 
     solnData  => localCENTER
     facexData => localFACEX
     faceyData => localFACEY
 
+#ifdef SINGLEPHASE
     do blk=1,blockCount
     facexData(2:Nxb+1,2:Nyb+1,blk,VELC_VAR) = &
     facexData(2:Nxb+1,2:Nyb+1,blk,USTR_VAR) - (dr_dt/gr_dx)*(solnData(3:Nxb+2,2:Nyb+1,blk,PRES_VAR)-&
@@ -91,6 +119,29 @@ subroutine IncompNS_solver(tstep,p_counter)
     faceyData(2:Nxb+1,2:Nyb+1,blk,USTR_VAR) - (dr_dt/gr_dy)*(solnData(2:Nxb+1,3:Nyb+2,blk,PRES_VAR)-&
                                                              solnData(2:Nxb+1,2:Nyb+1,blk,PRES_VAR))
     end do
+#else
+
+    do blk=1,blockCount
+    facexData(2:Nxb+1,2:Nyb+1,blk,VELC_VAR) = &
+    facexData(2:Nxb+1,2:Nyb+1,blk,USTR_VAR) - (dr_dt/gr_dx)*&
+                                              (facexData(2:Nxb+1,2:Nyb+1,blk,RH1F_VAR)+&
+                                               facexData(2:Nxb+1,2:Nyb+1,blk,RH2F_VAR))*&
+                                              (solnData(3:Nxb+2,2:Nyb+1,blk,PRES_VAR)-&
+                                               solnData(2:Nxb+1,2:Nyb+1,blk,PRES_VAR))&
+                                               +dr_dt*&
+                                               facexData(2:Nxb+1,2:Nyb+1,blk,SIGM_VAR)
+
+
+    faceyData(2:Nxb+1,2:Nyb+1,blk,VELC_VAR) = &
+    faceyData(2:Nxb+1,2:Nyb+1,blk,USTR_VAR) - (dr_dt/gr_dy)*&
+                                              (faceyData(2:Nxb+1,2:Nyb+1,blk,RH1F_VAR)+&
+                                               faceyData(2:Nxb+1,2:Nyb+1,blk,RH2F_VAR))*&                                               
+                                              (solnData(2:Nxb+1,3:Nyb+2,blk,PRES_VAR)-&
+                                               solnData(2:Nxb+1,2:Nyb+1,blk,PRES_VAR))&
+                                               +dr_dt*&
+                                                faceyData(2:Nxb+1,2:Nyb+1,blk,SIGM_VAR)
+    end do
+#endif
 
 #ifdef MPI_DIST
     call MPI_applyBC(VELC_VAR,FACEX)
@@ -104,8 +155,8 @@ subroutine IncompNS_solver(tstep,p_counter)
 #endif
 
 #ifdef MPI_RMA
-    call MPI_applyBC_RMA(VELC_VAR,FACEX)
-    call MPI_applyBC_RMA(VELC_VAR,FACEY)
+    call MPI_applyBC_RMA(facexData(:,:,:,VELC_VAR))
+    call MPI_applyBC_RMA(faceyData(:,:,:,VELC_VAR))
 #endif
 
     call MPI_physicalBC_vel(facexData(:,:,:,VELC_VAR),faceyData(:,:,:,VELC_VAR))
@@ -160,13 +211,13 @@ subroutine IncompNS_solver(tstep,p_counter)
     !                   solnData(:,:,blk,DFUN_VAR))
     !end do
 
-#ifdef MPI_DIST
+!#ifdef MPI_DIST
     !call MPI_applyBC(VORT_VAR,CENTER)
-#endif
+!#endif
 
-#ifdef MPI_SHRD
+!#ifdef MPI_SHRD
     !call MPI_applyBC_shared(VORT_VAR,CENTER)
-#endif
+!#endif
 
     !call MPI_physicalBC_vort(solnData(:,:,:,VORT_VAR))
 

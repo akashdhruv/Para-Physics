@@ -5,7 +5,7 @@ module Poisson_interface
        implicit none
 
        interface
-             subroutine Poisson_solver(ivar,rvar,ps_counter)
+             subroutine Poisson_solver(rvar,ivar,ps_counter)
              implicit none
              integer, intent(in)  :: ivar,rvar
              integer, intent(out) :: ps_counter
@@ -13,13 +13,11 @@ module Poisson_interface
        end interface
 
        interface
-             subroutine Poisson_solver_VC(ps_RHS,ps,ps_rx,ps_ry,ps_res,ps_counter,ps_quant)
+             subroutine Poisson_solver_VC(rvar,ivar,ps_counter,cvar,dvar)
              implicit none
-             real, dimension(:,:), intent(in) :: ps_RHS
-             real, dimension(:,:), intent(inout) :: ps,ps_rx,ps_ry
-             real, intent(out) :: ps_res
+             integer, intent(in)  :: ivar,rvar,cvar
+             integer, optional, intent(in) :: dvar
              integer, intent(out) :: ps_counter
-             integer, intent(in) :: ps_quant
              end subroutine Poisson_solver_VC
        end interface
 

@@ -86,7 +86,7 @@ subroutine HeatAD_solver(tstep)
 #endif
 
 #ifdef MPI_RMA
-   call MPI_applyBC_RMA(TEMP_VAR,CENTER)
+   call MPI_applyBC_RMA(solnData(:,:,:,TEMP_VAR))
 #endif
 
    call MPI_physicalBC_temp(solnData(:,:,:,TEMP_VAR))

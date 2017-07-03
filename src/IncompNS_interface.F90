@@ -25,11 +25,11 @@ module IncompNS_interface
        end interface
 
        interface
-           subroutine ins_predictor_VD(tstep,p_counter,p,u,v,ut,vt,visc,rho1x,rho1y,rho2x,rho2y,s,s2,sigp,sigx,sigy)
+           subroutine ins_predictor_VD(tstep,u,v,ut,vt,g1_old,g2_old,visc,rho1x,rho1y,rho2x,rho2y)
             implicit none
             integer, intent(in) :: tstep
-            integer, intent(out) :: p_counter
-            real, intent(inout), dimension(:,:) :: u, v, p, visc, rho1x, rho1y, rho2x, rho2y, s, s2, sigp, sigx, sigy, ut, vt
+            real, intent(inout), dimension(:,:) :: u, v, visc, rho1x, rho1y, rho2x, rho2y, &
+                                                   ut, vt,g1_old,g2_old
            end subroutine ins_predictor_VD
        end interface
 

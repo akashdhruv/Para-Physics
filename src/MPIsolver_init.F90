@@ -12,7 +12,7 @@ subroutine MPIsolver_init()
 
     integer :: checkSumMPI
     integer :: status = 0
-    integer :: i
+    integer :: i,blk
     real :: A
 
     !_________Define Global Communication Environment___________!
@@ -152,18 +152,18 @@ subroutine MPIsolver_init()
     allocate(northORIGIN(Nxb+2))
     allocate(southORIGIN(Nxb+2))
 
-    RMA_size   = (Nyb+2+Nxb+2+Nyb+2+Nxb+2)*sizeof(A)
+    RMA_size   = (Nyb+2+Nxb+2+Nyb+2+Nxb+2)*blockCount*sizeof(A)
 
     disp_unit  = sizeof(A)
 
 #ifdef MPI_RMA_ACTIVE
     call MPI_WIN_ALLOCATE(RMA_size,disp_unit,mpi_info_key,solver_comm,RMA_ptr,RMA_win,ierr)
-    call C_F_POINTER(RMA_ptr,dataTARGET,[Nyb+2+Nyb+2+Nxb+2+Nxb+2])
+    call C_F_POINTER(RMA_ptr,dataTARGET,[Nyb+2+Nyb+2+Nxb+2+Nxb+2*blockCount])
 #endif
 
 #ifdef MPI_RMA_PASSIVE
     call MPI_WIN_ALLOCATE(RMA_size,disp_unit,MPI_INFO_NULL,solver_comm,RMA_ptr,RMA_win,ierr)
-    call C_F_POINTER(RMA_ptr,dataTARGET,[Nyb+2+Nyb+2+Nxb+2+Nxb+2])
+    call C_F_POINTER(RMA_ptr,dataTARGET,[Nyb+2+Nyb+2+Nxb+2+Nxb+2*blockCount])
 #endif
 
 #endif

@@ -102,7 +102,7 @@ subroutine Poisson_solver(rvar,ivar,ps_counter)
 #endif
 
 #ifdef MPI_RMA
-    call MPI_applyBC_RMA(ivar,CENTER)
+    call MPI_applyBC_RMA(ps)
 #endif
 
     if(ivar == PRES_VAR) call MPI_physicalBC_pres(ps)

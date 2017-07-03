@@ -39,9 +39,9 @@ module MPI_interface
     end interface 
 
     interface
-          subroutine MPI_applyBC_RMA(ivar,datatype)
+          subroutine MPI_applyBC_RMA(local)
           implicit none
-          integer, intent(in) :: ivar,datatype
+          real, intent(inout), dimension(:,:,:) :: local
           end subroutine MPI_applyBC_RMA
     end interface
 
