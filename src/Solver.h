@@ -77,8 +77,10 @@ _______________________Grid Parameters___________________________
 #define MDOT_VAR 14
 #define SMRH_VAR 15
 #define SMHV_VAR 16
+#define PRHS_VAR 17
+#define VORO_VAR 18
 
-#define CENT_VAR 16
+#define CENT_VAR 18
 
 #define VELC_VAR 1
 #define IBMF_VAR 2
@@ -89,8 +91,10 @@ _______________________Grid Parameters___________________________
 #define SIGM_VAR 7
 #define VELI_VAR 8
 #define USTR_VAR 9
+#define UOLD_VAR 10
+#define GOLD_VAR 11
 
-#define FACE_VAR 9
+#define FACE_VAR 11
 
 #define CENTER 1
 #define FACEX 2

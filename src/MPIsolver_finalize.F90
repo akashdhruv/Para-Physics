@@ -37,6 +37,7 @@ subroutine MPIsolver_finalize(sim_Complete)
 
       deallocate(blockID)
       deallocate(blockLC)
+      deallocate(xLC,yLC)
 
       call MPI_COMM_FREE(x_comm,ierr)
       call MPI_COMM_FREE(y_comm,ierr)

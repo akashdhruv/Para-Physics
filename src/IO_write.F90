@@ -1,11 +1,14 @@
-subroutine IO_write(x,y,uu,vv,pp,tt,ww,rr,id)
+subroutine IO_write(x,y,uu,vv,pp,tt,ww,rr,blk,blockOffset)
 
 #include "Solver.h"
 
        implicit none
        real, dimension(Nxb+1, Nyb+1), intent(in) :: x,y,uu,vv,pp,tt,ww,rr
-       integer, intent(in) :: id
+       integer, intent(in) :: blk,blockOffset
        character(len=10) :: f1,f2,f3,f4,f7,f8,f9,f0
+       integer :: id
+
+       id = blk+blockOffset-1
      
        write (f1, '( "X", I4.4, ".dat" )' )id
        write (f2, '( "Y", I4.4, ".dat" )' )id
@@ -44,4 +47,3 @@ subroutine IO_write(x,y,uu,vv,pp,tt,ww,rr,id)
        close(0)
 
 end subroutine IO_write
-

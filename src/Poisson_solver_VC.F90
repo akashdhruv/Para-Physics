@@ -126,19 +126,19 @@ subroutine Poisson_solver_VC(ps_RHS,ps,ps_rx,ps_ry,ps_res,ps_counter,ps_quant)
      if (thread_id == 0) then
 
 #ifdef MPI_DIST
-     call MPI_applyBC(ps)
+     !call MPI_applyBC(ps)
 #endif
 
 #ifdef MPI_SHRD
-     call MPI_BARRIER(shared_comm,ierr)
-     call MPI_applyBC_shared(ps_quant,CENTER)
+     !call MPI_BARRIER(shared_comm,ierr)
+     !call MPI_applyBC_shared(ps_quant,CENTER)
 #endif
 
 #ifdef MPI_RMA
-     call MPI_applyBC_RMA(ps)
+     !call MPI_applyBC_RMA(ps)
 #endif
 
-     if(ps_quant == PRES_VAR) call MPI_physicalBC_pres(ps)
+     !if(ps_quant == PRES_VAR) call MPI_physicalBC_pres(ps)
  
      ps_counter = ps_counter + 1
 

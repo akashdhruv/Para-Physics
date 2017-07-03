@@ -14,14 +14,17 @@ subroutine IncompNS_init()
       facexData => localFACEX
       faceyData => localFACEY      
 
-      solnData(:,:,blockCount,PRES_VAR) = 0.0
-      solnData(:,:,blockCount,VORT_VAR) = 0.0
+      solnData(:,:,:,PRES_VAR) = 0.0
+      solnData(:,:,:,VORT_VAR) = 0.0
 
-      facexData(:,:,blockCount,VELC_VAR) = 0.0
-      faceyData(:,:,blockCount,VELC_VAR) = 0.0
+      facexData(:,:,:,VELC_VAR) = 0.0
+      faceyData(:,:,:,VELC_VAR) = 0.0
 
-      facexData(:,:,blockCount,USTR_VAR) = 0.0
-      faceyData(:,:,blockCount,USTR_VAR) = 0.0
+      facexData(:,:,:,USTR_VAR) = 0.0
+      faceyData(:,:,:,USTR_VAR) = 0.0
+
+      facexData(:,:,:,GOLD_VAR) = 0.0
+      faceyData(:,:,:,GOLD_VAR) = 0.0
      
       ins_inRe  = 0.001
 

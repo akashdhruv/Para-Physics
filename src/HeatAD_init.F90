@@ -23,8 +23,8 @@ subroutine HeatAD_init()
    ht_src = 0.0
    ht_St  = 1.0
 
-   solnData(:,:,blockCount,TEMP_VAR) = 0.0
-   solnData(:,:,blockCount,TOLD_VAR) = 0.0
+   solnData(:,:,:,TEMP_VAR) = 0.0
+   solnData(:,:,:,TOLD_VAR) = 0.0
 
    nullify(solnData)
 

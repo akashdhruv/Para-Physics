@@ -6,39 +6,24 @@ subroutine MPI_physicalBC_vort(d_ex)
 
        implicit none
 
-       real, dimension(:,:), intent(inout) :: d_ex
-       integer :: status(MPI_STATUS_SIZE)
+       real, dimension(:,:,:), intent(inout) :: d_ex
+       integer :: status(MPI_STATUS_SIZE),blk
        logical :: mask
 
        mask = .true.
-    
-       if ( x_id == 0) then
 
-           d_ex(1,:)=d_ex(2,:)
+       do blk=1,blockCount   
+ 
+       if (xLC(blk) == 0) d_ex(1,:,blk)=d_ex(2,:,blk)
 
-       end if
+       if (xLC(blk) == nblockx-1) d_ex(Nxb+2,:,blk)=d_ex(Nxb+1,:,blk)
 
-       if ( x_id == nblockx-1) then
+       if (yLC(blk) == 0) d_ex(:,1,blk)=d_ex(:,2,blk)
 
-           d_ex(Nxb+2,:)=d_ex(Nxb+1,:)
+       if (yLC(blk) == nblocky-1) d_ex(:,Nyb+2,blk)=d_ex(:,Nyb+1,blk)
 
-       end if
-
-
-       if ( y_id == 0) then
-
-           d_ex(:,1)=d_ex(:,2)
-
-       end if
-
-       if ( y_id == nblocky-1) then
-
-           d_ex(:,Nyb+2)=d_ex(:,Nyb+1)
-
-       end if
-
-       !call MPI_BARRIER(solver_comm,ierr)
-   
+       end do
+ 
        mask = .false.
 
 end subroutine MPI_physicalBC_vort

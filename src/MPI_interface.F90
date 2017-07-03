@@ -17,23 +17,31 @@ module MPI_interface
     end interface
 
     interface
-          subroutine MPI_applyBC(u_ex)
+          subroutine MPI_applyBC_ORIG(u_ex)
           implicit none
           real, dimension(:,:),intent(inout) :: u_ex
+          end subroutine MPI_applyBC_ORIG
+    end interface
+
+
+    interface
+          subroutine MPI_applyBC_ORIG_v2(u_ex)
+          implicit none
+          real, dimension(:,:),intent(inout) :: u_ex
+          end subroutine MPI_applyBC_ORIG_v2
+    end interface
+
+    interface
+          subroutine MPI_applyBC(ivar,datatype)
+          implicit none
+          integer, intent(in) :: ivar,datatype
           end subroutine MPI_applyBC
-    end interface
+    end interface 
 
     interface
-          subroutine MPI_applyBC_v2(u_ex)
+          subroutine MPI_applyBC_RMA(ivar,datatype)
           implicit none
-          real, dimension(:,:),intent(inout) :: u_ex
-          end subroutine MPI_applyBC_v2
-    end interface
-
-    interface
-          subroutine MPI_applyBC_RMA(local)
-          implicit none
-          real, intent(inout), dimension(:,:) :: local
+          integer, intent(in) :: ivar,datatype
           end subroutine MPI_applyBC_RMA
     end interface
 
@@ -55,42 +63,42 @@ module MPI_interface
     interface 
         subroutine MPI_physicalBC_vel(u_ex,v_ex)
         implicit none
-        real, dimension(:,:), intent(inout) :: u_ex, v_ex
+        real, dimension(:,:,:), intent(inout) :: u_ex, v_ex
         end subroutine MPI_physicalBC_vel
     end interface
 
     interface
         subroutine MPI_physicalBC_pres(p_ex)
         implicit none
-        real, dimension(:,:), intent(inout) :: p_ex
+        real, dimension(:,:,:), intent(inout) :: p_ex
         end subroutine MPI_physicalBC_pres
     end interface
 
    interface
         subroutine MPI_physicalBC_temp(t_ex)
         implicit none
-        real, dimension(:,:), intent(inout) :: t_ex
+        real, dimension(:,:,:), intent(inout) :: t_ex
         end subroutine MPI_physicalBC_temp
    end interface
 
    interface
         subroutine MPI_physicalBC_dfun(d_ex)
         implicit none
-        real, dimension(:,:), intent(inout) :: d_ex
+        real, dimension(:,:,:), intent(inout) :: d_ex
         end subroutine MPI_physicalBC_dfun
    end interface
 
    interface
         subroutine MPI_physicalBC_vort(d_ex)
         implicit none
-        real, dimension(:,:), intent(inout) :: d_ex
+        real, dimension(:,:,:), intent(inout) :: d_ex
         end subroutine MPI_physicalBC_vort
    end interface
 
    interface
         subroutine MPI_periodicBC(u_ex,v_ex,aDIM)
         implicit none
-        real, dimension(:,:), intent(inout) :: u_ex,v_ex
+        real, dimension(:,:,:), intent(inout) :: u_ex,v_ex
         integer,intent(in) :: aDIM
         end subroutine MPI_periodicBC
    end interface

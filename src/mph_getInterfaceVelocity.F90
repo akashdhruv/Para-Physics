@@ -3,8 +3,6 @@ subroutine mph_getInterfaceVelocity(u,v,u_int,v_int,smrh,mdot,nrmx,nrmy)
 
 #include "Solver.h"
 
-       use MPI_interface, ONLY: MPI_applyBC,MPI_physicalBC_vel,MPI_applyBC_shared
-
        implicit none
       
        real, dimension(:,:), intent(in) :: u, v, smrh, mdot, nrmx, nrmy

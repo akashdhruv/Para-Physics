@@ -1,4 +1,4 @@
-subroutine ins_vorticity(tstep,w,u,v,s)
+subroutine ins_vorticity(tstep,w,w_old,u,v,s)
 
 #include "Solver.h"
 
@@ -11,16 +11,13 @@ subroutine ins_vorticity(tstep,w,u,v,s)
 
     implicit none
     integer, intent(in) :: tstep
-    real, intent(inout), dimension(:,:) :: w,u,v,s
+    real, intent(inout), dimension(:,:) :: w,u,v,s,w_old
     real :: u_conv,v_conv,u_plus,u_mins,v_plus,v_mins
     real :: wx_plus,wx_mins,wy_plus,wy_mins
-    real, dimension(Nxb+2,Nyb+2) :: w_old
     integer :: i,j
     real :: w_res1
     real :: w_sat,th,tol,wij
-
-    w_old = w
-    
+   
     tol = 0.01
 
     !$OMP PARALLEL DEFAULT(NONE) PRIVATE(w_sat,th,wij,i,j,u_conv,v_conv,u_plus,u_mins,&
@@ -132,22 +129,5 @@ subroutine ins_vorticity(tstep,w,u,v,s)
 
      !$OMP END DO
      !$OMP END PARALLEL
-
-#ifdef MPI_DIST
-     call MPI_applyBC(w)
-#endif
-
-#ifdef MPI_SHRD
-     call MPI_applyBC_shared(VORT_VAR,CENTER)
-#endif
-
-     call MPI_physicalBC_vort(w)
-   
-     do i=1,Nyb+2
-          ins_w_res = ins_w_res + sum((w(:,i)-w_old(:,i))**2)
-     enddo
-
-     call MPI_CollectResiduals(ins_w_res,w_res1,SUM_DATA)
-     ins_w_res = sqrt(w_res1/((nblockx*nblocky)*(Nxb+2)*(Nyb+2))) 
 
 end subroutine ins_vorticity

@@ -1,13 +1,8 @@
-subroutine ins_momentum(tstep,p_counter,p,u,v,ut,vt,s,s2)
+subroutine ins_predictor(tstep,u,v,ut,vt,g1_old,g2_old)
 
-       use Poisson_interface, ONLY: Poisson_solver            
        use Grid_data
        use Driver_data
-       use MPI_data
        use IncompNS_data
-       use MPI_interface, ONLY: MPI_applyBC, MPI_CollectResiduals, MPI_physicalBC_vel, MPI_applyBC_shared, MPI_applyBC_RMA
-       use IncompNS_interface, ONLY: ins_rescaleVel
-       use IBM_interface, ONLY: IBM_ApplyForcing
 
 #include "Solver.h"
 
@@ -15,27 +10,11 @@ subroutine ins_momentum(tstep,p_counter,p,u,v,ut,vt,s,s2)
 
        !-Arguments
        integer, intent(in) :: tstep
-       integer, intent(out) :: p_counter
-       real, intent(inout), dimension(:,:) :: u, v, p, s, s2
-       real, intent(inout), dimension(:,:) :: ut,vt
+       real, intent(inout), dimension(:,:) :: u, v
+       real, intent(inout), dimension(:,:) :: ut,vt,g1_old,g2_old
 
        !-Local Variables
-       real, dimension(Nxb+2,Nyb+2) :: u_old,v_old
-       real, dimension(Nxb,Nyb) :: C1,G1,D1,C2,G2,D2,p_RHS
-       real :: u_res1, v_res1, maxdiv, mindiv,umax,umin,vmax,vmin
-       integer :: i,j
-
-       ins_v_res = 0
-       ins_u_res = 0
-
-       v_res1 = 0
-       u_res1 = 0
-
-       ! Rescaling velocities after first step
-       !if(tstep>1) call ins_rescaleVel(u,v)
-
-       u_old = u
-       v_old = v
+       real, dimension(Nxb,Nyb) :: C1,G1,D1,C2,G2,D2
 
        ! Predictor Step
 
@@ -47,11 +26,11 @@ subroutine ins_momentum(tstep,p_counter,p,u,v,ut,vt,s,s2)
        if (tstep == 0) then
 
               ut(2:Nxb+1,2:Nyb+1)=u(2:Nxb+1,2:Nyb+1)+(dr_dt/1)*(G1)
-              ins_G1_old = G1
+              g1_old(2:Nxb+1,2:Nyb+1) = G1
        else
 
-              ut(2:Nxb+1,2:Nyb+1)=u(2:Nxb+1,2:Nyb+1)+(dr_dt/2)*(3*ins_G1_old-G1)
-              ins_G1_old = G1
+              ut(2:Nxb+1,2:Nyb+1)=u(2:Nxb+1,2:Nyb+1)+(dr_dt/2)*(3*g1_old(2:Nxb+1,2:Nyb+1)-G1)
+              g1_old(2:Nxb+1,2:Nyb+1) = G1
        endif
 
 
@@ -63,126 +42,21 @@ subroutine ins_momentum(tstep,p_counter,p,u,v,ut,vt,s,s2)
        if (tstep == 0) then
 
               vt(2:Nxb+1,2:Nyb+1)=v(2:Nxb+1,2:Nyb+1)+(dr_dt/1)*(G2)
-              ins_G2_old = G2
+              g2_old(2:Nxb+1,2:Nyb+1) = G2
        else
 
-              vt(2:Nxb+1,2:Nyb+1)=v(2:Nxb+1,2:Nyb+1)+(dr_dt/2)*(3*ins_G2_old-G2)
-              ins_G2_old = G2
+              vt(2:Nxb+1,2:Nyb+1)=v(2:Nxb+1,2:Nyb+1)+(dr_dt/2)*(3*g2_old(2:Nxb+1,2:Nyb+1)-G2)
+              g2_old(2:Nxb+1,2:Nyb+1) = G2
        endif
 
-       ! Boundary Conditions
-
-#ifdef MPI_DIST
-       call MPI_applyBC(ut)
-       call MPI_applyBC(vt)
-#endif
-
-#ifdef MPI_SHRD
-       call MPI_BARRIER(shared_comm,ierr)
-       call MPI_applyBC_shared(USTR_VAR,FACEX)
-       call MPI_applyBC_shared(USTR_VAR,FACEY)
-#endif
-
-#ifdef MPI_RMA
-       call MPI_applyBC_RMA(ut)
-       call MPI_applyBC_RMA(vt)
-#endif
-      
-       call MPI_physicalBC_vel(ut,vt)
-
-#ifdef IBM
-       ! Immersed Boundary - Predictor BC
-
-       call IBM_ApplyForcing(ut,vt,s,s2)
-
-#endif
-       ! Poisson Solver
-
-       p_RHS = -((1/(gr_dy*dr_dt))*(vt(2:Nxb+1,2:Nyb+1)-vt(2:Nxb+1,1:Nyb)))&
-               -((1/(gr_dx*dr_dt))*(ut(2:Nxb+1,2:Nyb+1)-ut(1:Nxb,2:Nyb+1)))
-
-       call Poisson_solver(p_RHS,p,ins_p_res,p_counter,PRES_VAR)
-
-       ! Corrector Step
-
-       u(2:Nxb+1,2:Nyb+1) = ut(2:Nxb+1,2:Nyb+1) - (dr_dt/gr_dx)*(p(3:Nxb+2,2:Nyb+1)-p(2:Nxb+1,2:Nyb+1))
-       v(2:Nxb+1,2:Nyb+1) = vt(2:Nxb+1,2:Nyb+1) - (dr_dt/gr_dy)*(p(2:Nxb+1,3:Nyb+2)-p(2:Nxb+1,2:Nyb+1))
-
-       ! Boundary Conditions
-
-#ifdef MPI_DIST
-       call MPI_applyBC(u)
-       call MPI_applyBC(v)
-#endif
-
-#ifdef MPI_SHRD
-       call MPI_BARRIER(shared_comm,ierr)
-       call MPI_applyBC_shared(VELC_VAR,FACEX)
-       call MPI_applyBC_shared(VELC_VAR,FACEY)
-#endif
-
-#ifdef MPI_RMA
-       call MPI_applyBC_RMA(u)
-       call MPI_applyBC_RMA(v)
-#endif
-
-      call MPI_physicalBC_vel(u,v)
-
-       ! Divergence
-
-       maxdiv = -10.**(10.)
-       mindiv = 10.**(10.)
-
-       maxdiv = max(maxdiv,maxval(((1/(gr_dy))*(v(2:Nxb+1,2:Nyb+1)-v(2:Nxb+1,1:Nyb)))&
-                                  +((1/(gr_dx))*(u(2:Nxb+1,2:Nyb+1)-u(1:Nxb,2:Nyb+1)))))
-
-       mindiv = min(mindiv,minval(((1/(gr_dy))*(v(2:Nxb+1,2:Nyb+1)-v(2:Nxb+1,1:Nyb)))&
-                                  +((1/(gr_dx))*(u(2:Nxb+1,2:Nyb+1)-u(1:Nxb,2:Nyb+1)))))
-
-
-       umax = maxval(u)
-       umin = minval(u)
-
-       vmax = maxval(v)
-       vmin = minval(v)
-
-       call MPI_CollectResiduals(maxdiv,ins_maxdiv,MAX_DATA)
-       call MPI_CollectResiduals(mindiv,ins_mindiv,MIN_DATA)
-
-       call MPI_CollectResiduals(umax,ins_umaxmin(1),MAX_DATA)
-       call MPI_CollectResiduals(umin,ins_umaxmin(2),MIN_DATA)
-
-       call MPI_CollectResiduals(vmax,ins_vmaxmin(1),MAX_DATA)
-       call MPI_CollectResiduals(vmin,ins_vmaxmin(2),MIN_DATA)
-
-       ! Residuals
-
-       do i=1,Nyb+2
-          ins_u_res = ins_u_res + sum((u(:,i)-u_old(:,i))**2)
-       enddo
-
-       call MPI_CollectResiduals(ins_u_res,u_res1,SUM_DATA)
-       ins_u_res = sqrt(u_res1/((nblockx*nblocky)*(Nxb+2)*(Nyb+2)))
-
-       do i=1,Nyb+1
-          ins_v_res = ins_v_res + sum((v(:,i)-v_old(:,i))**2)
-       enddo
-
-       call MPI_CollectResiduals(ins_v_res,v_res1,SUM_DATA)
-       ins_v_res = sqrt(v_res1/((nblockx*nblocky)*(Nxb+2)*(Nyb+2)))
-
-
-       !deallocate(ut,vt,u_old,v_old)
-       !deallocate(C1,G1,D1,C2,G2,D2,p_RHS)
-
-end subroutine ins_momentum
+end subroutine ins_predictor
 
 
 !! CONVECTIVE U !!
 subroutine Convective_U(ut_cal,vt_cal,dx,dy,C1)
 
 #include "Solver.h"
-       
+
       implicit none
 
       real,dimension(Nxb+2,Nyb+2), intent(in) :: ut_cal
@@ -232,7 +106,7 @@ subroutine Convective_V(ut_cal,vt_cal,dx,dy,C2)
       real,dimension(Nxb+2,Nyb+2), intent(in) :: vt_cal
 
       real, intent(in) :: dx
-      real, intent(in) :: dy      
+      real, intent(in) :: dy
 
       !real, allocatable,dimension(:,:) :: vn, vs, ve, vw, ue, uw
       real,dimension(Nxb,Nyb) :: vn,vs,ve,vw,ue,uw
@@ -351,4 +225,3 @@ subroutine Diffusive_V(vt_cal,dx,dy,inRe,D2)
       !deallocate(vP,vE,vW,vN,vS)
 
 end subroutine Diffusive_V
-

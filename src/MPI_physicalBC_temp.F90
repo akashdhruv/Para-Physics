@@ -6,38 +6,20 @@ subroutine MPI_physicalBC_temp(t_ex)
 
        implicit none
 
-       real, dimension(:,:), intent(inout) :: t_ex
-       integer :: status(MPI_STATUS_SIZE)
-    
-       if ( x_id == 0) then
+       real, dimension(:,:,:), intent(inout) :: t_ex
+       integer :: status(MPI_STATUS_SIZE),blk
 
-           !t_ex(1,:) = 2*383.15-t_ex(2,:)
-           t_ex(1,:) = t_ex(2,:)
+       do blk=1,blockCount
 
-       end if
+       if (xLC(blk) == 0) t_ex(1,:,blk) = t_ex(2,:,blk)
 
-       if ( x_id == nblockx-1) then
+       if (xLC(blk) == nblockx-1) t_ex(Nxb+2,:,blk) = t_ex(Nxb+1,:,blk)
 
-           !t_ex(Nxb+2,:) = 2*373.15-t_ex(Nxb+1,:)
-           t_ex(Nxb+2,:) = t_ex(Nxb+1,:)
-       end if
+       if (yLC(blk) == 0) t_ex(:,1,blk) = 2*0.0-t_ex(:,2,blk)
 
+       if (yLC(blk) == nblocky-1) t_ex(:,Nyb+2,blk) = 2*1.0-t_ex(:,Nyb+1,blk)
+       !if (yLC(blk) == nblocky-1) t_ex(:,Nyb+2,blk) = t_ex(:,Nyb+1,blk)
 
-       if ( y_id == 0) then
+       end do 
 
-           t_ex(:,1) = 2*0.0-t_ex(:,2)
-           !t_ex(:,1) = t_ex(:,2)
-
-       end if
-
-       if ( y_id == nblocky-1) then
-
-            !t_ex(:,Nyb+2) = t_ex(:,Nyb+1)
-            t_ex(:,Nyb+2) = 2*1.0-t_ex(:,Nyb+1)
-            !t_ex(:,Nyb+2) = t_ex(:,Nyb+1)
-
-       end if
-
-       !call MPI_BARRIER(solver_comm,ierr)
-   
 end subroutine MPI_physicalBC_temp

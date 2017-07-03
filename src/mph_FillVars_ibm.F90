@@ -2,8 +2,6 @@ subroutine mph_FillVars_ibm(s,pf,thco,cprs,visc,rhox,rhoy,alpx,alpy,T,T_old,beta
 
 #include "Solver.h"
 
-    use MPI_interface, ONLY: MPI_applyBC,MPI_physicalBC_dfun, MPI_applyBC_shared
-
     implicit none
     real,intent(inout),dimension(Nxb+2,Nyb+2) :: s,pf,thco,cprs,visc,rhox,rhoy,alpx,alpy
     real,intent(in),dimension(Nxb+2,Nyb+2) :: T,T_old

@@ -1,4 +1,4 @@
-subroutine ins_momentum_VD(tstep,p_counter,p,u,v,ut,vt,visc,rho1x,rho1y,rho2x,rho2y,s,s2,sigp,sigx,sigy)
+subroutine ins_predictor_VD(tstep,p_counter,p,u,v,ut,vt,visc,rho1x,rho1y,rho2x,rho2y,s,s2,sigp,sigx,sigy)
 
        use Poisson_interface, ONLY: Poisson_solver_VC            
        use Grid_data
@@ -50,12 +50,12 @@ subroutine ins_momentum_VD(tstep,p_counter,p,u,v,ut,vt,visc,rho1x,rho1y,rho2x,rh
 
        if (tstep == 0) then
 
-              ut(2:Nxb+1,2:Nyb+1)=u(2:Nxb+1,2:Nyb+1)+(dr_dt/1)*(G1)
-              ins_G1_old = G1
+!              ut(2:Nxb+1,2:Nyb+1)=u(2:Nxb+1,2:Nyb+1)+(dr_dt/1)*(G1)
+!              ins_G1_old = G1
        else
 
-              ut(2:Nxb+1,2:Nyb+1)=u(2:Nxb+1,2:Nyb+1)+(dr_dt/2)*(3*ins_G1_old-G1)
-              ins_G1_old = G1
+!              ut(2:Nxb+1,2:Nyb+1)=u(2:Nxb+1,2:Nyb+1)+(dr_dt/2)*(3*ins_G1_old-G1)
+!              ins_G1_old = G1
        endif
 
 
@@ -66,33 +66,33 @@ subroutine ins_momentum_VD(tstep,p_counter,p,u,v,ut,vt,visc,rho1x,rho1y,rho2x,rh
 
        if (tstep == 0) then
 
-              vt(2:Nxb+1,2:Nyb+1)=v(2:Nxb+1,2:Nyb+1)+(dr_dt/1)*(G2)
-              ins_G2_old = G2
+!              vt(2:Nxb+1,2:Nyb+1)=v(2:Nxb+1,2:Nyb+1)+(dr_dt/1)*(G2)
+!              ins_G2_old = G2
        else
 
-              vt(2:Nxb+1,2:Nyb+1)=v(2:Nxb+1,2:Nyb+1)+(dr_dt/2)*(3*ins_G2_old-G2)
-              ins_G2_old = G2
+!              vt(2:Nxb+1,2:Nyb+1)=v(2:Nxb+1,2:Nyb+1)+(dr_dt/2)*(3*ins_G2_old-G2)
+!              ins_G2_old = G2
        endif
 
        ! Boundary Conditions
 
 #ifdef MPI_DIST
-       call MPI_applyBC(ut)
-       call MPI_applyBC(vt)
+       !call MPI_applyBC(ut)
+       !call MPI_applyBC(vt)
 #endif
 
 #ifdef MPI_SHRD
-       call MPI_BARRIER(shared_comm,ierr)
-       call MPI_applyBC_shared(USTR_VAR,FACEX)
-       call MPI_applyBC_shared(USTR_VAR,FACEY)
+       !call MPI_BARRIER(shared_comm,ierr)
+       !call MPI_applyBC_shared(USTR_VAR,FACEX)
+       !call MPI_applyBC_shared(USTR_VAR,FACEY)
 #endif 
 
 #ifdef MPI_RMA
-       call MPI_applyBC_RMA(ut)
-       call MPI_applyBC_RMA(vt)
+       !call MPI_applyBC_RMA(ut)
+       !call MPI_applyBC_RMA(vt)
 #endif
 
-       call MPI_physicalBC_vel(ut,vt)
+!       call MPI_physicalBC_vel(ut,vt)
 
 #ifdef IBM
        ! Immersed Boundary - Predictor BC
@@ -124,22 +124,22 @@ subroutine ins_momentum_VD(tstep,p_counter,p,u,v,ut,vt,visc,rho1x,rho1y,rho2x,rh
        ! Boundary Conditions
 
 #ifdef MPI_DIST
-       call MPI_applyBC(u)
-       call MPI_applyBC(v)
+       !call MPI_applyBC(u)
+       !call MPI_applyBC(v)
 #endif
 
 #ifdef MPI_SHRD
-       call MPI_BARRIER(shared_comm,ierr)
-       call MPI_applyBC_shared(VELC_VAR,FACEX)
-       call MPI_applyBC_shared(VELC_VAR,FACEY)
+       !call MPI_BARRIER(shared_comm,ierr)
+       !call MPI_applyBC_shared(VELC_VAR,FACEX)
+       !call MPI_applyBC_shared(VELC_VAR,FACEY)
 #endif 
 
 #ifdef MPI_RMA
-       call MPI_applyBC_RMA(u)
-       call MPI_applyBC_RMA(v)
+       !call MPI_applyBC_RMA(u)
+       !call MPI_applyBC_RMA(v)
 #endif
 
-       call MPI_physicalBC_vel(u,v)
+ !      call MPI_physicalBC_vel(u,v)
 
        ! Divergence
 
@@ -184,7 +184,7 @@ subroutine ins_momentum_VD(tstep,p_counter,p,u,v,ut,vt,visc,rho1x,rho1y,rho2x,rh
        ins_v_res = sqrt(v_res1/((nblockx*nblocky)*(Nxb+2)*(Nyb+2)))
 
 
-end subroutine ins_momentum_VD
+end subroutine ins_predictor_VD
 
 
 !! CONVECTIVE U !!

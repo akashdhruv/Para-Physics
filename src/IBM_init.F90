@@ -13,7 +13,7 @@ subroutine IBM_init()
    real :: x0,y0,r,xcell,ycell
    real :: x1,y1,r1
 
-   integer :: i,j
+   integer :: i,j,blk
 
    real,pointer,dimension(:,:,:,:) :: facexData,faceyData
 
@@ -32,69 +32,54 @@ subroutine IBM_init()
 
    ibm_omega = 1.0
 
-   facexData(:,:,blockCount,IBMF_VAR) = 0.0
-   faceyData(:,:,blockCount,IBMF_VAR) = 0.0
+   facexData(:,:,:,IBMF_VAR) = 0.0
+   faceyData(:,:,:,IBMF_VAR) = 0.0
 
    ibm_x0 = 0.0
    ibm_y0 = 0.5
    ibm_r0 = 0.1
 
+  do blk=1,blockCount
+
    do j=1,Nyb+2
-
     if(j==1) then
-        ycell = gr_y(1,j,blockCount) - 0.5*gr_dy
-
+        ycell = gr_y(1,j,blk) - 0.5*gr_dy
     else if(j==Nyb+2) then
-        ycell = gr_y(1,Nyb+1,blockCount) + 0.5*gr_dy
-
+        ycell = gr_y(1,Nyb+1,blk) + 0.5*gr_dy
     else
-        ycell = 0.5*(gr_y(1,j,blockCount) + gr_y(1,j-1,blockCount))
-
+        ycell = 0.5*(gr_y(1,j,blk) + gr_y(1,j-1,blk))
     end if
 
     do i=1,Nxb+2
-
      if(i==Nxb+2) then
-          xcell = gr_x(Nxb+1,1,blockCount) + gr_dx
-
+          xcell = gr_x(Nxb+1,1,blk) + gr_dx
      else
-          xcell = gr_x(i,1,blockCount)
-
+          xcell = gr_x(i,1,blk)
      end if
-
-     facexData(i,j,blockCount,IBMF_VAR) = ibm_r0 - sqrt((xcell-ibm_x0)**2+(ycell-ibm_y0)**2)
-
+     facexData(i,j,blk,IBMF_VAR) = ibm_r0 - sqrt((xcell-ibm_x0)**2+(ycell-ibm_y0)**2)
      end do
-
    end do
 
    do j=1,Nyb+2
-
     if(j==Nyb+2) then
-        ycell = gr_y(1,Nyb+1,blockCount) + gr_dy
-
+        ycell = gr_y(1,Nyb+1,blk) + gr_dy
     else
-        ycell = gr_y(1,j,blockCount)
-
+        ycell = gr_y(1,j,blk)
     end if
 
     do i=1,Nxb+2
-
     if(i==1) then
-          xcell = gr_x(i,1,blockCount) - 0.5*gr_dx
-
+          xcell = gr_x(i,1,blk) - 0.5*gr_dx
     else if(i==Nxb+2) then
-          xcell = gr_x(Nxb+1,1,blockCount) + 0.5*gr_dx
-
+          xcell = gr_x(Nxb+1,1,blk) + 0.5*gr_dx
     else
-          xcell = 0.5*(gr_x(i,1,blockCount) + gr_x(i-1,1,blockCount))
-
+          xcell = 0.5*(gr_x(i,1,blk) + gr_x(i-1,1,blk))
     end if
-
-    faceyData(i,j,blockCount,IBMF_VAR) = ibm_r0 - sqrt((xcell-ibm_x0)**2+(ycell-ibm_y0)**2)
-
+    faceyData(i,j,blk,IBMF_VAR) = ibm_r0 - sqrt((xcell-ibm_x0)**2+(ycell-ibm_y0)**2)
     end do
    end do
+
+  end do
 
    nullify(facexData,faceyData)
 

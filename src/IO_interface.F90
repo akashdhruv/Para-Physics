@@ -22,10 +22,10 @@ module IO_interface
 
 
        interface
-             subroutine IO_write(x,y,uu,vv,pp,tt,ww,rr,id)
+             subroutine IO_write(x,y,uu,vv,pp,tt,ww,rr,blk,blockOffset)
              implicit none
              real, dimension(Nxb+1,Nyb+1), intent(in) :: x,y,uu,vv,pp,tt,ww,rr
-             integer, intent(in) :: id
+             integer, intent(in) :: blk,blockOffset
              end subroutine IO_write
        end interface
 end module IO_interface

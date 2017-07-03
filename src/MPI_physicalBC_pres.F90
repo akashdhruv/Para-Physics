@@ -6,8 +6,8 @@ subroutine MPI_physicalBC_pres(p_ex)
 
        implicit none
 
-       real, dimension(:,:), intent(inout) :: p_ex
-       integer :: status(MPI_STATUS_SIZE)
+       real, dimension(:,:,:), intent(inout) :: p_ex
+       integer :: status(MPI_STATUS_SIZE),blk
        logical :: mask
 
        mask = .true.
@@ -15,66 +15,35 @@ subroutine MPI_physicalBC_pres(p_ex)
 
 #ifdef LID_DRIVEN_FLOW
 
-       if ( x_id == 0) then
+       do blk=1,blockCount
 
-           p_ex(1,:)=p_ex(2,:)
+       if (xLC(blk) == 0) p_ex(1,:,blk)=p_ex(2,:,blk)
 
-       end if
+       if (xLC(blk) == nblockx-1) p_ex(Nxb+2,:,blk)=p_ex(Nxb+1,:,blk)
 
-       if ( x_id == nblockx-1) then
+       if (yLC(blk) == 0) p_ex(:,1,blk)=p_ex(:,2,blk)
 
-           p_ex(Nxb+2,:)=p_ex(Nxb+1,:)
+       if (yLC(blk) == nblocky-1) p_ex(:,Nyb+2,blk)=p_ex(:,Nyb+1,blk)
 
-       end if
+       end do   
 
-
-       if ( y_id == 0) then
-
-           p_ex(:,1)=p_ex(:,2)
-
-       end if
-
-       if ( y_id == nblocky-1) then
-
-           p_ex(:,Nyb+2)=p_ex(:,Nyb+1)
-
-       end if
-
-       !call MPI_BARRIER(solver_comm,ierr)
-   
        mask = .false.
-
 #endif
 
 
 #ifdef CHANNEL_FLOW
 
-       if ( x_id == 0) then
+       do blk=1,blockCount
 
-           p_ex(1,:)=p_ex(2,:)
+       if (xLC(blk) == 0) p_ex(1,:,blk)=p_ex(2,:,blk)
 
-       end if
+       if (xLC(blk) == nblockx-1) p_ex(Nxb+2,:,blk)=-p_ex(Nxb+1,:,blk)
 
-       if ( x_id == nblockx-1) then
+       if (yLC(blk) == 0) p_ex(:,1,blk)=p_ex(:,2,blk)
 
-           p_ex(Nxb+2,:)=-p_ex(Nxb+1,:)
+       if (yLC(blk) == nblocky-1) p_ex(:,Nyb+2,blk)=p_ex(:,Nyb+1,blk)
 
-       end if
-
-
-       if ( y_id == 0) then
-
-           p_ex(:,1)=p_ex(:,2)
-
-       end if
-
-       if ( y_id == nblocky-1) then
-
-           p_ex(:,Nyb+2)=p_ex(:,Nyb+1)
-
-       end if
-
-       !call MPI_BARRIER(solver_comm,ierr)
+       end do
 
        mask = .false.
    
@@ -82,68 +51,39 @@ subroutine MPI_physicalBC_pres(p_ex)
 
 #ifdef MPH_FLOW
 
-       if ( x_id == 0) then
+       do blk=1,blockCount
 
-           p_ex(1,:) = p_ex(2,:)
+       if (xLC(blk) == 0) p_ex(1,:,blk) = p_ex(2,:,blk)
 
-       end if
+       if (xLC(blk) == nblockx-1) p_ex(Nxb+2,:,blk) = p_ex(Nxb+1,:,blk)
 
-       if ( x_id == nblockx-1) then
+       if (yLC(blk) == 0) p_ex(:,1,blk) = p_ex(:,2,blk)
 
-           p_ex(Nxb+2,:) = p_ex(Nxb+1,:)
+       if (yLC(blk) == nblocky-1) p_ex(:,Nyb+2,blk) = -p_ex(:,Nyb+1,blk)
 
-       end if
+       end do
 
-
-       if ( y_id == 0) then
-
-           p_ex(:,1) = p_ex(:,2)
-
-       end if
-
-       if ( y_id == nblocky-1) then
-
-           p_ex(:,Nyb+2) = -p_ex(:,Nyb+1)
-
-       end if
-
-       !call MPI_BARRIER(solver_comm,ierr)
- 
        mask = .false.
 
 #endif
 
       if (mask) then
 
-       if ( x_id == 0) then
+      do blk=1,blockCount
 
-           p_ex(1,:)=p_ex(2,:)
+       if (xLC(blk) == 0) p_ex(1,:,blk)=p_ex(2,:,blk)
 
-       end if
+       if (xLC(blk) == nblockx-1) p_ex(Nxb+2,:,blk)=p_ex(Nxb+1,:,blk)
 
-       if ( x_id == nblockx-1) then
+       if (yLC(blk) == 0) p_ex(:,1,blk)=p_ex(:,2,blk)
 
-           p_ex(Nxb+2,:)=p_ex(Nxb+1,:)
+       if (yLC(blk) == nblocky-1) p_ex(:,Nyb+2,blk)=p_ex(:,Nyb+1,blk)
 
-       end if
+      end do
 
-
-       if ( y_id == 0) then
-
-           p_ex(:,1)=p_ex(:,2)
-
-       end if
-
-       if ( y_id == nblocky-1) then
-
-           p_ex(:,Nyb+2)=p_ex(:,Nyb+1)
-
-       end if
-
-       !call MPI_BARRIER(solver_comm,ierr)
-
-       mask = .false.
+      mask = .false.
 
       end if
+   
 
 end subroutine MPI_physicalBC_pres

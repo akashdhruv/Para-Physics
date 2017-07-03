@@ -6,6 +6,7 @@ subroutine IBM_solver(tstep)
    use Driver_data, only: dr_dt
    use physicaldata, only: localCENTER,localFACEX,localFACEY
    use IBM_data
+   use MPI_data, only: blockCount
 
    implicit none
    

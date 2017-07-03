@@ -1,108 +1,248 @@
-subroutine MPI_applyBC(u_ex)
+subroutine MPI_applyBC(ivar,datatype)
 
 #include "Solver.h"
 
-      use MPI_data
+        use MPI_data
+        use physicaldata, only: localCENTER,localFACEX,localFACEY
+                                
+        implicit none
 
-      implicit none
+        integer, intent(in) :: ivar,datatype
 
-      real, dimension(:,:), intent(inout) :: u_ex
-      integer :: status(MPI_STATUS_SIZE)
+        integer :: status(MPI_STATUS_SIZE), blk, send_req,recv_req
 
-      if (x_procs > 1) then
-        
-       if(mod(x_id,2) == 0) then
-           
-             if(x_id == 0) then
+        if(datatype == CENTER) then
 
-                 call MPI_SENDRECV(u_ex(Nxb+1,:), Nyb+2, MPI_REAL, mod(x_id+1,x_procs), 1,&
-                                   u_ex(Nxb+2,:), Nyb+2, MPI_REAL, mod(x_id+1,x_procs), 2,x_comm, status, ierr) 
+            do blk = 1,blockCount
 
-             else if(x_id == nblockx-1) then
+                !_______________________MPI BC for High X______________________________!
+                if(xLC(blk) < nblockx - 1) then
+
+                  if(blockLC(blk+blockOffset) == blockLC(blk+blockOffset+1)) then
+
+                    localCENTER(Nxb+2,:,blockID(blk+blockOffset),ivar) = &
+                    localCENTER(2,:,blockID(blk+blockOffset+1),ivar)
+
+                  else
+
+                    call MPI_SENDRECV(localCENTER(Nxb+1,:,blockID(blk+blockOffset),ivar), Nyb+2, MPI_REAL, &
+                                      blockLC(blk+blockOffset+1), blk+blockOffset,&
+                                      localCENTER(Nxb+2,:,blockID(blk+blockOffset),ivar), Nyb+2, MPI_REAL, &
+                                      blockLC(blk+blockOffset+1), blk+blockOffset+1, solver_comm, status, ierr)
+
+                  end if
+                end if
+
+                !_______________________MPI BC for Low X______________________________!
+                if(xLC(blk) > 0) then
+
+                   if(blockLC(blk+blockOffset) == blockLC(blk+blockOffset-1)) then
+
+                     localCENTER(1,:,blockID(blk+blockOffset),ivar) = &
+                     localCENTER(Nxb+1,:,blockID(blk+blockOffset-1),ivar)
+
+                  else
+
+                   call MPI_SENDRECV(localCENTER(2,:,blockID(blk+blockOffset),ivar), Nyb+2, MPI_REAL, &
+                                     blockLC(blk+blockOffset-1), blk+blockOffset,&
+                                     localCENTER(1,:,blockID(blk+blockOffset),ivar), Nyb+2, MPI_REAL, &
+                                     blockLC(blk+blockOffset-1), blk+blockOffset-1, solver_comm, status, ierr)
+
+                  end if
+                end if
             
-                call MPI_SENDRECV(u_ex(2,:), Nyb+2, MPI_REAL, mod(x_id-1+x_procs,x_procs), 3,&
-                                  u_ex(1,:), Nyb+2, MPI_REAL, mod(x_id-1+x_procs,x_procs), 4,x_comm,status, ierr)
+                !_______________________MPI BC for High Y______________________________!
+                if(yLC(blk) < nblocky - 1) then
 
-             else
-                call MPI_SENDRECV(u_ex(Nxb+1,:), Nyb+2, MPI_REAL, mod(x_id+1,x_procs), 1,&
-                                  u_ex(Nxb+2,:), Nyb+2, MPI_REAL, mod(x_id+1,x_procs), 2, x_comm, status, ierr) 
-                  
-                call MPI_SENDRECV(u_ex(2,:), Nyb+2, MPI_REAL, mod(x_id-1+x_procs,x_procs), 3,&
-                                  u_ex(1,:), Nyb+2, MPI_REAL, mod(x_id-1+x_procs,x_procs), 4,x_comm,status, ierr)
-                                   
+                  if(blockLC(blk+blockOffset) == blockLC(blk+blockOffset+nblockx)) then
 
-             end if
+                    localCENTER(:,Nyb+2,blockID(blk+blockOffset),ivar) = &
+                    localCENTER(:,2,blockID(blk+blockOffset+nblockx),ivar)
 
-       else if (mod(x_id,2) == 1) then
+                  else
 
-             if(x_id == nblockx-1) then
-           
-               call MPI_SENDRECV(u_ex(2,:), Nyb+2,MPI_REAL, mod(x_id-1+x_procs,x_procs), 2,&
-                                 u_ex(1,:), Nyb+2,MPI_REAL, mod(x_id-1+x_procs,x_procs), 1,x_comm, status, ierr)
+                    call MPI_SENDRECV(localCENTER(:,Nyb+1,blockID(blk+blockOffset),ivar), Nxb+2, MPI_REAL, &
+                                      blockLC(blk+blockOffset+nblockx), blk+blockOffset,&
+                                      localCENTER(:,Nyb+2,blockID(blk+blockOffset),ivar), Nxb+2, MPI_REAL, &
+                                      blockLC(blk+blockOffset+nblockx), blk+blockOffset+nblockx, solver_comm, status, ierr)
+                  end if
+                end if
 
-             else
-             
-               call MPI_SENDRECV(u_ex(2,:), Nyb+2, MPI_REAL, mod(x_id-1+x_procs,x_procs), 2,&
-                                 u_ex(1,:), Nyb+2, MPI_REAL, mod(x_id-1+x_procs,x_procs), 1,x_comm,status, ierr)
+                !_______________________MPI BC for Low Y______________________________!
+                if(yLC(blk) > 0) then
 
-               call MPI_SENDRECV(u_ex(Nxb+1,:), Nyb+2, MPI_REAL, mod(x_id+1,x_procs), 4,&
-                                 u_ex(Nxb+2,:), Nyb+2, MPI_REAL, mod(x_id+1,x_procs), 3,x_comm,status,ierr)
-                  
+                  if(blockLC(blk+blockOffset) == blockLC(blk+blockOffset-nblockx)) then
 
-             end if
+                    localCENTER(:,1,blockID(blk+blockOffset),ivar) = &
+                    localCENTER(:,Nyb+1,blockID(blk+blockOffset-nblockx),ivar)
 
-       end if
+                  else
 
-     end if
+                    call MPI_SENDRECV(localCENTER(:,2,blockID(blk+blockOffset),ivar), Nxb+2, MPI_REAL, &
+                                      blockLC(blk+blockOffset-nblockx), blk+blockOffset,&
+                                      localCENTER(:,1,blockID(blk+blockOffset),ivar), Nxb+2, MPI_REAL, &
+                                      blockLC(blk+blockOffset-nblockx), blk+blockOffset-nblockx, solver_comm, status, ierr)
 
-     !! Second dimension !!
+                  end if
+                end if
+           end do
+           !call MPI_WAITALL(recv_req,status)
+           return
 
-     if (y_procs > 1) then
+        else if(datatype == FACEX) then
 
-       if(mod(y_id,2) == 0) then
+            do blk = 1,blockCount
 
-             if(y_id == 0) then
+                !_______________________MPI BC for High X______________________________!
+                if(xLC(blk) < nblockx - 1) then
 
-                  call MPI_SENDRECV(u_ex(:,Nyb+1), Nxb+2, MPI_REAL, mod(y_id+1,y_procs), 5,&
-                                    u_ex(:,Nyb+2), Nxb+2, MPI_REAL, mod(y_id+1,y_procs), 6,y_comm,status, ierr)
+                  if(blockLC(blk+blockOffset) == blockLC(blk+blockOffset+1)) then
 
-             else if(y_id == nblocky-1) then
+                    localFACEX(Nxb+2,:,blockID(blk+blockOffset),ivar) = &
+                    localFACEX(2,:,blockID(blk+blockOffset+1),ivar)
 
-                  call MPI_SENDRECV(u_ex(:,2), Nxb+2, MPI_REAL, mod(y_id-1+y_procs,y_procs), 7,&
-                                    u_ex(:,1), Nxb+2, MPI_REAL, mod(y_id-1+y_procs,y_procs), 8,y_comm,status,ierr)
+                  else
 
-             else 
-                  call MPI_SENDRECV(u_ex(:,Nyb+1), Nxb+2, MPI_REAL, mod(y_id+1,y_procs), 5,&
-                                    u_ex(:,Nyb+2), Nxb+2, MPI_REAL, mod(y_id+1,y_procs), 6,y_comm,status,ierr)
+                    call MPI_SENDRECV(localFACEX(Nxb+1,:,blockID(blk+blockOffset),ivar), Nyb+2, MPI_REAL, &
+                                      blockLC(blk+blockOffset+1), blk+blockOffset,&
+                                      localFACEX(Nxb+2,:,blockID(blk+blockOffset),ivar), Nyb+2, MPI_REAL, &
+                                      blockLC(blk+blockOffset+1), blk+blockOffset+1, solver_comm, status, ierr)
+                  end if
+                end if
 
-                  call MPI_SENDRECV(u_ex(:,2), Nxb+2, MPI_REAL, mod(y_id-1+y_procs,y_procs), 7,&
-                                    u_ex(:,1), Nxb+2, MPI_REAL, mod(y_id-1+y_procs,y_procs), 8,y_comm,status,ierr)
-                  
+                !_______________________MPI BC for Low X______________________________!
+                if(xLC(blk) > 0) then
 
-             end if
+                   if(blockLC(blk+blockOffset) == blockLC(blk+blockOffset-1)) then
 
-       else if (mod(y_id,2) == 1) then
+                     localFACEX(1,:,blockID(blk+blockOffset),ivar) = &
+                     localFACEX(Nxb+1,:,blockID(blk+blockOffset-1),ivar)
 
-             if(y_id == nblocky-1) then
-
-                  call MPI_SENDRECV(u_ex(:,2), Nxb+2, MPI_REAL, mod(y_id-1+y_procs,y_procs), 6,&
-                                    u_ex(:,1), Nxb+2, MPI_REAL, mod(y_id-1+y_procs,y_procs), 5,y_comm,status, ierr)
-
-             else
-
-                  call MPI_SENDRECV(u_ex(:,2), Nxb+2, MPI_REAL, mod(y_id-1+y_procs,y_procs), 6,&
-                                    u_ex(:,1), Nxb+2, MPI_REAL, mod(y_id-1+y_procs,y_procs), 5,y_comm,status, ierr)
-
+                  else
  
-                  call MPI_SENDRECV(u_ex(:,Nyb+1), Nxb+2, MPI_REAL, mod(y_id+1,y_procs), 8,&
-                                    u_ex(:,Nyb+2), Nxb+2, MPI_REAL, mod(y_id+1,y_procs), 7,y_comm,status, ierr)
-                  
+                    call MPI_SENDRECV(localFACEX(2,:,blockID(blk+blockOffset),ivar), Nyb+2, MPI_REAL, &
+                                      blockLC(blk+blockOffset-1), blk+blockOffset,&
+                                      localFACEX(1,:,blockID(blk+blockOffset),ivar), Nyb+2, MPI_REAL, &
+                                      blockLC(blk+blockOffset-1), blk+blockOffset-1, solver_comm, status, ierr)
 
-             end if
+                  end if
+                end if
+            
+                !_______________________MPI BC for High Y______________________________!
+                if(yLC(blk) < nblocky - 1) then
 
-       end if            
+                   if(blockLC(blk+blockOffset) == blockLC(blk+blockOffset+nblockx)) then
 
-    end if
-  
+                     localFACEX(:,Nyb+2,blockID(blk+blockOffset),ivar) = &
+                     localFACEX(:,2,blockID(blk+blockOffset+nblockx),ivar)
+
+                  else
+ 
+                    call MPI_SENDRECV(localFACEX(:,Nyb+1,blockID(blk+blockOffset),ivar), Nxb+2, MPI_REAL, &
+                                      blockLC(blk+blockOffset+nblockx), blk+blockOffset,&
+                                      localFACEX(:,Nyb+2,blockID(blk+blockOffset),ivar), Nxb+2, MPI_REAL, &
+                                      blockLC(blk+blockOffset+nblockx), blk+blockOffset+nblockx, solver_comm, status, ierr)
+                  end if
+                end if
+
+                !_______________________MPI BC for Low Y______________________________!
+                if(yLC(blk) > 0) then
+
+                   if(blockLC(blk+blockOffset) == blockLC(blk+blockOffset-nblockx)) then
+
+                     localFACEX(:,1,blockID(blk+blockOffset),ivar) = &
+                     localFACEX(:,Nyb+1,blockID(blk+blockOffset-nblockx),ivar)
+
+                  else
+ 
+                    call MPI_SENDRECV(localFACEX(:,2,blockID(blk+blockOffset),ivar), Nxb+2, MPI_REAL, &
+                                      blockLC(blk+blockOffset-nblockx), blk+blockOffset,&
+                                      localFACEX(:,1,blockID(blk+blockOffset),ivar), Nxb+2, MPI_REAL, &
+                                      blockLC(blk+blockOffset-nblockx), blk+blockOffset-nblockx, solver_comm, status, ierr)
+
+                  end if
+                end if
+           end do
+           return
+
+
+        else if(datatype == FACEY) then
+
+            do blk = 1,blockCount
+
+                !_______________________MPI BC for High X______________________________!
+                if(xLC(blk) < nblockx - 1) then
+
+                   if(blockLC(blk+blockOffset) == blockLC(blk+blockOffset+1)) then
+
+                     localFACEY(Nxb+2,:,blockID(blk+blockOffset),ivar) = &
+                     localFACEY(2,:,blockID(blk+blockOffset+1),ivar)
+
+                  else
+ 
+                    call MPI_SENDRECV(localFACEY(Nxb+1,:,blockID(blk+blockOffset),ivar), Nyb+2, MPI_REAL, &
+                                      blockLC(blk+blockOffset+1), blk+blockOffset,&
+                                      localFACEY(Nxb+2,:,blockID(blk+blockOffset),ivar), Nyb+2, MPI_REAL, &
+                                      blockLC(blk+blockOffset+1), blk+blockOffset+1, solver_comm, status, ierr)
+                  end if
+                end if
+
+                !_______________________MPI BC for Low X______________________________!
+                if(xLC(blk) > 0) then
+
+                   if(blockLC(blk+blockOffset) == blockLC(blk+blockOffset-1)) then
+
+                     localFACEY(1,:,blockID(blk+blockOffset),ivar) = &
+                     localFACEY(Nxb+1,:,blockID(blk+blockOffset-1),ivar)
+
+                  else
+ 
+                    call MPI_SENDRECV(localFACEY(2,:,blockID(blk+blockOffset),ivar), Nyb+2, MPI_REAL, &
+                                      blockLC(blk+blockOffset-1), blk+blockOffset,&
+                                      localFACEY(1,:,blockID(blk+blockOffset),ivar), Nyb+2, MPI_REAL, &
+                                      blockLC(blk+blockOffset-1), blk+blockOffset-1, solver_comm, status, ierr)
+
+                  end if
+                end if
+            
+                !_______________________MPI BC for High Y______________________________!
+                if(yLC(blk) < nblocky - 1) then
+
+                  if(blockLC(blk+blockOffset) == blockLC(blk+blockOffset+nblockx)) then
+
+                    localFACEY(:,Nyb+2,blockID(blk+blockOffset),ivar) = &
+                    localFACEY(:,2,blockID(blk+blockOffset+nblockx),ivar)
+
+                  else
+ 
+                    call MPI_SENDRECV(localFACEY(:,Nyb+1,blockID(blk+blockOffset),ivar), Nxb+2, MPI_REAL, &
+                                      blockLC(blk+blockOffset+nblockx), blk+blockOffset,&
+                                      localFACEY(:,Nyb+2,blockID(blk+blockOffset),ivar), Nxb+2, MPI_REAL, &
+                                      blockLC(blk+blockOffset+nblockx), blk+blockOffset+nblockx, solver_comm, status, ierr)
+
+                  end if
+                end if
+
+                !_______________________MPI BC for Low Y______________________________!
+                if(yLC(blk) > 0) then
+
+                  if(blockLC(blk+blockOffset) == blockLC(blk+blockOffset-nblockx)) then
+
+                    localFACEY(:,1,blockID(blk+blockOffset),ivar) = &
+                    localFACEY(:,Nyb+1,blockID(blk+blockOffset-nblockx),ivar)
+
+                  else
+ 
+                    call MPI_SENDRECV(localFACEY(:,2,blockID(blk+blockOffset),ivar), Nxb+2, MPI_REAL, &
+                                      blockLC(blk+blockOffset-nblockx), blk+blockOffset,&
+                                      localFACEY(:,1,blockID(blk+blockOffset),ivar), Nxb+2, MPI_REAL, &
+                                      blockLC(blk+blockOffset-nblockx), blk+blockOffset-nblockx, solver_comm, status, ierr)
+
+                  end if
+                end if
+           end do
+           return
+
+        end if
+
 end subroutine MPI_applyBC
-

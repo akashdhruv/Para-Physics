@@ -78,7 +78,8 @@ Objects += physicaldata.o \
            morton_sort.o \
            MPI_periodicBC.o \
            MPI_CollectResiduals.o \
-           MPI_applyBC_v2.o\
+           MPI_applyBC_ORIG.o \
+           MPI_applyBC_ORIG_v2.o\
            MPI_applyBC.o \
 	   MPI_applyBC_RMA.o \
            MPI_applyBC_shared.o \
@@ -98,10 +99,10 @@ Objects += physicaldata.o \
            HeatAD_solver.o \
            ibm_evolve.o \
            Poisson_solver.o \
-           ins_momentum.o \
+           ins_predictor.o \
            ins_vorticity.o \
            Poisson_solver_VC.o \
-           ins_momentum_VD.o \
+           ins_predictor_VD.o \
            IncompNS_solver.o \
            Multiphase_solver.o \
            IBM_solver.o \

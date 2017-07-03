@@ -23,7 +23,7 @@ subroutine Multiphase_solver(tstep,solnX,jump_flag)
     
     real,intent(out) :: solnX
     real :: ycell
-    integer :: j,i
+    integer :: j,i,blk
     logical,intent(in) :: jump_flag
 
     real, pointer, dimension(:,:,:,:) :: solnData,facexData,faceyData
@@ -36,20 +36,22 @@ subroutine Multiphase_solver(tstep,solnX,jump_flag)
 
 if (jump_flag .eqv. .FALSE.) then
 
-    call mph_FillVars_ibm(solnData(:,:,blockCount,DFUN_VAR),solnData(:,:,blockCount,PFUN_VAR),&
-                           solnData(:,:,blockCount,THCO_VAR),solnData(:,:,blockCount,CPRS_VAR),&
-                           solnData(:,:,blockCount,VISC_VAR),&
-                           facexData(:,:,blockCount,RH2F_VAR),faceyData(:,:,blockCount,RH2F_VAR),&
-                           facexData(:,:,blockCount,AL2F_VAR),faceyData(:,:,blockCount,AL2F_VAR),&
-                           solnData(:,:,blockCount,TEMP_VAR),solnData(:,:,blockCount,TOLD_VAR),&
+    do blk=1,blockCount
+    call mph_FillVars_ibm(solnData(:,:,blk,DFUN_VAR),solnData(:,:,blk,PFUN_VAR),&
+                           solnData(:,:,blk,THCO_VAR),solnData(:,:,blk,CPRS_VAR),&
+                           solnData(:,:,blk,VISC_VAR),&
+                           facexData(:,:,blk,RH2F_VAR),faceyData(:,:,blk,RH2F_VAR),&
+                           facexData(:,:,blk,AL2F_VAR),faceyData(:,:,blk,AL2F_VAR),&
+                           solnData(:,:,blk,TEMP_VAR),solnData(:,:,blk,TOLD_VAR),&
                            mph_beta)
+    end do
 
 #ifdef MPI_DIST
-    call MPI_applyBC(solnData(:,:,blockCount,VISC_VAR))
-    call MPI_applyBC(facexData(:,:,blockCount,RH2F_VAR))
-    call MPI_applyBC(faceyData(:,:,blockCount,RH2F_VAR))
-    call MPI_applyBC(facexData(:,:,blockCount,AL2F_VAR))
-    call MPI_applyBC(faceyData(:,:,blockCount,AL2F_VAR))    
+    call MPI_applyBC(VISC_VAR,CENTER)
+    call MPI_applyBC(RH2F_VAR,FACEX)
+    call MPI_applyBC(RH2F_VAR,FACEY)
+    call MPI_applyBC(AL2F_VAR,FACEX)
+    call MPI_applyBC(AL2F_VAR,FACEY)    
 #endif
 
 #ifdef MPI_SHRD
@@ -62,33 +64,34 @@ if (jump_flag .eqv. .FALSE.) then
 #endif
 
 #ifdef MPI_RMA
-    call MPI_applyBC_RMA(solnData(:,:,blockCount,VISC_VAR))
-    call MPI_applyBC_RMA(facexData(:,:,blockCount,RH2F_VAR))
-    call MPI_applyBC_RMA(faceyData(:,:,blockCount,RH2F_VAR))
-    call MPI_applyBC_RMA(facexData(:,:,blockCount,AL2F_VAR))
-    call MPI_applyBC_RMA(faceyData(:,:,blockCount,AL2F_VAR))    
+    call MPI_applyBC_RMA(VISC_VAR,CENTER)
+    call MPI_applyBC_RMA(RH2F_VAR,FACEX)
+    call MPI_applyBC_RMA(RH2F_VAR,FACEY)
+    call MPI_applyBC_RMA(AL2F_VAR,FACEX)
+    call MPI_applyBC_RMA(AL2F_VAR,FACEY)   
 #endif
 
-    call MPI_physicalBC_dfun(solnData(:,:,blockCount,VISC_VAR))
-    call MPI_physicalBC_dfun(facexData(:,:,blockCount,RH2F_VAR))
-    call MPI_physicalBC_dfun(faceyData(:,:,blockCount,RH2F_VAR))
-    call MPI_physicalBC_dfun(facexData(:,:,blockCount,AL2F_VAR))
-    call MPI_physicalBC_dfun(faceyData(:,:,blockCount,AL2F_VAR))
-
+    call MPI_physicalBC_dfun(solnData(:,:,:,VISC_VAR))
+    call MPI_physicalBC_dfun(facexData(:,:,:,RH2F_VAR))
+    call MPI_physicalBC_dfun(faceyData(:,:,:,RH2F_VAR))
+    call MPI_physicalBC_dfun(facexData(:,:,:,AL2F_VAR))
+    call MPI_physicalBC_dfun(faceyData(:,:,:,AL2F_VAR))
 
     if(tstep > 0) then 
 
-        call mph_getInterfaceVelocity(facexData(:,:,blockCount,VELC_VAR),faceyData(:,:,blockCount,VELC_VAR),&
-                                      facexData(:,:,blockCount,VELI_VAR),faceyData(:,:,blockCount,VELI_VAR),&
-                                      solnData(:,:,blockCount,SMRH_VAR),solnData(:,:,blockCount,MDOT_VAR),&
-                                      solnData(:,:,blockCount,NRMX_VAR),solnData(:,:,blockCount,NRMY_VAR))
+        do blk=1,blockCount
+        call mph_getInterfaceVelocity(facexData(:,:,blk,VELC_VAR),faceyData(:,:,blk,VELC_VAR),&
+                                      facexData(:,:,blk,VELI_VAR),faceyData(:,:,blk,VELI_VAR),&
+                                      solnData(:,:,blk,SMRH_VAR),solnData(:,:,blk,MDOT_VAR),&
+                                      solnData(:,:,blk,NRMX_VAR),solnData(:,:,blk,NRMY_VAR))
+        end do
 
     !   call mph_advect 
     !   call mph_redistance
 
 #ifdef MPI_DIST
-      call MPI_applyBC(facexData(:,:,blockCount,VELI_VAR))
-      call MPI_applyBC(faceyData(:,:,blockCount,VELI_VAR))
+      call MPI_applyBC(VELI_VAR,FACEX)
+      call MPI_applyBC(VELI_VAR,FACEY)
 #endif
 
 #ifdef MPI_SHRD
@@ -98,11 +101,11 @@ if (jump_flag .eqv. .FALSE.) then
 #endif
 
 #ifdef MPI_RMA
-      call MPI_applyBC_RMA(facexData(:,:,blockCount,VELI_VAR))
-      call MPI_applyBC_RMA(faceyData(:,:,blockCount,VELI_VAR))
+      call MPI_applyBC_RMA(VELI_VAR,FACEX)
+      call MPI_applyBC_RMA(VELI_VAR,FACEY)
 #endif
 
-      call MPI_physicalBC_vel(facexData(:,:,blockCount,VELI_VAR),faceyData(:,:,blockCount,VELI_VAR))
+      call MPI_physicalBC_vel(facexData(:,:,:,VELI_VAR),faceyData(:,:,:,VELI_VAR))
 
 
     end if
@@ -112,19 +115,21 @@ else if (jump_flag .eqv. .TRUE.) then
 #ifdef MPH_DEBUG
 
 #else
-    call mph_PressureJumps(solnData(:,:,blockCount,DFUN_VAR),solnData(:,:,blockCount,PFUN_VAR),&
-                           solnData(:,:,blockCount,CURV_VAR),&
-                           facexData(:,:,blockCount,RH1F_VAR),faceyData(:,:,blockCount,RH1F_VAR),&
-                           facexData(:,:,blockCount,RH2F_VAR),faceyData(:,:,blockCount,RH2F_VAR),&
-                           solnData(:,:,blockCount,SIGP_VAR),&
-                           facexData(:,:,blockCount,SIGM_VAR),faceyData(:,:,blockCount,SIGM_VAR),&
-                           solnData(:,:,blockCount,MDOT_VAR))
+    do blk=1,blockCount
+    call mph_PressureJumps(solnData(:,:,blk,DFUN_VAR),solnData(:,:,blk,PFUN_VAR),&
+                           solnData(:,:,blk,CURV_VAR),&
+                           facexData(:,:,blk,RH1F_VAR),faceyData(:,:,blk,RH1F_VAR),&
+                           facexData(:,:,blk,RH2F_VAR),faceyData(:,:,blk,RH2F_VAR),&
+                           solnData(:,:,blk,SIGP_VAR),&
+                           facexData(:,:,blk,SIGM_VAR),faceyData(:,:,blk,SIGM_VAR),&
+                           solnData(:,:,blk,MDOT_VAR))
+    end do
 
 #ifdef MPI_DIST
-    call MPI_applyBC(facexData(:,:,blockCount,RH1F_VAR))
-    call MPI_applyBC(facexData(:,:,blockCount,RH2F_VAR))
-    call MPI_applyBC(faceyData(:,:,blockCount,RH1F_VAR))
-    call MPI_applyBC(faceyData(:,:,blockCount,RH2F_VAR))
+    call MPI_applyBC(RH1F_VAR,FACEX)
+    call MPI_applyBC(RH1F_VAR,FACEY)
+    call MPI_applyBC(RH2F_VAR,FACEX)
+    call MPI_applyBC(RH2F_VAR,FACEY)
 #endif
 
 #ifdef MPI_SHRD
@@ -136,16 +141,16 @@ else if (jump_flag .eqv. .TRUE.) then
 #endif
 
 #ifdef MPI_RMA
-    call MPI_applyBC_RMA(facexData(:,:,blockCount,RH1F_VAR))
-    call MPI_applyBC_RMA(facexData(:,:,blockCount,RH2F_VAR))
-    call MPI_applyBC_RMA(faceyData(:,:,blockCount,RH1F_VAR))
-    call MPI_applyBC_RMA(faceyData(:,:,blockCount,RH2F_VAR))
+    call MPI_applyBC_RMA(RH1F_VAR,FACEX)
+    call MPI_applyBC_RMA(RH1F_VAR,FACEY)
+    call MPI_applyBC_RMA(RH2F_VAR,FACEX)
+    call MPI_applyBC_RMA(RH2F_VAR,FACEY)
 #endif
 
-    call MPI_physicalBC_dfun(facexData(:,:,blockCount,RH1F_VAR))
-    call MPI_physicalBC_dfun(facexData(:,:,blockCount,RH2F_VAR))
-    call MPI_physicalBC_dfun(faceyData(:,:,blockCount,RH1F_VAR))
-    call MPI_physicalBC_dfun(faceyData(:,:,blockCount,RH2F_VAR))
+    call MPI_physicalBC_dfun(facexData(:,:,:,RH1F_VAR))
+    call MPI_physicalBC_dfun(facexData(:,:,:,RH2F_VAR))
+    call MPI_physicalBC_dfun(faceyData(:,:,:,RH1F_VAR))
+    call MPI_physicalBC_dfun(faceyData(:,:,:,RH2F_VAR))
 
 #endif
 

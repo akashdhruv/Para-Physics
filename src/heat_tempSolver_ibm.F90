@@ -7,10 +7,8 @@ subroutine heat_tempSolver_ibm(tstep,T,T_old,mdot,smrh,u,v,a1x,a1y,a2x,a2y,s,pf,
    use IncompNS_data
    use HeatAD_data
    use Driver_data
-   use MPI_interface, only: MPI_applyBC, MPI_physicalBC_temp, MPI_CollectResiduals, MPI_applyBC_shared, MPI_applyBC_RMA
    use Multiphase_data, only: mph_cp2,mph_thco2,mph_max_s,mph_min_s
    use IBM_data, only: ibm_cp1,ibm_thco1
-   use MPI_data, only: shared_comm,ierr
 
    implicit none
       
@@ -26,12 +24,7 @@ subroutine heat_tempSolver_ibm(tstep,T,T_old,mdot,smrh,u,v,a1x,a1y,a2x,a2y,s,pf,
    real :: E_source
 
   real :: tol
-
-  real :: T_res1
   real :: Tsat
-
-  ht_T_res = 0.0
-  T_res1 = 0.0
 
   tol = 0.01
   Tsat = 1.0
@@ -164,28 +157,5 @@ subroutine heat_tempSolver_ibm(tstep,T,T_old,mdot,smrh,u,v,a1x,a1y,a2x,a2y,s,pf,
 
   !$OMP END DO
   !$OMP END PARALLEL
-
-#ifdef MPI_DIST
-  call MPI_applyBC(T)
-#endif
-
-#ifdef MPI_SHRD
-  call MPI_BARRIER(shared_comm,ierr)
-  call MPI_applyBC_shared(TEMP_VAR,CENTER)
-#endif
-
-#ifdef MPI_RMA
-  call MPI_applyBC_RMA(T)
-#endif
-
-  call MPI_physicalBC_temp(T)
-
-  do i=1,Nxb+2
-          ht_T_res = ht_T_res + sum((T(i,:)-T_old(i,:))**2)
-  enddo
-
-  call MPI_CollectResiduals(ht_T_res,T_res1,SUM_DATA)
-
-  ht_T_res = sqrt(T_res1/((Nxb+2)*(Nyb+2)*(nblockx*nblocky)))
 
 end subroutine heat_tempSolver_ibm
