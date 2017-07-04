@@ -11,9 +11,7 @@ subroutine Multiphase_solver(tstep,solnX,jump_flag)
                                      mph_getInterfaceVelocity,&
                                      mph_FillVars_ibm    
 
-    use MPI_interface, only: MPI_applyBC_shared,MPI_applyBC,&
-                             MPI_physicalBC_dfun,MPI_physicalBC_vel,&
-                             MPI_applyBC_RMA
+    use MPI_interface, only: MPI_applyBC,MPI_physicalBC_dfun,MPI_physicalBC_vel
 
     use MPI_data, only: shared_comm,ierr,blockCount
 
@@ -34,7 +32,7 @@ subroutine Multiphase_solver(tstep,solnX,jump_flag)
 
     solnX = 0.0
 
-if (jump_flag .eqv. .FALSE.) then
+  if (jump_flag .eqv. .FALSE.) then
 
     do blk=1,blockCount
     call mph_FillVars_ibm(solnData(:,:,blk,DFUN_VAR),solnData(:,:,blk,PFUN_VAR),&
@@ -46,30 +44,11 @@ if (jump_flag .eqv. .FALSE.) then
                            mph_beta)
     end do
 
-#ifdef MPI_DIST
     call MPI_applyBC(VISC_VAR,CENTER)
     call MPI_applyBC(RH2F_VAR,FACEX)
     call MPI_applyBC(RH2F_VAR,FACEY)
     call MPI_applyBC(AL2F_VAR,FACEX)
     call MPI_applyBC(AL2F_VAR,FACEY)    
-#endif
-
-#ifdef MPI_SHRD
-    call MPI_BARRIER(shared_comm,ierr)
-    call MPI_applyBC_shared(VISC_VAR,CENTER)
-    call MPI_applyBC_shared(RH2F_VAR,FACEX)
-    call MPI_applyBC_shared(RH2F_VAR,FACEY)
-    call MPI_applyBC_shared(AL2F_VAR,FACEX)
-    call MPI_applyBC_shared(AL2F_VAR,FACEY)
-#endif
-
-#ifdef MPI_RMA
-    call MPI_applyBC_RMA(solnData(:,:,:,VISC_VAR))
-    call MPI_applyBC_RMA(facexData(:,:,:,RH2F_VAR))
-    call MPI_applyBC_RMA(faceyData(:,:,:,RH2F_VAR))
-    call MPI_applyBC_RMA(facexData(:,:,:,AL2F_VAR))
-    call MPI_applyBC_RMA(faceyData(:,:,:,AL2F_VAR))   
-#endif
 
     call MPI_physicalBC_dfun(solnData(:,:,:,VISC_VAR))
     call MPI_physicalBC_dfun(facexData(:,:,:,RH2F_VAR))
@@ -89,28 +68,14 @@ if (jump_flag .eqv. .FALSE.) then
     !   call mph_advect 
     !   call mph_redistance
 
-#ifdef MPI_DIST
       call MPI_applyBC(VELI_VAR,FACEX)
       call MPI_applyBC(VELI_VAR,FACEY)
-#endif
-
-#ifdef MPI_SHRD
-      call MPI_BARRIER(shared_comm,ierr)
-      call MPI_applyBC_shared(VELI_VAR,FACEX)
-      call MPI_applyBC_shared(VELI_VAR,FACEY)
-#endif
-
-#ifdef MPI_RMA
-      call MPI_applyBC_RMA(facexData(:,:,:,VELI_VAR))
-      call MPI_applyBC_RMA(faceyData(:,:,:,VELI_VAR))
-#endif
 
       call MPI_physicalBC_vel(facexData(:,:,:,VELI_VAR),faceyData(:,:,:,VELI_VAR))
 
-
     end if
 
-else if (jump_flag .eqv. .TRUE.) then
+ else if (jump_flag .eqv. .TRUE.) then
                       
 #ifdef MPH_DEBUG
 
@@ -125,27 +90,10 @@ else if (jump_flag .eqv. .TRUE.) then
                            solnData(:,:,blk,MDOT_VAR))
     end do
 
-#ifdef MPI_DIST
     call MPI_applyBC(RH1F_VAR,FACEX)
     call MPI_applyBC(RH1F_VAR,FACEY)
     call MPI_applyBC(RH2F_VAR,FACEX)
     call MPI_applyBC(RH2F_VAR,FACEY)
-#endif
-
-#ifdef MPI_SHRD
-    call MPI_BARRIER(shared_comm,ierr)
-    call MPI_applyBC_shared(RH1F_VAR,FACEX)
-    call MPI_applyBC_shared(RH1F_VAR,FACEY)
-    call MPI_applyBC_shared(RH2F_VAR,FACEX)
-    call MPI_applyBC_shared(RH2F_VAR,FACEY)
-#endif
-
-#ifdef MPI_RMA
-    call MPI_applyBC_RMA(facexData(:,:,:,RH1F_VAR))
-    call MPI_applyBC_RMA(faceyData(:,:,:,RH1F_VAR))
-    call MPI_applyBC_RMA(facexData(:,:,:,RH2F_VAR))
-    call MPI_applyBC_RMA(faceyData(:,:,:,RH2F_VAR))
-#endif
 
     call MPI_physicalBC_dfun(facexData(:,:,:,RH1F_VAR))
     call MPI_physicalBC_dfun(facexData(:,:,:,RH2F_VAR))
@@ -154,9 +102,8 @@ else if (jump_flag .eqv. .TRUE.) then
 
 #endif
 
-end if
+ end if
 
    nullify(solnData,facexData,faceyData)
 
 end subroutine Multiphase_solver
-

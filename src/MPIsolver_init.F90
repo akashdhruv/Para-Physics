@@ -73,13 +73,13 @@ subroutine MPIsolver_init()
     xLC = mod(((/(I,I=0,blockCount-1)/) + blockOffset),nblockx)
     yLC = ((/(I,I=0,blockCount-1)/) + blockOffset)/nblockx
 
-#ifdef MPI_DIST
+#ifdef MPI_DIS
     allocate(localCENTER(Nxb+2,Nyb+2,blockCount,CENT_VAR))
     allocate(localFACEX(Nxb+2,Nyb+2,blockCount,FACE_VAR))
     allocate(localFACEY(Nxb+2,Nyb+2,blockCount,FACE_VAR))
 #endif
 
-#ifdef MPI_SHRD
+#ifdef MPI_SHM
     !__________Define Shared Communication Environment__________!
     call MPI_COMM_SPLIT_TYPE(solver_comm, MPI_COMM_TYPE_SHARED, 0, MPI_INFO_NULL, shared_comm, ierr)
     call MPI_COMM_RANK(shared_comm,shared_id,ierr)

@@ -9,9 +9,8 @@ subroutine IncompNS_solver(tstep,p_counter)
     use Grid_data, only: gr_dx,gr_dy
     use Driver_data, only: dr_dt
     use Poisson_interface, only: Poisson_solver, Poisson_solver_VC
-    use MPI_interface, ONLY: MPI_applyBC, MPI_CollectResiduals,MPI_physicalBC_vort,MPI_physicalBC_vel,&
-                             MPI_applyBC_shared,MPI_applyBC_RMA
-
+    use MPI_interface, ONLY: MPI_applyBC, MPI_CollectResiduals,MPI_physicalBC_vort,MPI_physicalBC_vel
+            
     implicit none
 
     integer, intent(in) :: tstep
@@ -54,21 +53,8 @@ subroutine IncompNS_solver(tstep,p_counter)
     end do
 #endif
 
-#ifdef MPI_DIST
     call MPI_applyBC(USTR_VAR,FACEX)
     call MPI_applyBC(USTR_VAR,FACEY)
-#endif
-
-#ifdef MPI_SHRD
-    call MPI_BARRIER(shared_comm,ierr)
-    call MPI_applyBC_shared(USTR_VAR,FACEX)
-    call MPI_applyBC_shared(USTR_VAR,FACEY)
-#endif
-
-#ifdef MPI_RMA
-    call MPI_applyBC_RMA(facexData(:,:,:,USTR_VAR))
-    call MPI_applyBC_RMA(faceyData(:,:,:,USTR_VAR))
-#endif
 
     call MPI_physicalBC_vel(facexData(:,:,:,USTR_VAR),faceyData(:,:,:,USTR_VAR))
 
@@ -143,21 +129,8 @@ subroutine IncompNS_solver(tstep,p_counter)
     end do
 #endif
 
-#ifdef MPI_DIST
     call MPI_applyBC(VELC_VAR,FACEX)
     call MPI_applyBC(VELC_VAR,FACEY)
-#endif
-
-#ifdef MPI_SHRD
-    call MPI_BARRIER(shared_comm,ierr)
-    call MPI_applyBC_shared(VELC_VAR,FACEX)
-    call MPI_applyBC_shared(VELC_VAR,FACEY)
-#endif
-
-#ifdef MPI_RMA
-    call MPI_applyBC_RMA(facexData(:,:,:,VELC_VAR))
-    call MPI_applyBC_RMA(faceyData(:,:,:,VELC_VAR))
-#endif
 
     call MPI_physicalBC_vel(facexData(:,:,:,VELC_VAR),faceyData(:,:,:,VELC_VAR))
 
@@ -211,13 +184,7 @@ subroutine IncompNS_solver(tstep,p_counter)
     !                   solnData(:,:,blk,DFUN_VAR))
     !end do
 
-!#ifdef MPI_DIST
     !call MPI_applyBC(VORT_VAR,CENTER)
-!#endif
-
-!#ifdef MPI_SHRD
-    !call MPI_applyBC_shared(VORT_VAR,CENTER)
-!#endif
 
     !call MPI_physicalBC_vort(solnData(:,:,:,VORT_VAR))
 

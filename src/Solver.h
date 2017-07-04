@@ -187,11 +187,11 @@ _________________MPI with shared memory on/off_______________
 #define SHARE_TYPE 2
 
 #if SHARE_TYPE == 1
-#define MPI_DIST
+#define MPI_DIS
 #endif
 
 #if SHARE_TYPE == 2
-#define MPI_SHRD
+#define MPI_SHM
 #endif
 
 #if SHARE_TYPE == 3

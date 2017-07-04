@@ -7,7 +7,6 @@ subroutine ins_vorticity(tstep,w,w_old,u,v,s)
     use Driver_data
     use MPI_data
     use IncompNS_data
-    use MPI_interface, ONLY: MPI_applyBC, MPI_CollectResiduals,MPI_physicalBC_vort,MPI_physicalBC_dfun,MPI_applyBC_shared
 
     implicit none
     integer, intent(in) :: tstep

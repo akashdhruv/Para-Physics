@@ -3,7 +3,7 @@ subroutine Poisson_solver_VC(rvar,ivar,ps_counter,cvar,dvar)
   !$ use omp_lib
   use Grid_data
   use MPI_data
-  use MPI_interface, ONLY: MPI_applyBC, MPI_CollectResiduals, MPI_physicalBC_pres, MPI_applyBC_shared, MPI_applyBC_RMA
+  use MPI_interface, ONLY: MPI_applyBC, MPI_CollectResiduals, MPI_physicalBC_pres
   use Driver_data, ONLY: dr_tile
   use IncompNS_data, ONLY: ins_timePoisson, ins_p_res
   use physicaldata, only: localCENTER,localFACEX,localFACEY
@@ -94,18 +94,7 @@ subroutine Poisson_solver_VC(rvar,ivar,ps_counter,cvar,dvar)
     end do
 #endif
 
-#ifdef MPI_DIST
      call MPI_applyBC(ivar,CENTER)
-#endif
-
-#ifdef MPI_SHRD
-     call MPI_BARRIER(shared_comm,ierr)
-     call MPI_applyBC_shared(ivar,CENTER)
-#endif
-
-#ifdef MPI_RMA
-     call MPI_applyBC_RMA(ps)
-#endif
 
      if(ivar == PRES_VAR) call MPI_physicalBC_pres(ps)
  

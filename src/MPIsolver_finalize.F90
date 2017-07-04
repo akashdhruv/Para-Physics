@@ -13,12 +13,12 @@ subroutine MPIsolver_finalize(sim_Complete)
 
       exec_time = (finish - start)
 
-#ifdef MPI_DIST
+#ifdef MPI_DIS
       nullify(localCENTER,localFACEX,localFACEY)
       nullify(world_part)
 #endif
 
-#ifdef MPI_SHRD
+#ifdef MPI_SHM
       call MPI_WIN_FREE(center_win,ierr)
       call MPI_WIN_FREE(facex_win,ierr)
       call MPI_WIN_FREE(facey_win,ierr)

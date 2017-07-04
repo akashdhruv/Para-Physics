@@ -17,26 +17,27 @@ module MPI_interface
     end interface
 
     interface
-          subroutine MPI_applyBC_ORIG(u_ex)
-          implicit none
-          real, dimension(:,:),intent(inout) :: u_ex
-          end subroutine MPI_applyBC_ORIG
-    end interface
-
-
-    interface
-          subroutine MPI_applyBC_ORIG_v2(u_ex)
-          implicit none
-          real, dimension(:,:),intent(inout) :: u_ex
-          end subroutine MPI_applyBC_ORIG_v2
-    end interface
-
-    interface
           subroutine MPI_applyBC(ivar,datatype)
           implicit none
           integer, intent(in) :: ivar,datatype
           end subroutine MPI_applyBC
     end interface 
+
+    interface
+          subroutine MPI_applyBC_DIS(local)
+          implicit none
+          real, intent(inout), dimension(:,:,:) :: local
+          end subroutine MPI_applyBC_DIS
+    end interface
+
+    interface
+          subroutine MPI_applyBC_SHM(local,sharedData,ivar,totvar)
+          implicit none
+          real, intent(inout), dimension(:,:,:) :: local
+          real, intent(inout), dimension(:,:,:,:) :: sharedData
+          integer, intent(in) :: ivar,totvar
+          end subroutine MPI_applyBC_SHM
+    end interface
 
     interface
           subroutine MPI_applyBC_RMA(local)
@@ -46,11 +47,11 @@ module MPI_interface
     end interface
 
     interface
-          subroutine MPI_applyBC_shared(ivar,datatype)
+          subroutine MPI_applyBC_ORIG(local)
           implicit none
-          integer, intent(in) :: ivar,datatype
-          end subroutine MPI_applyBC_shared
-    end interface 
+          real, dimension(:,:),intent(inout) :: local
+          end subroutine MPI_applyBC_ORIG
+    end interface
 
     interface 
        subroutine MPI_CollectResiduals(res,res1,collect_type)

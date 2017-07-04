@@ -79,10 +79,10 @@ Objects += physicaldata.o \
            MPI_periodicBC.o \
            MPI_CollectResiduals.o \
            MPI_applyBC_ORIG.o \
-           MPI_applyBC_ORIG_v2.o\
-           MPI_applyBC.o \
-	   MPI_applyBC_RMA.o \
-           MPI_applyBC_shared.o \
+           MPI_applyBC_DIS.o \
+           MPI_applyBC_SHM.o \
+           MPI_applyBC_RMA.o \
+	   MPI_applyBC.o \
            MPI_physicalBC_vel.o \
            MPI_physicalBC_pres.o \
            MPI_physicalBC_temp.o \

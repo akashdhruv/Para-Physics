@@ -7,8 +7,7 @@ subroutine HeatAD_solver(tstep)
    use physicaldata, only: localCENTER,localFACEX,localFACEY
    use MPI_data, only: blockCount,shared_comm,ierr
    use HeatAD_data, only: ht_T_res
-   use MPI_interface, ONLY: MPI_applyBC, MPI_CollectResiduals,MPI_physicalBC_temp,&
-                             MPI_applyBC_shared,MPI_applyBC_RMA
+   use MPI_interface, ONLY: MPI_applyBC, MPI_CollectResiduals, MPI_physicalBC_temp
  
    implicit none
    
@@ -76,18 +75,7 @@ subroutine HeatAD_solver(tstep)
 #endif
 #endif
 
-#ifdef MPI_DIST
    call MPI_applyBC(TEMP_VAR,CENTER)
-#endif
-
-#ifdef MPI_SHRD
-   call MPI_BARRIER(shared_comm,ierr)
-   call MPI_applyBC_shared(TEMP_VAR,CENTER)
-#endif
-
-#ifdef MPI_RMA
-   call MPI_applyBC_RMA(solnData(:,:,:,TEMP_VAR))
-#endif
 
    call MPI_physicalBC_temp(solnData(:,:,:,TEMP_VAR))
 
