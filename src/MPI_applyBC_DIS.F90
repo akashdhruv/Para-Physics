@@ -65,6 +65,7 @@ subroutine MPI_applyBC_DIS(local)
  
         end do
 
+        call MPI_WAITALL(req_count,reqs(1:req_count),req_stat(1:req_count),ierr)
 
 !===============================SWEEP IN Y DIRECTION===================================================
         req_count = 0
@@ -120,5 +121,7 @@ subroutine MPI_applyBC_DIS(local)
                            blockLC(blk+blockOffset-nblockx), blk+blockOffset-nblockx, solver_comm, status, ierr)
 
         end do
+
+        call MPI_WAITALL(req_count,reqs(1:req_count),req_stat(1:req_count),ierr)
 
 end subroutine MPI_applyBC_DIS
