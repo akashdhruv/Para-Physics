@@ -4,7 +4,7 @@ subroutine IncompNS_solver(tstep,p_counter)
 
     use IncompNS_interface, only: ins_predictor,ins_vorticity,ins_predictor_VD
     use physicaldata, only: localCENTER,localFACEX,localFACEY
-    use MPI_data, only: blockCount,shared_comm,ierr
+    use MPI_data, only: blockCount,solver_comm,ierr
     use IncompNS_data, only: ins_v_res,ins_u_res,ins_maxdiv,ins_mindiv,ins_umaxmin,ins_vmaxmin,ins_w_res
     use Grid_data, only: gr_dx,gr_dy
     use Driver_data, only: dr_dt
@@ -53,9 +53,9 @@ subroutine IncompNS_solver(tstep,p_counter)
     end do
 #endif
 
+    call MPI_BARRIER(solver_comm,ierr)
     call MPI_applyBC(USTR_VAR,FACEX)
     call MPI_applyBC(USTR_VAR,FACEY)
-
     call MPI_physicalBC_vel(facexData(:,:,:,USTR_VAR),faceyData(:,:,:,USTR_VAR))
 
 #ifdef IBM
@@ -129,9 +129,9 @@ subroutine IncompNS_solver(tstep,p_counter)
     end do
 #endif
 
+    call MPI_BARRIER(solver_comm,ierr)
     call MPI_applyBC(VELC_VAR,FACEX)
     call MPI_applyBC(VELC_VAR,FACEY)
-
     call MPI_physicalBC_vel(facexData(:,:,:,VELC_VAR),faceyData(:,:,:,VELC_VAR))
 
     ! Divergence

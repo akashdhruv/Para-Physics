@@ -94,9 +94,9 @@ subroutine Poisson_solver_VC(rvar,ivar,ps_counter,cvar,dvar)
     end do
 #endif
 
+     call MPI_BARRIER(solver_comm,ierr)
      call MPI_applyBC(ivar,CENTER)
-
-     if(ivar == PRES_VAR) call MPI_physicalBC_pres(ps)
+     call MPI_physicalBC_pres(ps)
  
      ps_counter = ps_counter + 1
 

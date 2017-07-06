@@ -26,16 +26,16 @@ subroutine MPI_applyBC_RMA(local)
         end do
 
 #ifdef MPI_RMA_ACTIVE
-        do blk=1,blockCount
-
         call MPI_WIN_FENCE(0,RMA_win,ierr)
+
+        do blk=1,blockCount
 
         !_______________________MPI BC for High X______________________________!
         if(xLC(blk) < nblockx - 1) then
            if(blockLC(blk+blockOffset) == blockLC(blk+blockOffset+1)) then
-              eastORIGIN = local(2,:,blockID(blk+blockOffset+1))
+              eastORIGIN(:,blk) = local(2,:,blockID(blk+blockOffset+1))
            else
-             call MPI_GET(eastORIGIN(1),Nyb+2,MPI_REAL,blockLC(blk+blockOffset+1),&
+             call MPI_GET(eastORIGIN(1,blk),Nyb+2,MPI_REAL,blockLC(blk+blockOffset+1),&
                   target_disp+(blockID(blk+blockOffset+1)-1)*bSize,Nyb+2,MPI_REAL,RMA_win,ierr)
            end if
         end if
@@ -43,9 +43,9 @@ subroutine MPI_applyBC_RMA(local)
         !_______________________MPI BC for Low X______________________________!
         if(xLC(blk) > 0) then
            if(blockLC(blk+blockOffset) == blockLC(blk+blockOffset-1)) then
-              westORIGIN = local(Nxb+1,:,blockID(blk+blockOffset-1))
+              westORIGIN(:,blk) = local(Nxb+1,:,blockID(blk+blockOffset-1))
            else
-              call MPI_GET(westORIGIN(1),Nyb+2,MPI_REAL,blockLC(blk+blockOffset-1),&
+              call MPI_GET(westORIGIN(1,blk),Nyb+2,MPI_REAL,blockLC(blk+blockOffset-1),&
                    target_disp+index1+(blockID(blk+blockOffset-1)-1)*bSize,Nyb+2,MPI_REAL,RMA_win,ierr)
            end if
         end if         
@@ -53,9 +53,9 @@ subroutine MPI_applyBC_RMA(local)
         !_______________________MPI BC for High Y______________________________!
         if(yLC(blk) < nblocky - 1) then
            if(blockLC(blk+blockOffset) == blockLC(blk+blockOffset+nblockx)) then
-              northORIGIN = local(:,2,blockID(blk+blockOffset+nblockx))
+              northORIGIN(:,blk) = local(:,2,blockID(blk+blockOffset+nblockx))
            else
-              call MPI_GET(northORIGIN(1),Nxb+2,MPI_REAL,blockLC(blk+blockOffset+nblockx),&
+              call MPI_GET(northORIGIN(1,blk),Nxb+2,MPI_REAL,blockLC(blk+blockOffset+nblockx),&
                    target_disp+index2+(blockID(blk+blockOffset+nblockx)-1)*bSize,Nxb+2,MPI_REAL,RMA_win,ierr)
            
            end if
@@ -64,35 +64,30 @@ subroutine MPI_applyBC_RMA(local)
         !_______________________MPI BC for Low Y______________________________!
         if(yLC(blk) > 0) then
            if(blockLC(blk+blockOffset) == blockLC(blk+blockOffset-nblockx)) then
-              southORIGIN = local(:,Nyb+1,blockID(blk+blockOffset-nblockx))
+              southORIGIN(:,blk) = local(:,Nyb+1,blockID(blk+blockOffset-nblockx))
            else
-              call MPI_GET(southORIGIN(1),Nxb+2,MPI_REAL,blockLC(blk+blockOffset-nblockx),&
+              call MPI_GET(southORIGIN(1,blk),Nxb+2,MPI_REAL,blockLC(blk+blockOffset-nblockx),&
                    target_disp+index3+(blockID(blk+blockOffset-nblockx)-1)*bSize,Nxb+2,MPI_REAL,RMA_win,ierr)
     
            end if
         end if
 
-        call MPI_WIN_FENCE(0,RMA_win,ierr)
-
-        local(Nxb+2,:,blk) = eastORIGIN
-        local(1,:,blk)     = westORIGIN
-        local(:,Nyb+2,blk) = northORIGIN
-        local(:,1,blk)     = southORIGIN
-
         end do
+
+        call MPI_WIN_FENCE(0,RMA_win,ierr)
 #endif
 
 #ifdef MPI_RMA_PASSIVE
-        do blk=1,blockCount
-
         call MPI_BARRIER(solver_comm,ierr)
+
+        do blk=1,blockCount
 
         !_______________________MPI BC for High X______________________________!
         if(xLC(blk) < nblockx - 1) then
            if(blockLC(blk+blockOffset) == blockLC(blk+blockOffset+1)) then
-              eastORIGIN = local(2,:,blockID(blk+blockOffset+1))
+              eastORIGIN(:,blk) = local(2,:,blockID(blk+blockOffset+1))
            else
-             call MPI_GET(eastORIGIN(1),Nyb+2,MPI_REAL,blockLC(blk+blockOffset+1),&
+             call MPI_GET(eastORIGIN(1,blk),Nyb+2,MPI_REAL,blockLC(blk+blockOffset+1),&
                   target_disp+(blockID(blk+blockOffset+1)-1)*bSize,Nyb+2,MPI_REAL,RMA_win,ierr)
            end if
         end if
@@ -100,9 +95,9 @@ subroutine MPI_applyBC_RMA(local)
         !_______________________MPI BC for Low X______________________________!
         if(xLC(blk) > 0) then
            if(blockLC(blk+blockOffset) == blockLC(blk+blockOffset-1)) then
-              westORIGIN = local(Nxb+1,:,blockID(blk+blockOffset-1))
+              westORIGIN(:,blk) = local(Nxb+1,:,blockID(blk+blockOffset-1))
            else
-              call MPI_GET(westORIGIN(1),Nyb+2,MPI_REAL,blockLC(blk+blockOffset-1),&
+              call MPI_GET(westORIGIN(1,blk),Nyb+2,MPI_REAL,blockLC(blk+blockOffset-1),&
                    target_disp+index1+(blockID(blk+blockOffset-1)-1)*bSize,Nyb+2,MPI_REAL,RMA_win,ierr)
            end if
         end if         
@@ -110,9 +105,9 @@ subroutine MPI_applyBC_RMA(local)
         !_______________________MPI BC for High Y______________________________!
         if(yLC(blk) < nblocky - 1) then
            if(blockLC(blk+blockOffset) == blockLC(blk+blockOffset+nblockx)) then
-              northORIGIN = local(:,2,blockID(blk+blockOffset+nblockx))
+              northORIGIN(:,blk) = local(:,2,blockID(blk+blockOffset+nblockx))
            else
-              call MPI_GET(northORIGIN(1),Nxb+2,MPI_REAL,blockLC(blk+blockOffset+nblockx),&
+              call MPI_GET(northORIGIN(1,blk),Nxb+2,MPI_REAL,blockLC(blk+blockOffset+nblockx),&
                    target_disp+index2+(blockID(blk+blockOffset+nblockx)-1)*bSize,Nxb+2,MPI_REAL,RMA_win,ierr)
            
            end if
@@ -121,22 +116,24 @@ subroutine MPI_applyBC_RMA(local)
         !_______________________MPI BC for Low Y______________________________!
         if(yLC(blk) > 0) then
            if(blockLC(blk+blockOffset) == blockLC(blk+blockOffset-nblockx)) then
-              southORIGIN = local(:,Nyb+1,blockID(blk+blockOffset-nblockx))
+              southORIGIN(:,blk) = local(:,Nyb+1,blockID(blk+blockOffset-nblockx))
            else
-              call MPI_GET(southORIGIN(1),Nxb+2,MPI_REAL,blockLC(blk+blockOffset-nblockx),&
+              call MPI_GET(southORIGIN(1,blk),Nxb+2,MPI_REAL,blockLC(blk+blockOffset-nblockx),&
                    target_disp+index3+(blockID(blk+blockOffset-nblockx)-1)*bSize,Nxb+2,MPI_REAL,RMA_win,ierr)
     
            end if
         end if
 
-        call MPI_BARRIER(solver_comm,ierr)
-
-        local(Nxb+2,:,blk) = eastORIGIN
-        local(1,:,blk)     = westORIGIN
-        local(:,Nyb+2,blk) = northORIGIN
-        local(:,1,blk)     = southORIGIN
-
         end do
+
+        call MPI_BARRIER(solver_comm,ierr)
 #endif
+
+        do blk=1,blockCount
+        local(Nxb+2,:,blk) = eastORIGIN(:,blk)
+        local(1,:,blk)     = westORIGIN(:,blk)
+        local(:,Nyb+2,blk) = northORIGIN(:,blk)
+        local(:,1,blk)     = southORIGIN(:,blk)
+        end do
 
 end subroutine MPI_applyBC_RMA

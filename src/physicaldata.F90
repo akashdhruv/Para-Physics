@@ -6,6 +6,6 @@ module physicaldata
        real, save, pointer, dimension(:,:,:,:) :: sharedCENTER, sharedFACEX, sharedFACEY
 
        real, save, pointer, dimension(:) :: dataTARGET
-       real, save, pointer, dimension(:) :: northORIGIN, southORIGIN, eastORIGIN, westORIGIN
+       real, save, pointer, dimension(:,:) :: northORIGIN, southORIGIN, eastORIGIN, westORIGIN
 
 end module physicaldata

@@ -26,6 +26,9 @@ subroutine MPIsolver_init()
     allocate(world_part(procs))
     world_part = (/(I,I=0,procs-1)/)
 
+    allocate(recv_req(blockCount*4))
+    allocate(send_req(blockCount*4))
+
     !_______________Split Domain Into Blocks For Cache Optimization_________!
 
     blockCount = ((nblockx*nblocky)/procs)
@@ -147,10 +150,10 @@ subroutine MPIsolver_init()
     allocate(localFACEX(Nxb+2,Nyb+2,blockCount,FACE_VAR))
     allocate(localFACEY(Nxb+2,Nyb+2,blockCount,FACE_VAR))
 
-    allocate(eastORIGIN(Nyb+2))
-    allocate(westORIGIN(Nyb+2))
-    allocate(northORIGIN(Nxb+2))
-    allocate(southORIGIN(Nxb+2))
+    allocate(eastORIGIN(Nyb+2,blockCount))
+    allocate(westORIGIN(Nyb+2,blockCount))
+    allocate(northORIGIN(Nxb+2,blockCount))
+    allocate(southORIGIN(Nxb+2,blockCount))
 
     RMA_size   = (Nyb+2+Nxb+2+Nyb+2+Nxb+2)*blockCount*sizeof(A)
 

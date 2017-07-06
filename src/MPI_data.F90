@@ -28,4 +28,6 @@ module MPI_data
 
       integer,save :: mpi_info_key
 
+      integer, allocatable, save, dimension(:) :: send_req, recv_req
+
 end module MPI_data

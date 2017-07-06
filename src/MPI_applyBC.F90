@@ -19,7 +19,6 @@ subroutine MPI_applyBC(ivar,datatype)
 #endif
 
 #ifdef MPI_SHM
-    call MPI_BARRIER(shared_comm,ierr)
     if(datatype == CENTER) call MPI_applyBC_SHM(localCENTER(:,:,:,ivar),sharedCENTER,ivar,CENT_VAR)
     if(datatype == FACEX)  call MPI_applyBC_SHM(localFACEX(:,:,:,ivar),sharedFACEX,ivar,FACE_VAR)
     if(datatype == FACEY)  call MPI_applyBC_SHM(localFACEY(:,:,:,ivar),sharedFACEY,ivar,FACE_VAR)
