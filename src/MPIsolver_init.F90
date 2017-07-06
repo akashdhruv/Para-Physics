@@ -80,7 +80,7 @@ subroutine MPIsolver_init()
     allocate(xLC(blockCount))
     allocate(yLC(blockCount))
     allocate(reqs(blockCount*2))
-    allocate(req_stat(blockCount*2*MPI_STATUS_SIZE))
+    allocate(req_stat(MPI_STATUS_SIZE,blockCount*2))
 
     xLC = mod(((/(I,I=0,blockCount-1)/) + blockOffset),nblockx)
     yLC = ((/(I,I=0,blockCount-1)/) + blockOffset)/nblockx

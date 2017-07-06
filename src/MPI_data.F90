@@ -28,6 +28,7 @@ module MPI_data
 
       integer,save :: mpi_info_key
 
-      integer, allocatable, save, dimension(:) :: reqs, req_stat
+      integer, allocatable, save, dimension(:) :: reqs
+      integer, allocatable, save, dimension(:,:) :: req_stat
 
 end module MPI_data
