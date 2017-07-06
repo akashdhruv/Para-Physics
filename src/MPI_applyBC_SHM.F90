@@ -86,7 +86,7 @@ subroutine MPI_applyBC_SHM(local,sharedDATA,ivar,totvar)
 
         end do
 
-        call MPI_WAITALL(req_count,reqs(1:req_count),req_stat(1:req_count),ierr)
+        call MPI_WAITALL(req_count,reqs(1:req_count),req_stat(1:req_count*MPI_STATUS_SIZE),ierr)
 
 !===============================SWEEP IN Y DIRECTION===================================================
           req_count = 0
@@ -161,6 +161,6 @@ subroutine MPI_applyBC_SHM(local,sharedDATA,ivar,totvar)
 
          end do
 
-         call MPI_WAITALL(req_count,reqs(1:req_count),req_stat(1:req_count),ierr)
+         call MPI_WAITALL(req_count,reqs(1:req_count),req_stat(1:req_count*MPI_STATUS_SIZE),ierr)
 
 end subroutine MPI_applyBC_SHM
