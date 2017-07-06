@@ -26,9 +26,6 @@ subroutine MPIsolver_init()
     allocate(world_part(procs))
     world_part = (/(I,I=0,procs-1)/)
 
-    allocate(recv_req(blockCount*4))
-    allocate(send_req(blockCount*4))
-
     !_______________Split Domain Into Blocks For Cache Optimization_________!
 
     blockCount = ((nblockx*nblocky)/procs)
@@ -38,10 +35,20 @@ subroutine MPIsolver_init()
 
     if (checkSumMPI /= nblockx*nblocky) then
        
-        call MPI_FINALIZE(ierr)
         if (myid == 0) &
         print *,"RUNTIME ERROR: The number of blocks should be greater than/equal to &
                  and exactly divisible by total number of MPI processes."
+
+        call MPI_FINALIZE(ierr)
+        call exit(status)
+
+    else if(blockCount > MAX_BLOCKS) then
+    
+        if (myid == 0) &
+        print *,"RUNTIME ERROR: The total number of blocks per process exceed the maximum limit. &
+                 Increase the number of MPI jobs."
+
+        call MPI_FINALIZE(ierr)
         call exit(status)
 
     end if
@@ -72,6 +79,8 @@ subroutine MPIsolver_init()
 
     allocate(xLC(blockCount))
     allocate(yLC(blockCount))
+    allocate(reqs(blockCount*4*2))
+    allocate(req_stat(blockCount*4*2*MPI_STATUS_SIZE))
 
     xLC = mod(((/(I,I=0,blockCount-1)/) + blockOffset),nblockx)
     yLC = ((/(I,I=0,blockCount-1)/) + blockOffset)/nblockx

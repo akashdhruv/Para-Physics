@@ -53,6 +53,13 @@ module MPI_interface
           end subroutine MPI_applyBC_ORIG
     end interface
 
+    interface
+          subroutine MPI_applyBC_DEBUG(local)
+          implicit none
+          real, intent(inout), dimension(:,:,:) :: local
+          end subroutine MPI_applyBC_DEBUG
+    end interface
+
     interface 
        subroutine MPI_CollectResiduals(res,res1,collect_type)
        implicit none

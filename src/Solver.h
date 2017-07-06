@@ -40,18 +40,18 @@ _________________Defining Temperature Solver____________________
 _______________________Grid Parameters___________________________
 #endif
 
-#define MAX_BLOCKS 80
+#define MAX_BLOCKS 10
 
 
 #define Nxb 20
 #define Nyb 20
 
 
-#define D_xmin  0.0
+#define D_xmin -0.5
 #define D_ymin -0.5
 
 
-#define D_xmax  1.0
+#define D_xmax  0.5
 #define D_ymax  0.5
 
 #define TIME_END 60.00
@@ -184,7 +184,7 @@ _________________OpenMP threads per MPI rank_______________
 _________________MPI with shared memory on/off_______________
 #endif
 
-#define SHARE_TYPE 1
+#define SHARE_TYPE 2
 
 #if SHARE_TYPE == 1
 #define MPI_DIS

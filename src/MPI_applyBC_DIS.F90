@@ -23,16 +23,11 @@ subroutine MPI_applyBC_DIS(local)
                 local(2,:,blockID(blk+blockOffset+1))
 
              else
-
-                req_count = req_count + 1
-
-                call MPI_ISEND(local(Nxb+1,:,blockID(blk+blockOffset)), Nyb+2, MPI_REAL, &
-                               blockLC(blk+blockOffset+1), blk+blockOffset, solver_comm, send_req(req_count), ierr)
-         
-                !call MPI_SENDRECV(local(Nxb+1,:,blockID(blk+blockOffset)), Nyb+2, MPI_REAL, &
-                !                  blockLC(blk+blockOffset+1), blk+blockOffset,&
-                !                  local(Nxb+2,:,blockID(blk+blockOffset)), Nyb+2, MPI_REAL, &
-                !                  blockLC(blk+blockOffset+1), blk+blockOffset+1, solver_comm, status, ierr)
+        
+                call MPI_SENDRECV(local(Nxb+1,:,blockID(blk+blockOffset)), Nyb+2, MPI_REAL, &
+                                  blockLC(blk+blockOffset+1), blk+blockOffset,&
+                                  local(Nxb+2,:,blockID(blk+blockOffset)), Nyb+2, MPI_REAL, &
+                                  blockLC(blk+blockOffset+1), blk+blockOffset+1, solver_comm, status, ierr)
 
              end if
            end if
@@ -46,16 +41,11 @@ subroutine MPI_applyBC_DIS(local)
                  local(Nxb+1,:,blockID(blk+blockOffset-1))
 
               else
-
-                 req_count = req_count + 1
-
-                 call MPI_ISEND(local(2,:,blockID(blk+blockOffset)), Nyb+2, MPI_REAL, &
-                                blockLC(blk+blockOffset-1), blk+blockOffset, solver_comm, send_req(req_count), ierr)
-                            
-                 !call MPI_SENDRECV(local(2,:,blockID(blk+blockOffset)), Nyb+2, MPI_REAL, &
-                 !                  blockLC(blk+blockOffset-1), blk+blockOffset,&
-                 !                  local(1,:,blockID(blk+blockOffset)), Nyb+2, MPI_REAL, &
-                 !                  blockLC(blk+blockOffset-1), blk+blockOffset-1, solver_comm, status, ierr)
+                           
+                 call MPI_SENDRECV(local(2,:,blockID(blk+blockOffset)), Nyb+2, MPI_REAL, &
+                                   blockLC(blk+blockOffset-1), blk+blockOffset,&
+                                   local(1,:,blockID(blk+blockOffset)), Nyb+2, MPI_REAL, &
+                                   blockLC(blk+blockOffset-1), blk+blockOffset-1, solver_comm, status, ierr)
 
               end if
             end if
@@ -69,16 +59,11 @@ subroutine MPI_applyBC_DIS(local)
                   local(:,2,blockID(blk+blockOffset+nblockx))
 
                else
-                              
-                  req_count = req_count + 1
-
-                  call MPI_ISEND(local(:,Nyb+1,blockID(blk+blockOffset)), Nxb+2, MPI_REAL, &
-                                 blockLC(blk+blockOffset+nblockx), blk+blockOffset, solver_comm, send_req(req_count), ierr)
-                                 
-                  !call MPI_SENDRECV(local(:,Nyb+1,blockID(blk+blockOffset)), Nxb+2, MPI_REAL, &
-                  !                  blockLC(blk+blockOffset+nblockx), blk+blockOffset,&
-                  !                  local(:,Nyb+2,blockID(blk+blockOffset)), Nxb+2, MPI_REAL, &
-                  !                  blockLC(blk+blockOffset+nblockx), blk+blockOffset+nblockx, solver_comm, status, ierr)
+                                
+                  call MPI_SENDRECV(local(:,Nyb+1,blockID(blk+blockOffset)), Nxb+2, MPI_REAL, &
+                                    blockLC(blk+blockOffset+nblockx), blk+blockOffset,&
+                                    local(:,Nyb+2,blockID(blk+blockOffset)), Nxb+2, MPI_REAL, &
+                                    blockLC(blk+blockOffset+nblockx), blk+blockOffset+nblockx, solver_comm, status, ierr)
 
                end if
              end if
@@ -92,48 +77,15 @@ subroutine MPI_applyBC_DIS(local)
                    local(:,Nyb+1,blockID(blk+blockOffset-nblockx))
 
                 else
-                    
-                    req_count = req_count + 1
-
-                    call MPI_ISEND(local(:,2,blockID(blk+blockOffset)), Nxb+2, MPI_REAL, &
-                                   blockLC(blk+blockOffset-nblockx), blk+blockOffset, solver_comm, send_req(req_count), ierr)
-                                            
-                    !call MPI_SENDRECV(local(:,2,blockID(blk+blockOffset)), Nxb+2, MPI_REAL, &
-                    !                  blockLC(blk+blockOffset-nblockx), blk+blockOffset,&
-                    !                  local(:,1,blockID(blk+blockOffset)), Nxb+2, MPI_REAL, &
-                    !                  blockLC(blk+blockOffset-nblockx), blk+blockOffset-nblockx, solver_comm, status, ierr)
+                                          
+                   call MPI_SENDRECV(local(:,2,blockID(blk+blockOffset)), Nxb+2, MPI_REAL, &
+                                     blockLC(blk+blockOffset-nblockx), blk+blockOffset,&
+                                     local(:,1,blockID(blk+blockOffset)), Nxb+2, MPI_REAL, &
+                                     blockLC(blk+blockOffset-nblockx), blk+blockOffset-nblockx, solver_comm, status, ierr)
 
                 end if
               end if
 
            end do
-
-        do blk = 1,blockCount
-
-           !_______________________MPI BC for High X______________________________!
-           if((xLC(blk) < nblockx - 1) .and. (blockLC(blk+blockOffset) /= blockLC(blk+blockOffset+1))) &
-
-           call MPI_RECV(local(Nxb+2,:,blockID(blk+blockOffset)), Nyb+2, MPI_REAL, &
-                         blockLC(blk+blockOffset+1), blk+blockOffset+1, solver_comm, status, ierr)
- 
-           !_______________________MPI BC for Low X______________________________!
-           if((xLC(blk) > 0) .and. (blockLC(blk+blockOffset) /= blockLC(blk+blockOffset-1))) &
-
-           call MPI_RECV(local(1,:,blockID(blk+blockOffset)), Nyb+2, MPI_REAL, &
-                         blockLC(blk+blockOffset-1), blk+blockOffset-1, solver_comm, status, ierr)
-                               
-           !_______________________MPI BC for High Y______________________________!
-           if((yLC(blk) < nblocky - 1) .and. (blockLC(blk+blockOffset) /= blockLC(blk+blockOffset+nblockx))) &
-
-           call MPI_RECV(local(:,Nyb+2,blockID(blk+blockOffset)), Nxb+2, MPI_REAL, &
-                         blockLC(blk+blockOffset+nblockx), blk+blockOffset+nblockx, solver_comm, status, ierr)
-                              
-           !_______________________MPI BC for Low Y______________________________!
-           if((yLC(blk) > 0) .and. (blockLC(blk+blockOffset) /= blockLC(blk+blockOffset-nblockx))) &
-                    
-           call MPI_RECV(local(:,1,blockID(blk+blockOffset)), Nxb+2, MPI_REAL, &
-                              blockLC(blk+blockOffset-nblockx), blk+blockOffset-nblockx, solver_comm, status, ierr)
- 
-         end do
 
  end subroutine MPI_applyBC_DIS
