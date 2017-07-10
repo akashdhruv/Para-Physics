@@ -31,11 +31,10 @@ module MPI_interface
     end interface
 
     interface
-          subroutine MPI_applyBC_SHM(local,sharedData,ivar,totvar)
+          subroutine MPI_applyBC_SHM(local,sharedData)
           implicit none
           real, intent(inout), dimension(:,:,:) :: local
-          real, intent(inout), dimension(:,:,:,:) :: sharedData
-          integer, intent(in) :: ivar,totvar
+          real, intent(inout), dimension(:,:,:) :: sharedData
           end subroutine MPI_applyBC_SHM
     end interface
 

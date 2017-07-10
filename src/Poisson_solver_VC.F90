@@ -24,18 +24,18 @@ subroutine Poisson_solver_VC(rvar,ivar,ps_counter,cvar,dvar)
   integer :: i,j,thread_id,ii,jj,blk
   double precision :: poisson_start, poisson_finish
 
-  ps     => localCENTER(:,:,:,ivar)
-  ps_RHS => localCENTER(:,:,:,rvar)
+  ps     => localCENTER(:,:,ivar,:)
+  ps_RHS => localCENTER(:,:,rvar,:)
 
   ps_old = 0
   ps_counter = 0
 
   if(present(dvar)) then
-     ps_rx = 1./(localFACEX(:,:,:,cvar)+localFACEX(:,:,:,dvar))
-     ps_ry = 1./(localFACEY(:,:,:,cvar)+localFACEY(:,:,:,dvar))
+     ps_rx = 1./(localFACEX(:,:,cvar,:)+localFACEX(:,:,dvar,:))
+     ps_ry = 1./(localFACEY(:,:,cvar,:)+localFACEY(:,:,dvar,:))
   else
-     ps_rx = 1./(localFACEX(:,:,:,cvar))
-     ps_ry = 1./(localFACEY(:,:,:,cvar))
+     ps_rx = 1./(localFACEX(:,:,cvar,:))
+     ps_ry = 1./(localFACEY(:,:,cvar,:))
 
   end if
 

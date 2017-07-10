@@ -32,8 +32,8 @@ subroutine IBM_init()
 
    ibm_omega = 1.0
 
-   facexData(:,:,:,IBMF_VAR) = 0.0
-   faceyData(:,:,:,IBMF_VAR) = 0.0
+   facexData(:,:,IBMF_VAR,:) = 0.0
+   faceyData(:,:,IBMF_VAR,:) = 0.0
 
    ibm_x0 = 0.0
    ibm_y0 = 0.5
@@ -56,7 +56,7 @@ subroutine IBM_init()
      else
           xcell = gr_x(i,1,blk)
      end if
-     facexData(i,j,blk,IBMF_VAR) = ibm_r0 - sqrt((xcell-ibm_x0)**2+(ycell-ibm_y0)**2)
+     facexData(i,j,IBMF_VAR,blk) = ibm_r0 - sqrt((xcell-ibm_x0)**2+(ycell-ibm_y0)**2)
      end do
    end do
 
@@ -75,7 +75,7 @@ subroutine IBM_init()
     else
           xcell = 0.5*(gr_x(i,1,blk) + gr_x(i-1,1,blk))
     end if
-    faceyData(i,j,blk,IBMF_VAR) = ibm_r0 - sqrt((xcell-ibm_x0)**2+(ycell-ibm_y0)**2)
+    faceyData(i,j,IBMF_VAR,blk) = ibm_r0 - sqrt((xcell-ibm_x0)**2+(ycell-ibm_y0)**2)
     end do
    end do
 

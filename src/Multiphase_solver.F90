@@ -35,13 +35,13 @@ subroutine Multiphase_solver(tstep,solnX,jump_flag)
   if (jump_flag .eqv. .FALSE.) then
 
     do blk=1,blockCount
-    call mph_FillVars_ibm(solnData(:,:,blk,DFUN_VAR),solnData(:,:,blk,PFUN_VAR),&
-                           solnData(:,:,blk,THCO_VAR),solnData(:,:,blk,CPRS_VAR),&
-                           solnData(:,:,blk,VISC_VAR),&
-                           facexData(:,:,blk,RH2F_VAR),faceyData(:,:,blk,RH2F_VAR),&
-                           facexData(:,:,blk,AL2F_VAR),faceyData(:,:,blk,AL2F_VAR),&
-                           solnData(:,:,blk,TEMP_VAR),solnData(:,:,blk,TOLD_VAR),&
-                           mph_beta)
+    call mph_FillVars_ibm(solnData(:,:,DFUN_VAR,blk),solnData(:,:,PFUN_VAR,blk),&
+                          solnData(:,:,THCO_VAR,blk),solnData(:,:,CPRS_VAR,blk),&
+                          solnData(:,:,VISC_VAR,blk),&
+                          facexData(:,:,RH2F_VAR,blk),faceyData(:,:,RH2F_VAR,blk),&
+                          facexData(:,:,AL2F_VAR,blk),faceyData(:,:,AL2F_VAR,blk),&
+                          solnData(:,:,TEMP_VAR,blk),solnData(:,:,TOLD_VAR,blk),&
+                          mph_beta)
     end do
 
     call MPI_BARRIER(solver_comm,ierr)
@@ -50,19 +50,19 @@ subroutine Multiphase_solver(tstep,solnX,jump_flag)
     call MPI_applyBC(RH2F_VAR,FACEY)
     call MPI_applyBC(AL2F_VAR,FACEX)
     call MPI_applyBC(AL2F_VAR,FACEY)    
-    call MPI_physicalBC_dfun(solnData(:,:,:,VISC_VAR))
-    call MPI_physicalBC_dfun(facexData(:,:,:,RH2F_VAR))
-    call MPI_physicalBC_dfun(faceyData(:,:,:,RH2F_VAR))
-    call MPI_physicalBC_dfun(facexData(:,:,:,AL2F_VAR))
-    call MPI_physicalBC_dfun(faceyData(:,:,:,AL2F_VAR))
+    call MPI_physicalBC_dfun(solnData(:,:,VISC_VAR,:))
+    call MPI_physicalBC_dfun(facexData(:,:,RH2F_VAR,:))
+    call MPI_physicalBC_dfun(faceyData(:,:,RH2F_VAR,:))
+    call MPI_physicalBC_dfun(facexData(:,:,AL2F_VAR,:))
+    call MPI_physicalBC_dfun(faceyData(:,:,AL2F_VAR,:))
 
     if(tstep > 0) then 
 
         do blk=1,blockCount
-        call mph_getInterfaceVelocity(facexData(:,:,blk,VELC_VAR),faceyData(:,:,blk,VELC_VAR),&
-                                      facexData(:,:,blk,VELI_VAR),faceyData(:,:,blk,VELI_VAR),&
-                                      solnData(:,:,blk,SMRH_VAR),solnData(:,:,blk,MDOT_VAR),&
-                                      solnData(:,:,blk,NRMX_VAR),solnData(:,:,blk,NRMY_VAR))
+        call mph_getInterfaceVelocity(facexData(:,:,VELC_VAR,blk),faceyData(:,:,VELC_VAR,blk),&
+                                      facexData(:,:,VELI_VAR,blk),faceyData(:,:,VELI_VAR,blk),&
+                                      solnData(:,:,SMRH_VAR,blk),solnData(:,:,MDOT_VAR,blk),&
+                                      solnData(:,:,NRMX_VAR,blk),solnData(:,:,NRMY_VAR,blk))
         end do
 
     !   call mph_advect 
@@ -71,7 +71,7 @@ subroutine Multiphase_solver(tstep,solnX,jump_flag)
       call MPI_BARRIER(solver_comm,ierr)
       call MPI_applyBC(VELI_VAR,FACEX)
       call MPI_applyBC(VELI_VAR,FACEY)
-      call MPI_physicalBC_vel(facexData(:,:,:,VELI_VAR),faceyData(:,:,:,VELI_VAR))
+      call MPI_physicalBC_vel(facexData(:,:,VELI_VAR,:),faceyData(:,:,VELI_VAR,:))
 
     end if
 
@@ -81,13 +81,13 @@ subroutine Multiphase_solver(tstep,solnX,jump_flag)
 
 #else
     do blk=1,blockCount
-    call mph_PressureJumps(solnData(:,:,blk,DFUN_VAR),solnData(:,:,blk,PFUN_VAR),&
-                           solnData(:,:,blk,CURV_VAR),&
-                           facexData(:,:,blk,RH1F_VAR),faceyData(:,:,blk,RH1F_VAR),&
-                           facexData(:,:,blk,RH2F_VAR),faceyData(:,:,blk,RH2F_VAR),&
-                           solnData(:,:,blk,SIGP_VAR),&
-                           facexData(:,:,blk,SIGM_VAR),faceyData(:,:,blk,SIGM_VAR),&
-                           solnData(:,:,blk,MDOT_VAR))
+    call mph_PressureJumps(solnData(:,:,DFUN_VAR,blk),solnData(:,:,PFUN_VAR,blk),&
+                           solnData(:,:,CURV_VAR,blk),&
+                           facexData(:,:,RH1F_VAR,blk),faceyData(:,:,RH1F_VAR,blk),&
+                           facexData(:,:,RH2F_VAR,blk),faceyData(:,:,RH2F_VAR,blk),&
+                           solnData(:,:,SIGP_VAR,blk),&
+                           facexData(:,:,SIGM_VAR,blk),faceyData(:,:,SIGM_VAR,blk),&
+                           solnData(:,:,MDOT_VAR,blk))
     end do
 
     call MPI_BARRIER(solver_comm,ierr)
@@ -95,10 +95,10 @@ subroutine Multiphase_solver(tstep,solnX,jump_flag)
     call MPI_applyBC(RH1F_VAR,FACEY)
     call MPI_applyBC(RH2F_VAR,FACEX)
     call MPI_applyBC(RH2F_VAR,FACEY)
-    call MPI_physicalBC_dfun(facexData(:,:,:,RH1F_VAR))
-    call MPI_physicalBC_dfun(facexData(:,:,:,RH2F_VAR))
-    call MPI_physicalBC_dfun(faceyData(:,:,:,RH1F_VAR))
-    call MPI_physicalBC_dfun(faceyData(:,:,:,RH2F_VAR))
+    call MPI_physicalBC_dfun(facexData(:,:,RH1F_VAR,:))
+    call MPI_physicalBC_dfun(facexData(:,:,RH2F_VAR,:))
+    call MPI_physicalBC_dfun(faceyData(:,:,RH1F_VAR,:))
+    call MPI_physicalBC_dfun(faceyData(:,:,RH2F_VAR,:))
 
 #endif
 

@@ -1,4 +1,4 @@
-subroutine MPI_applyBC_SHM(local,sharedDATA,ivar,totvar)
+subroutine MPI_applyBC_SHM(local,sharedDATA)
 
 #include "Solver.h"
 
@@ -7,8 +7,7 @@ subroutine MPI_applyBC_SHM(local,sharedDATA,ivar,totvar)
         implicit none
 
         real, intent(inout), dimension(:,:,:) :: local
-        real, intent(inout), dimension(:,:,:,:) :: sharedData
-        integer, intent(in) :: ivar, totvar
+        real, intent(inout), dimension(:,:,:) :: sharedData
 
         integer :: status(MPI_STATUS_SIZE), blk, req_count
 
@@ -29,7 +28,7 @@ subroutine MPI_applyBC_SHM(local,sharedDATA,ivar,totvar)
               else if(shared_part(blockLC(blk+blockOffset+1)+1) /= MPI_UNDEFINED) then
 
                  local(Nxb+2,:,blockID(blk+blockOffset)) = &
-                 sharedDATA(2,:,blockID(blk+blockOffset+1),ivar+shared_part(blockLC(blk+blockOffset+1)+1)*totvar)
+                 sharedDATA(2,:,blockID(blk+blockOffset+1)+shared_part(blockLC(blk+blockOffset+1)+1)*blockCount)
 
               else
 
@@ -52,7 +51,7 @@ subroutine MPI_applyBC_SHM(local,sharedDATA,ivar,totvar)
                else if(shared_part(blockLC(blk+blockOffset-1)+1) /= MPI_UNDEFINED) then
 
                   local(1,:,blockID(blk+blockOffset)) = &
-                  sharedDATA(Nxb+1,:,blockID(blk+blockOffset-1),ivar+shared_part(blockLC(blk+blockOffset-1)+1)*totvar)
+                  sharedDATA(Nxb+1,:,blockID(blk+blockOffset-1)+shared_part(blockLC(blk+blockOffset-1)+1)*blockCount)
 
                else
 
@@ -104,7 +103,7 @@ subroutine MPI_applyBC_SHM(local,sharedDATA,ivar,totvar)
                 else if(shared_part(blockLC(blk+blockOffset+nblockx)+1) /= MPI_UNDEFINED) then
 
                    local(:,Nyb+2,blockID(blk+blockOffset)) = &
-                   sharedDATA(:,2,blockID(blk+blockOffset+nblockx),ivar+shared_part(blockLC(blk+blockOffset+nblockx)+1)*totvar)
+                   sharedDATA(:,2,blockID(blk+blockOffset+nblockx)+shared_part(blockLC(blk+blockOffset+nblockx)+1)*blockCount)
 
                 else
 
@@ -127,7 +126,7 @@ subroutine MPI_applyBC_SHM(local,sharedDATA,ivar,totvar)
                 else if(shared_part(blockLC(blk+blockOffset-nblockx)+1) /= MPI_UNDEFINED) then
 
                    local(:,1,blockID(blk+blockOffset)) = &
-                   sharedDATA(:,Nyb+1,blockID(blk+blockOffset-nblockx),ivar+shared_part(blockLC(blk+blockOffset-nblockx)+1)*totvar)
+                   sharedDATA(:,Nyb+1,blockID(blk+blockOffset-nblockx)+shared_part(blockLC(blk+blockOffset-nblockx)+1)*blockCount)
 
                 else
 

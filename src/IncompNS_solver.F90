@@ -32,52 +32,52 @@ subroutine IncompNS_solver(tstep,p_counter)
     v_res1 = 0
     u_res1 = 0
 
-    facexData(:,:,:,UOLD_VAR) = facexData(:,:,:,VELC_VAR)
-    faceyData(:,:,:,UOLD_VAR) = faceyData(:,:,:,VELC_VAR)
-    solnData(:,:,:,VORO_VAR)  = solnData(:,:,:,VORT_VAR)
+    facexData(:,:,UOLD_VAR,:) = facexData(:,:,VELC_VAR,:)
+    faceyData(:,:,UOLD_VAR,:) = faceyData(:,:,VELC_VAR,:)
+    solnData(:,:,VORO_VAR,:)  = solnData(:,:,VORT_VAR,:)
 
 #ifdef SINGLEPHASE
     do blk=1,blockCount
-       call ins_predictor(tstep,facexData(:,:,blk,VELC_VAR),faceyData(:,:,blk,VELC_VAR),&
-                                facexData(:,:,blk,USTR_VAR),faceyData(:,:,blk,USTR_VAR),&
-                                facexData(:,:,blk,GOLD_VAR),faceyData(:,:,blk,GOLD_VAR))
+       call ins_predictor(tstep,facexData(:,:,VELC_VAR,blk),faceyData(:,:,VELC_VAR,blk),&
+                                facexData(:,:,USTR_VAR,blk),faceyData(:,:,USTR_VAR,blk),&
+                                facexData(:,:,GOLD_VAR,blk),faceyData(:,:,GOLD_VAR,blk))
     end do
 #else
     do blk=1,blockCount
-       call ins_predictor_VD(tstep,facexData(:,:,blk,VELC_VAR),faceyData(:,:,blk,VELC_VAR),&
-                                   facexData(:,:,blk,USTR_VAR),faceyData(:,:,blk,USTR_VAR),&
-                                   facexData(:,:,blk,GOLD_VAR),faceyData(:,:,blk,GOLD_VAR),&
-                                   solnData(:,:,blk,VISC_VAR),&
-                                   facexData(:,:,blk,RH1F_VAR),faceyData(:,:,blk,RH1F_VAR),&
-                                   facexData(:,:,blk,RH2F_VAR),faceyData(:,:,blk,RH2F_VAR))
+       call ins_predictor_VD(tstep,facexData(:,:,VELC_VAR,blk),faceyData(:,:,VELC_VAR,blk),&
+                                   facexData(:,:,USTR_VAR,blk),faceyData(:,:,USTR_VAR,blk),&
+                                   facexData(:,:,GOLD_VAR,blk),faceyData(:,:,GOLD_VAR,blk),&
+                                   solnData(:,:,VISC_VAR,blk),&
+                                   facexData(:,:,RH1F_VAR,blk),faceyData(:,:,RH1F_VAR,blk),&
+                                   facexData(:,:,RH2F_VAR,blk),faceyData(:,:,RH2F_VAR,blk))
     end do
 #endif
 
     call MPI_BARRIER(solver_comm,ierr)
     call MPI_applyBC(USTR_VAR,FACEX)
     call MPI_applyBC(USTR_VAR,FACEY)
-    call MPI_physicalBC_vel(facexData(:,:,:,USTR_VAR),faceyData(:,:,:,USTR_VAR))
+    call MPI_physicalBC_vel(facexData(:,:,USTR_VAR,:),faceyData(:,:,USTR_VAR,:))
 
 #ifdef IBM
     do blk=1,blockCount
-       call IBM_ApplyForcing(facexData(:,:,blk,USTR_VAR),faceyData(:,:,blk,USTR_VAR),&
-                             facexData(:,:,blk,IBMF_VAR),faceyData(:,:,blk,IBMF_VAR))
+       call IBM_ApplyForcing(facexData(:,:,USTR_VAR,blk),faceyData(:,:,USTR_VAR,blk),&
+                             facexData(:,:,IBMF_VAR,blk),faceyData(:,:,IBMF_VAR,blk))
     end do
 #endif    
 
 #ifdef SINGLEPHASE
     do blk=1,blockCount
-       solnData(2:Nxb+1,2:Nyb+1,blk,PRHS_VAR) = &
-       -((1/(gr_dy*dr_dt))*(faceyData(2:Nxb+1,2:Nyb+1,blk,USTR_VAR)-faceyData(2:Nxb+1,1:Nyb,blk,USTR_VAR)))&
-       -((1/(gr_dx*dr_dt))*(facexData(2:Nxb+1,2:Nyb+1,blk,USTR_VAR)-facexData(1:Nxb,2:Nyb+1,blk,USTR_VAR)))
+       solnData(2:Nxb+1,2:Nyb+1,PRHS_VAR,blk) = &
+       -((1/(gr_dy*dr_dt))*(faceyData(2:Nxb+1,2:Nyb+1,USTR_VAR,blk)-faceyData(2:Nxb+1,1:Nyb,USTR_VAR,blk)))&
+       -((1/(gr_dx*dr_dt))*(facexData(2:Nxb+1,2:Nyb+1,USTR_VAR,blk)-facexData(1:Nxb,2:Nyb+1,USTR_VAR,blk)))
     end do
 
 #else
     do blk=1,blockCount
-       solnData(2:Nxb+1,2:Nyb+1,blk,PRHS_VAR) = &
-       -((1/(gr_dy*dr_dt))*(faceyData(2:Nxb+1,2:Nyb+1,blk,USTR_VAR)-faceyData(2:Nxb+1,1:Nyb,blk,USTR_VAR)))&
-       -((1/(gr_dx*dr_dt))*(facexData(2:Nxb+1,2:Nyb+1,blk,USTR_VAR)-facexData(1:Nxb,2:Nyb+1,blk,USTR_VAR)))&
-       -solnData(2:Nxb+1,2:Nyb+1,blk,SIGP_VAR)
+       solnData(2:Nxb+1,2:Nyb+1,PRHS_VAR,blk) = &
+       -((1/(gr_dy*dr_dt))*(faceyData(2:Nxb+1,2:Nyb+1,USTR_VAR,blk)-faceyData(2:Nxb+1,1:Nyb,USTR_VAR,blk)))&
+       -((1/(gr_dx*dr_dt))*(facexData(2:Nxb+1,2:Nyb+1,USTR_VAR,blk)-facexData(1:Nxb,2:Nyb+1,USTR_VAR,blk)))&
+       -solnData(2:Nxb+1,2:Nyb+1,SIGP_VAR,blk)
     end do
 
 #endif
@@ -96,43 +96,43 @@ subroutine IncompNS_solver(tstep,p_counter)
 
 #ifdef SINGLEPHASE
     do blk=1,blockCount
-    facexData(2:Nxb+1,2:Nyb+1,blk,VELC_VAR) = &
-    facexData(2:Nxb+1,2:Nyb+1,blk,USTR_VAR) - (dr_dt/gr_dx)*(solnData(3:Nxb+2,2:Nyb+1,blk,PRES_VAR)-&
-                                                             solnData(2:Nxb+1,2:Nyb+1,blk,PRES_VAR))
+    facexData(2:Nxb+1,2:Nyb+1,VELC_VAR,blk) = &
+    facexData(2:Nxb+1,2:Nyb+1,USTR_VAR,blk) - (dr_dt/gr_dx)*(solnData(3:Nxb+2,2:Nyb+1,PRES_VAR,blk)-&
+                                                             solnData(2:Nxb+1,2:Nyb+1,PRES_VAR,blk))
 
 
-    faceyData(2:Nxb+1,2:Nyb+1,blk,VELC_VAR) = &
-    faceyData(2:Nxb+1,2:Nyb+1,blk,USTR_VAR) - (dr_dt/gr_dy)*(solnData(2:Nxb+1,3:Nyb+2,blk,PRES_VAR)-&
-                                                             solnData(2:Nxb+1,2:Nyb+1,blk,PRES_VAR))
+    faceyData(2:Nxb+1,2:Nyb+1,VELC_VAR,blk) = &
+    faceyData(2:Nxb+1,2:Nyb+1,USTR_VAR,blk) - (dr_dt/gr_dy)*(solnData(2:Nxb+1,3:Nyb+2,PRES_VAR,blk)-&
+                                                             solnData(2:Nxb+1,2:Nyb+1,PRES_VAR,blk))
     end do
 #else
 
     do blk=1,blockCount
-    facexData(2:Nxb+1,2:Nyb+1,blk,VELC_VAR) = &
-    facexData(2:Nxb+1,2:Nyb+1,blk,USTR_VAR) - (dr_dt/gr_dx)*&
-                                              (facexData(2:Nxb+1,2:Nyb+1,blk,RH1F_VAR)+&
-                                               facexData(2:Nxb+1,2:Nyb+1,blk,RH2F_VAR))*&
-                                              (solnData(3:Nxb+2,2:Nyb+1,blk,PRES_VAR)-&
-                                               solnData(2:Nxb+1,2:Nyb+1,blk,PRES_VAR))&
+    facexData(2:Nxb+1,2:Nyb+1,VELC_VAR,blk) = &
+    facexData(2:Nxb+1,2:Nyb+1,USTR_VAR,blk) - (dr_dt/gr_dx)*&
+                                              (facexData(2:Nxb+1,2:Nyb+1,RH1F_VAR,blk)+&
+                                               facexData(2:Nxb+1,2:Nyb+1,RH2F_VAR,blk))*&
+                                              (solnData(3:Nxb+2,2:Nyb+1,PRES_VAR,blk)-&
+                                               solnData(2:Nxb+1,2:Nyb+1,PRES_VAR,blk))&
                                                +dr_dt*&
-                                               facexData(2:Nxb+1,2:Nyb+1,blk,SIGM_VAR)
+                                               facexData(2:Nxb+1,2:Nyb+1,SIGM_VAR,blk)
 
 
-    faceyData(2:Nxb+1,2:Nyb+1,blk,VELC_VAR) = &
-    faceyData(2:Nxb+1,2:Nyb+1,blk,USTR_VAR) - (dr_dt/gr_dy)*&
-                                              (faceyData(2:Nxb+1,2:Nyb+1,blk,RH1F_VAR)+&
-                                               faceyData(2:Nxb+1,2:Nyb+1,blk,RH2F_VAR))*&                                               
-                                              (solnData(2:Nxb+1,3:Nyb+2,blk,PRES_VAR)-&
-                                               solnData(2:Nxb+1,2:Nyb+1,blk,PRES_VAR))&
+    faceyData(2:Nxb+1,2:Nyb+1,VELC_VAR,blk) = &
+    faceyData(2:Nxb+1,2:Nyb+1,USTR_VAR,blk) - (dr_dt/gr_dy)*&
+                                              (faceyData(2:Nxb+1,2:Nyb+1,RH1F_VAR,blk)+&
+                                               faceyData(2:Nxb+1,2:Nyb+1,RH2F_VAR,blk))*&                                               
+                                              (solnData(2:Nxb+1,3:Nyb+2,PRES_VAR,blk)-&
+                                               solnData(2:Nxb+1,2:Nyb+1,PRES_VAR,blk))&
                                                +dr_dt*&
-                                                faceyData(2:Nxb+1,2:Nyb+1,blk,SIGM_VAR)
+                                                faceyData(2:Nxb+1,2:Nyb+1,SIGM_VAR,blk)
     end do
 #endif
 
     call MPI_BARRIER(solver_comm,ierr)
     call MPI_applyBC(VELC_VAR,FACEX)
     call MPI_applyBC(VELC_VAR,FACEY)
-    call MPI_physicalBC_vel(facexData(:,:,:,VELC_VAR),faceyData(:,:,:,VELC_VAR))
+    call MPI_physicalBC_vel(facexData(:,:,VELC_VAR,:),faceyData(:,:,VELC_VAR,:))
 
     ! Divergence
 
@@ -140,19 +140,19 @@ subroutine IncompNS_solver(tstep,p_counter)
     mindiv = 10.**(10.)
 
     do blk=1,blockCount
-    maxdiv = max(maxdiv,maxval(((1/(gr_dy))*(faceyData(2:Nxb+1,2:Nyb+1,blk,VELC_VAR)-faceyData(2:Nxb+1,1:Nyb,blk,VELC_VAR)))&
-                              +((1/(gr_dx))*(facexData(2:Nxb+1,2:Nyb+1,blk,VELC_VAR)-facexData(1:Nxb,2:Nyb+1,blk,VELC_VAR)))))
+    maxdiv = max(maxdiv,maxval(((1/(gr_dy))*(faceyData(2:Nxb+1,2:Nyb+1,VELC_VAR,blk)-faceyData(2:Nxb+1,1:Nyb,VELC_VAR,blk)))&
+                              +((1/(gr_dx))*(facexData(2:Nxb+1,2:Nyb+1,VELC_VAR,blk)-facexData(1:Nxb,2:Nyb+1,VELC_VAR,blk)))))
 
-    mindiv = min(mindiv,minval(((1/(gr_dy))*(faceyData(2:Nxb+1,2:Nyb+1,blk,VELC_VAR)-faceyData(2:Nxb+1,1:Nyb,blk,VELC_VAR)))&
-                              +((1/(gr_dx))*(facexData(2:Nxb+1,2:Nyb+1,blk,VELC_VAR)-facexData(1:Nxb,2:Nyb+1,blk,VELC_VAR)))))
+    mindiv = min(mindiv,minval(((1/(gr_dy))*(faceyData(2:Nxb+1,2:Nyb+1,VELC_VAR,blk)-faceyData(2:Nxb+1,1:Nyb,VELC_VAR,blk)))&
+                              +((1/(gr_dx))*(facexData(2:Nxb+1,2:Nyb+1,VELC_VAR,blk)-facexData(1:Nxb,2:Nyb+1,VELC_VAR,blk)))))
 
     end do
 
-    umax = maxval(facexData(:,:,:,VELC_VAR))
-    umin = minval(facexData(:,:,:,VELC_VAR))
+    umax = maxval(facexData(:,:,VELC_VAR,:))
+    umin = minval(facexData(:,:,VELC_VAR,:))
 
-    vmax = maxval(faceyData(:,:,:,VELC_VAR))
-    vmin = minval(faceyData(:,:,:,VELC_VAR))
+    vmax = maxval(faceyData(:,:,VELC_VAR,:))
+    vmin = minval(faceyData(:,:,VELC_VAR,:))
 
     call MPI_CollectResiduals(maxdiv,ins_maxdiv,MAX_DATA)
     call MPI_CollectResiduals(mindiv,ins_mindiv,MIN_DATA)
@@ -167,8 +167,8 @@ subroutine IncompNS_solver(tstep,p_counter)
 
     do blk=1,blockCount
     do i=1,Nyb+2
-          ins_u_res = ins_u_res + sum((facexData(:,i,blk,VELC_VAR)-facexData(:,i,blk,UOLD_VAR))**2)
-          ins_v_res = ins_v_res + sum((faceyData(:,i,blk,VELC_VAR)-faceyData(:,i,blk,UOLD_VAR))**2)
+          ins_u_res = ins_u_res + sum((facexData(:,i,VELC_VAR,blk)-facexData(:,i,UOLD_VAR,blk))**2)
+          ins_v_res = ins_v_res + sum((faceyData(:,i,VELC_VAR,blk)-faceyData(:,i,UOLD_VAR,blk))**2)
     enddo
     enddo
 
@@ -179,18 +179,18 @@ subroutine IncompNS_solver(tstep,p_counter)
     ins_v_res = sqrt(v_res1/((nblockx*nblocky)*(Nxb+2)*(Nyb+2)))
 
     !do blk=1,blockCount
-    !call ins_vorticity(tstep,solnData(:,:,blk,VORT_VAR),solnData(:,:,blk,VORO_VAR),&
-    !                   facexData(:,:,blk,VELC_VAR),faceyData(:,:,blk,VELC_VAR),&
-    !                   solnData(:,:,blk,DFUN_VAR))
+    !call ins_vorticity(tstep,solnData(:,:,VORT_VAR,blk),solnData(:,:,VORO_VAR,blk),&
+    !                   facexData(:,:,VELC_VAR,blk),faceyData(:,:,VELC_VAR,blk),&
+    !                   solnData(:,:,DFUN_VAR,blk))
     !end do
 
     !call MPI_applyBC(VORT_VAR,CENTER)
 
-    !call MPI_physicalBC_vort(solnData(:,:,:,VORT_VAR))
+    !call MPI_physicalBC_vort(solnData(:,:,VORT_VAR,:))
 
     !do blk=1,blockCount
     !do i=1,Nyb+2
-    !      ins_w_res = ins_w_res + sum((solnData(:,i,blk,VORT_VAR)-solnData(:,i,blk,VORO_VAR))**2)
+    !      ins_w_res = ins_w_res + sum((solnData(:,i,VORT_VAR,blk)-solnData(:,i,VORO_VAR,blk))**2)
     !enddo
     !enddo
 

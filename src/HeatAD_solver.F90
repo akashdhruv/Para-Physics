@@ -24,52 +24,52 @@ subroutine HeatAD_solver(tstep)
    facexData => localFACEX
    faceyData => localFACEY
 
-   solnData(:,:,:,TOLD_VAR) = solnData(:,:,:,TEMP_VAR) 
+   solnData(:,:,TOLD_VAR,:) = solnData(:,:,TEMP_VAR,:) 
 
 #ifdef SINGLEPHASE
    do blk=1,blockCount
-   call heat_tempSolver(tstep,solnData(:,:,blk,TEMP_VAR),solnData(:,:,blk,TOLD_VAR),&
-                         solnData(:,:,blk,MDOT_VAR),solnData(:,:,blk,SMRH_VAR),&
-                         facexData(:,:,blk,VELC_VAR),faceyData(:,:,blk,VELC_VAR),&
-                         facexData(:,:,blk,AL1F_VAR),faceyData(:,:,blk,AL1F_VAR),&
-                         facexData(:,:,blk,AL2F_VAR),faceyData(:,:,blk,AL2F_VAR),&
-                         solnData(:,:,blk,DFUN_VAR),solnData(:,:,blk,PFUN_VAR),&
-                         solnData(:,:,blk,THCO_VAR),solnData(:,:,blk,CPRS_VAR))
+   call heat_tempSolver(tstep,solnData(:,:,TEMP_VAR,blk),solnData(:,:,TOLD_VAR,blk),&
+                         solnData(:,:,MDOT_VAR,blk),solnData(:,:,SMRH_VAR,blk),&
+                         facexData(:,:,VELC_VAR,blk),faceyData(:,:,VELC_VAR,blk),&
+                         facexData(:,:,AL1F_VAR,blk),faceyData(:,:,AL1F_VAR,blk),&
+                         facexData(:,:,AL2F_VAR,blk),faceyData(:,:,AL2F_VAR,blk),&
+                         solnData(:,:,DFUN_VAR,blk),solnData(:,:,PFUN_VAR,blk),&
+                         solnData(:,:,THCO_VAR,blk),solnData(:,:,CPRS_VAR,blk))
    end do
 #endif
 
 #ifdef MULTIPHASE
 #ifdef IBM
    do blk=1,blockCount
-   call heat_tempSolver_ibm(tstep,solnData(:,:,blk,TEMP_VAR),solnData(:,:,blk,TOLD_VAR),&
-                         solnData(:,:,blk,MDOT_VAR),solnData(:,:,blk,SMRH_VAR),&
-                         facexData(:,:,blk,VELC_VAR),faceyData(:,:,blk,VELC_VAR),&
-                         facexData(:,:,blk,AL1F_VAR),faceyData(:,:,blk,AL1F_VAR),&
-                         facexData(:,:,blk,AL2F_VAR),faceyData(:,:,blk,AL2F_VAR),&
-                         solnData(:,:,blk,DFUN_VAR),solnData(:,:,blk,PFUN_VAR),&
-                         solnData(:,:,blk,THCO_VAR),solnData(:,:,blk,CPRS_VAR))
+   call heat_tempSolver_ibm(tstep,solnData(:,:,TEMP_VAR,blk),solnData(:,:,TOLD_VAR,blk),&
+                         solnData(:,:,MDOT_VAR,blk),solnData(:,:,SMRH_VAR,blk),&
+                         facexData(:,:,VELC_VAR,blk),faceyData(:,:,VELC_VAR,blk),&
+                         facexData(:,:,AL1F_VAR,blk),faceyData(:,:,AL1F_VAR,blk),&
+                         facexData(:,:,AL2F_VAR,blk),faceyData(:,:,AL2F_VAR,blk),&
+                         solnData(:,:,DFUN_VAR,blk),solnData(:,:,PFUN_VAR,blk),&
+                         solnData(:,:,THCO_VAR,blk),solnData(:,:,CPRS_VAR,blk))   
    end do
 #else
 
 #ifdef MPH_DEBUG
    do blk=1,blockCount
-   call heat_tempSolver(tstep,solnData(:,:,blk,TEMP_VAR),solnData(:,:,blk,TOLD_VAR),&
-                         solnData(:,:,blk,MDOT_VAR),solnData(:,:,blk,SMRH_VAR),&
-                         facexData(:,:,blk,VELC_VAR),faceyData(:,:,blk,VELC_VAR),&
-                         facexData(:,:,blk,AL1F_VAR),faceyData(:,:,blk,AL1F_VAR),&
-                         facexData(:,:,blk,AL2F_VAR),faceyData(:,:,blk,AL2F_VAR),&
-                         solnData(:,:,blk,DFUN_VAR),solnData(:,:,blk,PFUN_VAR),&
-                         solnData(:,:,blk,THCO_VAR),solnData(:,:,blk,CPRS_VAR))
+   call heat_tempSolver(tstep,solnData(:,:,TEMP_VAR,blk),solnData(:,:,TOLD_VAR,blk),&
+                         solnData(:,:,MDOT_VAR,blk),solnData(:,:,SMRH_VAR,blk),&
+                         facexData(:,:,VELC_VAR,blk),faceyData(:,:,VELC_VAR,blk),&
+                         facexData(:,:,AL1F_VAR,blk),faceyData(:,:,AL1F_VAR,blk),&
+                         facexData(:,:,AL2F_VAR,blk),faceyData(:,:,AL2F_VAR,blk),&
+                         solnData(:,:,DFUN_VAR,blk),solnData(:,:,PFUN_VAR,blk),&
+                         solnData(:,:,THCO_VAR,blk),solnData(:,:,CPRS_VAR,blk))
    end do
 #else
    do blk=1,blockCount
-   call heat_tempSolver_mph(tstep,solnData(:,:,blk,TEMP_VAR),solnData(:,:,blk,TOLD_VAR),&
-                         solnData(:,:,blk,MDOT_VAR),solnData(:,:,blk,SMRH_VAR),&
-                         facexData(:,:,blk,VELC_VAR),faceyData(:,:,blk,VELC_VAR),&
-                         facexData(:,:,blk,AL1F_VAR),faceyData(:,:,blk,AL1F_VAR),&
-                         facexData(:,:,blk,AL2F_VAR),faceyData(:,:,blk,AL2F_VAR),&
-                         solnData(:,:,blk,DFUN_VAR),solnData(:,:,blk,PFUN_VAR),&
-                         solnData(:,:,blk,THCO_VAR),solnData(:,:,blk,CPRS_VAR))
+   call heat_tempSolver_mph(tstep,solnData(:,:,TEMP_VAR,blk),solnData(:,:,TOLD_VAR,blk),&
+                         solnData(:,:,MDOT_VAR,blk),solnData(:,:,SMRH_VAR,blk),&
+                         facexData(:,:,VELC_VAR,blk),faceyData(:,:,VELC_VAR,blk),&
+                         facexData(:,:,AL1F_VAR,blk),faceyData(:,:,AL1F_VAR,blk),&
+                         facexData(:,:,AL2F_VAR,blk),faceyData(:,:,AL2F_VAR,blk),&
+                         solnData(:,:,DFUN_VAR,blk),solnData(:,:,PFUN_VAR,blk),&
+                         solnData(:,:,THCO_VAR,blk),solnData(:,:,CPRS_VAR,blk))
    end do
 #endif
 #endif
@@ -77,11 +77,11 @@ subroutine HeatAD_solver(tstep)
 
    call MPI_BARRIER(solver_comm,ierr)
    call MPI_applyBC(TEMP_VAR,CENTER)
-   call MPI_physicalBC_temp(solnData(:,:,:,TEMP_VAR))
+   call MPI_physicalBC_temp(solnData(:,:,TEMP_VAR,:))
 
    do blk =1,blockCount
      do j=1,Nyb+2
-       ht_T_res = ht_T_res + sum((solnData(:,j,blk,TEMP_VAR)-solnData(:,j,blk,TOLD_VAR))**2)
+       ht_T_res = ht_T_res + sum((solnData(:,j,TEMP_VAR,blk)-solnData(:,j,TOLD_VAR,blk))**2)
      end do
    end do
 

@@ -21,8 +21,8 @@ subroutine Poisson_solver(rvar,ivar,ps_counter)
   integer :: i,j,thread_id,ii,jj,blk
   double precision :: poisson_start, poisson_finish
 
-  ps     => localCENTER(:,:,:,ivar)
-  ps_RHS => localCENTER(:,:,:,rvar)
+  ps     => localCENTER(:,:,ivar,:)
+  ps_RHS => localCENTER(:,:,rvar,:)
 
   ps_old = 0
   ps_counter = 0

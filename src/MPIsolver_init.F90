@@ -86,9 +86,9 @@ subroutine MPIsolver_init()
     yLC = ((/(I,I=0,blockCount-1)/) + blockOffset)/nblockx
 
 #ifdef MPI_DIS
-    allocate(localCENTER(Nxb+2,Nyb+2,blockCount,CENT_VAR))
-    allocate(localFACEX(Nxb+2,Nyb+2,blockCount,FACE_VAR))
-    allocate(localFACEY(Nxb+2,Nyb+2,blockCount,FACE_VAR))
+    allocate(localCENTER(Nxb+2,Nyb+2,CENT_VAR,blockCount))
+    allocate(localFACEX(Nxb+2,Nyb+2,FACE_VAR,blockCount))
+    allocate(localFACEY(Nxb+2,Nyb+2,FACE_VAR,blockCount))
 #endif
 
 #ifdef MPI_SHM
@@ -118,27 +118,27 @@ subroutine MPIsolver_init()
     !__________________Point to local chunk of the shared data_______________________________!
     call MPI_WIN_SHARED_QUERY(center_win, shared_id, center_size, disp_unit, center_ptr,ierr)
     call MPI_BARRIER(shared_comm,ierr)
-    call C_F_POINTER(center_ptr, localCENTER,[Nxb+2,Nyb+2,blockCount,CENT_VAR])
+    call C_F_POINTER(center_ptr, localCENTER,[Nxb+2,Nyb+2,CENT_VAR,blockCount])
 
     call MPI_WIN_SHARED_QUERY(facex_win, shared_id, facex_size, disp_unit, facex_ptr,ierr)
     call MPI_BARRIER(shared_comm,ierr)
-    call C_F_POINTER(facex_ptr, localFACEX, [Nxb+2,Nyb+2,blockCount,FACE_VAR])
+    call C_F_POINTER(facex_ptr, localFACEX, [Nxb+2,Nyb+2,FACE_VAR,blockCount])
 
     call MPI_WIN_SHARED_QUERY(facey_win, shared_id, facey_size, disp_unit, facey_ptr,ierr)
     call MPI_BARRIER(shared_comm,ierr)
-    call C_F_POINTER(facey_ptr, localFACEY, [Nxb+2,Nyb+2,blockCount,FACE_VAR])
+    call C_F_POINTER(facey_ptr, localFACEY, [Nxb+2,Nyb+2,FACE_VAR,blockCount])
 
     !____________________________Point to the shared data________________________________!
     call MPI_WIN_SHARED_QUERY(center_win, 0 ,center_size,disp_unit,center_ptr,ierr)
-    call C_F_POINTER(center_ptr,sharedCENTER,[Nxb+2,Nyb+2,blockCount,CENT_VAR*shared_procs])
+    call C_F_POINTER(center_ptr,sharedCENTER,[Nxb+2,Nyb+2,CENT_VAR,blockCount*shared_procs])
     call MPI_BARRIER(shared_comm,ierr)
 
     call MPI_WIN_SHARED_QUERY(facex_win, 0,facex_size,disp_unit,facex_ptr,ierr)
-    call C_F_POINTER(facex_ptr,sharedFACEX,[Nxb+2,Nyb+2,blockCount,FACE_VAR*shared_procs])
+    call C_F_POINTER(facex_ptr,sharedFACEX,[Nxb+2,Nyb+2,FACE_VAR,blockCount*shared_procs])
     call MPI_BARRIER(shared_comm,ierr)
 
     call MPI_WIN_SHARED_QUERY(facey_win, 0,facey_size,disp_unit,facey_ptr,ierr)
-    call C_F_POINTER(facey_ptr,sharedFACEY,[Nxb+2,Nyb+2,blockCount,FACE_VAR*shared_procs])
+    call C_F_POINTER(facey_ptr,sharedFACEY,[Nxb+2,Nyb+2,FACE_VAR,blockCount*shared_procs])
     call MPI_BARRIER(shared_comm,ierr)
 #endif
 
@@ -155,9 +155,9 @@ subroutine MPIsolver_init()
     call MPI_INFO_CREATE(mpi_info_key,ierr)
     call MPI_INFO_SET(mpi_info_key,"no_locks","true",ierr)
 
-    allocate(localCENTER(Nxb+2,Nyb+2,blockCount,CENT_VAR))
-    allocate(localFACEX(Nxb+2,Nyb+2,blockCount,FACE_VAR))
-    allocate(localFACEY(Nxb+2,Nyb+2,blockCount,FACE_VAR))
+    allocate(localCENTER(Nxb+2,Nyb+2,CENT_VAR,blockCount))
+    allocate(localFACEX(Nxb+2,Nyb+2,FACE_VAR,blockCount))
+    allocate(localFACEY(Nxb+2,Nyb+2,FACE_VAR,blockCount))
 
     allocate(eastORIGIN(Nyb+2,blockCount))
     allocate(westORIGIN(Nyb+2,blockCount))
