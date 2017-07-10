@@ -21,18 +21,18 @@ subroutine Multiphase_init()
    facexData => localFACEX
    faceyData => localFACEY  
 
-   mph_thco2 = 1.0
-   mph_rho2  = 1.0
-   mph_cp2   = 1.0*mph_rho2
-   mph_vis2  = 1.0
+   mph_thco2 = 1.0           ! Fluid thermal conductivity
+   mph_rho2  = 1.0           ! Fluid density
+   mph_cp2   = 1.0*mph_rho2  ! Fluid specific heat
+   mph_vis2  = 1.0           ! Fluid viscosity
 
-   mph_thco1 = 1.0
-   mph_rho1  = 1.0
-   mph_cp1   = 1.0*mph_rho1
-   mph_vis1  = 1.0
+   mph_thco1 = 1.0           ! Vapor/Gas thermal conductivity
+   mph_rho1  = 1.0           ! Vapor/Gas density
+   mph_cp1   = 1.0*mph_rho1  ! Vapor/Gas specific heat
+   mph_vis1  = 1.0           ! Vapor/Gas viscosity
 
-   mph_beta  = 0.1
-   mph_sten  = 1.0
+   mph_beta  = 0.1           ! Thermal expansion coefficient
+   mph_sten  = 1.0           ! inverse Weber number 
 
    solnData(:,:,DFUN_VAR,:)  = 0.0
    solnData(:,:,PFUN_VAR,:)  = 0.0
@@ -61,6 +61,8 @@ subroutine Multiphase_init()
    faceyData(:,:,VELI_VAR,:) = 0.0
 
 
+   ! Initial vapor phase definition
+
    !___Vorticity Test__!
    !mph_x0 = -0.2
    !mph_y0 =  0.0
@@ -75,6 +77,8 @@ subroutine Multiphase_init()
    !mph_x0 = -5.0
    !mph_y0 =  0.0
    !mph_r0 = 0.5
+
+   ! Distance function calculation
 
    do blk=1,blockCount
 

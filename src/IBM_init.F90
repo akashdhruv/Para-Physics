@@ -20,25 +20,27 @@ subroutine IBM_init()
    facexData => localFACEX
    faceyData => localFACEY  
 
-   ibm_thco2 = 1.0
-   ibm_rho2 = 1.0
-   ibm_cp2 = 1.0*ibm_rho2
-   ibm_vis2 = 1.0
+   ibm_thco2 = 1.0          ! Fluid thermal conductivity
+   ibm_rho2 = 1.0           ! Fluid density
+   ibm_cp2 = 1.0*ibm_rho2   ! Fluid specific heat
+   ibm_vis2 = 1.0           ! Fluid viscosity
 
-   ibm_thco1 = 1.0
-   ibm_rho1 = 1.0
-   ibm_cp1 = 1.0*ibm_rho1
-   ibm_vis1 = 1.0
+   ibm_thco1 = 1.0          ! Solid thermal conductivity
+   ibm_rho1 = 1.0           ! Solid density
+   ibm_cp1 = 1.0*ibm_rho1   ! Solid specific heat
+   ibm_vis1 = 1.0           ! Solid viscosity
 
-   ibm_omega = 1.0
+   ibm_omega = 1.0          ! Rotational velocity of immersed solid cylinder
 
-   facexData(:,:,IBMF_VAR,:) = 0.0
+   ! Distance function to store distances from immersed boundary
+   facexData(:,:,IBMF_VAR,:) = 0.0 
    faceyData(:,:,IBMF_VAR,:) = 0.0
 
-   ibm_x0 = 0.0
+   ibm_x0 = 0.0             ! parameters for cylinder's location
    ibm_y0 = 0.5
    ibm_r0 = 0.1
 
+  ! Calculate distance function
   do blk=1,blockCount
 
    do j=1,Nyb+2

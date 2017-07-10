@@ -17,12 +17,12 @@ subroutine MPI_applyBC_DIS(local)
 
         !_______________________MPI BC for High X______________________________!
            if(xLC(blk) < nblockx - 1) then
-             if(blockLC(blk+blockOffset) == blockLC(blk+blockOffset+1)) then
+             if(blockLC(blk+blockOffset) == blockLC(blk+blockOffset+1)) then    ! Check if neighbouring block on same process
 
                 local(Nxb+2,:,blockID(blk+blockOffset)) = &
                 local(2,:,blockID(blk+blockOffset+1))
 
-             else
+             else                                                               ! If not on same process do MPI exchange
                 req_count = req_count + 1
 
                 call MPI_ISEND(local(Nxb+1,:,blockID(blk+blockOffset)), Nyb+2, MPI_REAL, &
@@ -33,12 +33,12 @@ subroutine MPI_applyBC_DIS(local)
 
         !_______________________MPI BC for Low X________________________________!
            if(xLC(blk) > 0) then
-              if(blockLC(blk+blockOffset) == blockLC(blk+blockOffset-1)) then
+              if(blockLC(blk+blockOffset) == blockLC(blk+blockOffset-1)) then   ! Check if neighbouring block on same process
 
                  local(1,:,blockID(blk+blockOffset)) = &
                  local(Nxb+1,:,blockID(blk+blockOffset-1))
 
-              else
+              else                                                              ! If not on same process do MPI exchange
                  req_count = req_count + 1
 
                  call MPI_ISEND(local(2,:,blockID(blk+blockOffset)), Nyb+2, MPI_REAL, &
@@ -49,6 +49,7 @@ subroutine MPI_applyBC_DIS(local)
 
         end do
 
+        ! Receive sent information to complete MPI exchange
         do blk = 1,blockCount
 
         !_______________________MPI BC for High X______________________________!
@@ -74,12 +75,12 @@ subroutine MPI_applyBC_DIS(local)
 
          !_______________________MPI BC for High Y______________________________!
             if(yLC(blk) < nblocky - 1) then
-               if(blockLC(blk+blockOffset) == blockLC(blk+blockOffset+nblockx)) then
+               if(blockLC(blk+blockOffset) == blockLC(blk+blockOffset+nblockx)) then     ! Check if neighbouring block on same process
 
                   local(:,Nyb+2,blockID(blk+blockOffset)) = &
                   local(:,2,blockID(blk+blockOffset+nblockx))
 
-               else
+               else                                                                      ! If not on same process do MPI exchange
                   req_count = req_count + 1
 
                   call MPI_ISEND(local(:,Nyb+1,blockID(blk+blockOffset)), Nxb+2, MPI_REAL, &
@@ -90,12 +91,12 @@ subroutine MPI_applyBC_DIS(local)
 
          !_______________________MPI BC for Low Y________________________________!
              if(yLC(blk) > 0) then
-                if(blockLC(blk+blockOffset) == blockLC(blk+blockOffset-nblockx)) then
+                if(blockLC(blk+blockOffset) == blockLC(blk+blockOffset-nblockx)) then    ! Check if neighbouring block on same process
 
                    local(:,1,blockID(blk+blockOffset)) = &
                    local(:,Nyb+1,blockID(blk+blockOffset-nblockx))
 
-                else
+                else                                                                     ! If not on same process do MPI exchange
                    req_count = req_count + 1
                                          
                    call MPI_ISEND(local(:,2,blockID(blk+blockOffset)), Nxb+2, MPI_REAL, &
@@ -106,6 +107,7 @@ subroutine MPI_applyBC_DIS(local)
 
         end do
 
+        ! Receive sent information to complete MPI exchange
         do blk = 1,blockCount            
 
          !_______________________MPI BC for High Y______________________________!

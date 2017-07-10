@@ -14,6 +14,7 @@ subroutine IncompNS_init()
       facexData => localFACEX
       faceyData => localFACEY      
 
+      ! Initialize variables relevant to INS unit
       solnData(:,:,PRES_VAR,:) = 0.0
       solnData(:,:,VORT_VAR,:) = 0.0
 
@@ -26,14 +27,14 @@ subroutine IncompNS_init()
       facexData(:,:,GOLD_VAR,:) = 0.0
       faceyData(:,:,GOLD_VAR,:) = 0.0
      
-      ins_inRe  = 0.001
+      ins_inRe  = 0.001       ! Reynolds number
 
-      ins_sigma = 0.1
-      ins_cfl   = 0.1
-      ins_timePoisson = 0.0
+      ins_sigma = 0.1         ! CFL for diffusive  dt
+      ins_cfl   = 0.1         ! CFL for convective dt
+      ins_timePoisson = 0.0   ! variable to store Poisson solver time
 
-      ins_gravX =  0.0
-      ins_gravY =  0.0
+      ins_gravX =  0.0        ! 1/(Fr**2) in X
+      ins_gravY =  0.0        ! 1/(Fr**2) in Y
 
       nullify(facexData,faceyData,solnData)
 

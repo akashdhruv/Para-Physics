@@ -1,3 +1,6 @@
+! Initialization of MPI environment, Physical data,
+! Grid data, Physics unit data, etc
+
 subroutine Solver_init
 
 #include "Solver.h"

@@ -19,18 +19,18 @@ subroutine MPI_applyBC_SHM(local,sharedDATA)
            !_______________________MPI BC for High X______________________________!
            if(xLC(blk) < nblockx - 1) then
 
-              if(blockLC(blk+blockOffset) == blockLC(blk+blockOffset+1)) then
+              if(blockLC(blk+blockOffset) == blockLC(blk+blockOffset+1)) then           ! Check if neighbouring block on same process
 
                  local(Nxb+2,:,blockID(blk+blockOffset)) = &
                  local(2,:,blockID(blk+blockOffset+1))
 
 
-              else if(shared_part(blockLC(blk+blockOffset+1)+1) /= MPI_UNDEFINED) then
+              else if(shared_part(blockLC(blk+blockOffset+1)+1) /= MPI_UNDEFINED) then  ! If not on same process then check if on the same node
 
                  local(Nxb+2,:,blockID(blk+blockOffset)) = &
                  sharedDATA(2,:,blockID(blk+blockOffset+1)+shared_part(blockLC(blk+blockOffset+1)+1)*blockCount)
 
-              else
+              else                                                                      ! If on different node perform MPI exchange
 
                 req_count = req_count + 1
 
@@ -43,17 +43,17 @@ subroutine MPI_applyBC_SHM(local,sharedDATA)
             !_______________________MPI BC for Low X______________________________!
             if(xLC(blk) > 0) then
 
-               if(blockLC(blk+blockOffset) == blockLC(blk+blockOffset-1)) then
+               if(blockLC(blk+blockOffset) == blockLC(blk+blockOffset-1)) then          ! Check if neighbouring block on same process
 
                   local(1,:,blockID(blk+blockOffset)) = &
                   local(Nxb+1,:,blockID(blk+blockOffset-1))
 
-               else if(shared_part(blockLC(blk+blockOffset-1)+1) /= MPI_UNDEFINED) then
+               else if(shared_part(blockLC(blk+blockOffset-1)+1) /= MPI_UNDEFINED) then ! If not on same process then check if on the same node
 
                   local(1,:,blockID(blk+blockOffset)) = &
                   sharedDATA(Nxb+1,:,blockID(blk+blockOffset-1)+shared_part(blockLC(blk+blockOffset-1)+1)*blockCount)
 
-               else
+               else                                                                     ! If on different node perform MPI exchange
 
                  req_count = req_count + 1
 
@@ -65,6 +65,7 @@ subroutine MPI_applyBC_SHM(local,sharedDATA)
 
         end do
 
+        ! Receive information to complete MPI exchange
         do blk = 1,blockCount
 
         !_______________________MPI BC for High X______________________________!
@@ -95,17 +96,17 @@ subroutine MPI_applyBC_SHM(local,sharedDATA)
              !_______________________MPI BC for High Y______________________________!
              if(yLC(blk) < nblocky - 1) then
 
-                if(blockLC(blk+blockOffset) == blockLC(blk+blockOffset+nblockx)) then
+                if(blockLC(blk+blockOffset) == blockLC(blk+blockOffset+nblockx)) then           ! Check if neighbouring block on same process
 
                    local(:,Nyb+2,blockID(blk+blockOffset)) = &
                    local(:,2,blockID(blk+blockOffset+nblockx))
 
-                else if(shared_part(blockLC(blk+blockOffset+nblockx)+1) /= MPI_UNDEFINED) then
+                else if(shared_part(blockLC(blk+blockOffset+nblockx)+1) /= MPI_UNDEFINED) then  ! If not on same process then check if on the same node
 
                    local(:,Nyb+2,blockID(blk+blockOffset)) = &
                    sharedDATA(:,2,blockID(blk+blockOffset+nblockx)+shared_part(blockLC(blk+blockOffset+nblockx)+1)*blockCount)
 
-                else
+                else                                                                            ! If on different node perform MPI exchange
 
                   req_count = req_count + 1
 
@@ -118,17 +119,17 @@ subroutine MPI_applyBC_SHM(local,sharedDATA)
              !_______________________MPI BC for Low Y______________________________!
              if(yLC(blk) > 0) then
 
-                if(blockLC(blk+blockOffset) == blockLC(blk+blockOffset-nblockx)) then
+                if(blockLC(blk+blockOffset) == blockLC(blk+blockOffset-nblockx)) then           ! Check if neighbouring block on same process
 
                    local(:,1,blockID(blk+blockOffset)) = &
                    local(:,Nyb+1,blockID(blk+blockOffset-nblockx))
 
-                else if(shared_part(blockLC(blk+blockOffset-nblockx)+1) /= MPI_UNDEFINED) then
+                else if(shared_part(blockLC(blk+blockOffset-nblockx)+1) /= MPI_UNDEFINED) then  ! If not on same process then check if on the same node
 
                    local(:,1,blockID(blk+blockOffset)) = &
                    sharedDATA(:,Nyb+1,blockID(blk+blockOffset-nblockx)+shared_part(blockLC(blk+blockOffset-nblockx)+1)*blockCount)
 
-                else
+                else                                                                            ! If on different node perform MPI exchange
 
                    req_count = req_count + 1
 
@@ -140,6 +141,7 @@ subroutine MPI_applyBC_SHM(local,sharedDATA)
 
           end do
 
+         ! Receive information to complete MPI exchange
          do blk = 1,blockCount
 
          !_______________________MPI BC for High Y______________________________!

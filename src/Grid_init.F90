@@ -11,18 +11,19 @@ subroutine Grid_init()
      integer :: I,blk
      real :: pi=4.0*atan(1.0)
 
-     gr_Lx = (D_xmax)-(D_xmin)
-     gr_Ly = (D_ymax)-(D_ymin)
+     gr_Lx = (D_xmax)-(D_xmin) ! Domain length in X DIR
+     gr_Ly = (D_ymax)-(D_ymin) ! Domain length in Y DIR
 
-     gr_Lx = gr_Lx/nblockx
-     gr_Ly = gr_Ly/nblocky
+     gr_Lx = gr_Lx/nblockx     ! Block length in X DIR
+     gr_Ly = gr_Ly/nblocky     ! Block length in Y DIR
 
-     gr_dx = gr_Lx/Nxb
-     gr_dy = gr_Ly/Nyb
+     gr_dx = gr_Lx/Nxb         ! dx
+     gr_dy = gr_Ly/Nyb         ! dy
     
-     allocate(gr_x(Nxb+1,Nyb+1,blockCount))
-     allocate(gr_y(Nxb+1,Nyb+1,blockCount))
+     allocate(gr_x(Nxb+1,Nyb+1,blockCount)) ! Array to store X location per block
+     allocate(gr_y(Nxb+1,Nyb+1,blockCount)) ! Array to store Y location per block
 
+     ! Calculate X and Y coordinates per block
      do blk=1,blockCount
 
        do i=1,Nyb+1
