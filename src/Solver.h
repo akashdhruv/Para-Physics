@@ -56,43 +56,43 @@ _______________________Grid Parameters___________________________
 
 #define TIME_END 60.00
 
-#define nblockx 4
-#define nblocky 3
+#define nblockx 2
+#define nblocky 2
 
 #define MaxIt 1500
 
 #define PRES_VAR 1
 #define TEMP_VAR 2
 #define DFUN_VAR 3
-#define PFUN_VAR 4
-#define THCO_VAR 5
-#define CPRS_VAR 6
-#define NRMX_VAR 7
+#define PRHS_VAR 4
+#define VORO_VAR 5
+#define NRMX_VAR 6
+#define TOLD_VAR 7
 #define NRMY_VAR 8
-#define VORT_VAR 9
-#define VISC_VAR 10
-#define TOLD_VAR 11
+#define VISC_VAR 9
+#define SIGP_VAR 10
+#define SMHV_VAR 11
 #define CURV_VAR 12
-#define SIGP_VAR 13
-#define MDOT_VAR 14
-#define SMRH_VAR 15
-#define SMHV_VAR 16
-#define PRHS_VAR 17
-#define VORO_VAR 18
+#define THCO_VAR 13
+#define SMRH_VAR 14
+#define CPRS_VAR 15
+#define PFUN_VAR 16
+#define MDOT_VAR 17
+#define VORT_VAR 18
 
 #define CENT_VAR 18
 
 #define VELC_VAR 1
 #define IBMF_VAR 2
-#define RH1F_VAR 3
-#define RH2F_VAR 4
-#define AL1F_VAR 5
-#define AL2F_VAR 6
-#define SIGM_VAR 7
-#define VELI_VAR 8
-#define USTR_VAR 9
-#define UOLD_VAR 10
-#define GOLD_VAR 11
+#define UOLD_VAR 3
+#define GOLD_VAR 4
+#define VELI_VAR 5
+#define SIGM_VAR 6
+#define USTR_VAR 7
+#define RH1F_VAR 8
+#define AL1F_VAR 9
+#define RH2F_VAR 10
+#define AL2F_VAR 11
 
 #define FACE_VAR 11
 
