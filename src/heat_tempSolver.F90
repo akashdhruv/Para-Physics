@@ -74,7 +74,7 @@ subroutine heat_tempSolver(tstep,T,T_old,mdot,smrh,u,v,a1x,a1y,a2x,a2y,s,pf,thco
      Ty_mins = (T_old(i,j)-T_old(i,j-1))/gr_dy
 
      T(i,j) = T_old(i,j)+((dr_dt*ins_inRe*0.5*(a2x(i,j)+a2x(i-1,j)))/(ht_Pr*gr_dx*gr_dx))*(T_old(i+1,j)+T_old(i-1,j)-2*T_old(i,j))&
-                        +((dr_dt*ins_inRe*0.5*(a2x(i,j)+a2x(i,j-1)))/(ht_Pr*gr_dy*gr_dy))*(T_old(i,j+1)+T_old(i,j-1)-2*T_old(i,j))&
+                        +((dr_dt*ins_inRe*0.5*(a2y(i,j)+a2y(i,j-1)))/(ht_Pr*gr_dy*gr_dy))*(T_old(i,j+1)+T_old(i,j-1)-2*T_old(i,j))&
                         -((dr_dt))*(u_plus*Tx_mins + u_mins*Tx_plus)&
                         -((dr_dt))*(v_plus*Ty_mins + v_mins*Ty_plus)
 
