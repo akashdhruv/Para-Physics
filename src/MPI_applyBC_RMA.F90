@@ -18,6 +18,7 @@ subroutine MPI_applyBC_RMA(local)
 
         bSize = Nxb+2+Nxb+2+Nyb+2+Nyb+2
 
+        ! Write data to target window
         do blk=1,blockCount
         dataTARGET(1+(blk-1)*bsize:Nyb+2+(blk-1)*bSize)               = local(2,:,blk)
         dataTARGET(index1+1+(blk-1)*bsize:index1+Nyb+2+(blk-1)*bsize) = local(Nxb+1,:,blk)
@@ -31,9 +32,14 @@ subroutine MPI_applyBC_RMA(local)
         do blk=1,blockCount
 
         !_______________________MPI BC for High X______________________________!
+        ! Check if MPI boundary
         if(xLC(blk) < nblockx - 1) then
+
+           ! Check if neighbouring block on same process
            if(blockLC(blk+blockOffset) == blockLC(blk+blockOffset+1)) then
               eastORIGIN(:,blk) = local(2,:,blockID(blk+blockOffset+1))
+
+           ! If not on same process then get info from RMA window 
            else
              call MPI_GET(eastORIGIN(1,blk),Nyb+2,MPI_REAL,blockLC(blk+blockOffset+1),&
                   target_disp+(blockID(blk+blockOffset+1)-1)*bSize,Nyb+2,MPI_REAL,RMA_win,ierr)
@@ -41,9 +47,14 @@ subroutine MPI_applyBC_RMA(local)
         end if
 
         !_______________________MPI BC for Low X______________________________!
+        ! Check if MPI boundary
         if(xLC(blk) > 0) then
+
+           ! Check if neighbouring block on same process
            if(blockLC(blk+blockOffset) == blockLC(blk+blockOffset-1)) then
               westORIGIN(:,blk) = local(Nxb+1,:,blockID(blk+blockOffset-1))
+
+           ! If not on same process then get info from RMA window
            else
               call MPI_GET(westORIGIN(1,blk),Nyb+2,MPI_REAL,blockLC(blk+blockOffset-1),&
                    target_disp+index1+(blockID(blk+blockOffset-1)-1)*bSize,Nyb+2,MPI_REAL,RMA_win,ierr)
@@ -51,9 +62,14 @@ subroutine MPI_applyBC_RMA(local)
         end if         
       
         !_______________________MPI BC for High Y______________________________!
+        ! Check if MPI boundary
         if(yLC(blk) < nblocky - 1) then
+
+           ! Check if neighbouring block on same process
            if(blockLC(blk+blockOffset) == blockLC(blk+blockOffset+nblockx)) then
               northORIGIN(:,blk) = local(:,2,blockID(blk+blockOffset+nblockx))
+
+           ! If not on same process then get info from RMA window
            else
               call MPI_GET(northORIGIN(1,blk),Nxb+2,MPI_REAL,blockLC(blk+blockOffset+nblockx),&
                    target_disp+index2+(blockID(blk+blockOffset+nblockx)-1)*bSize,Nxb+2,MPI_REAL,RMA_win,ierr)
@@ -62,9 +78,14 @@ subroutine MPI_applyBC_RMA(local)
         end if
 
         !_______________________MPI BC for Low Y______________________________!
+        ! Check if MPI boundary
         if(yLC(blk) > 0) then
+
+           ! Check if neighbouring block on same process
            if(blockLC(blk+blockOffset) == blockLC(blk+blockOffset-nblockx)) then
               southORIGIN(:,blk) = local(:,Nyb+1,blockID(blk+blockOffset-nblockx))
+
+           ! If not on same process then get info from RMA window
            else
               call MPI_GET(southORIGIN(1,blk),Nxb+2,MPI_REAL,blockLC(blk+blockOffset-nblockx),&
                    target_disp+index3+(blockID(blk+blockOffset-nblockx)-1)*bSize,Nxb+2,MPI_REAL,RMA_win,ierr)
@@ -83,9 +104,14 @@ subroutine MPI_applyBC_RMA(local)
         do blk=1,blockCount
 
         !_______________________MPI BC for High X______________________________!
+        ! Check if MPI boundary
         if(xLC(blk) < nblockx - 1) then
+
+           ! Check if neighbouring block on same process
            if(blockLC(blk+blockOffset) == blockLC(blk+blockOffset+1)) then
               eastORIGIN(:,blk) = local(2,:,blockID(blk+blockOffset+1))
+
+           ! If not on same process then get info from RMA window 
            else
              call MPI_GET(eastORIGIN(1,blk),Nyb+2,MPI_REAL,blockLC(blk+blockOffset+1),&
                   target_disp+(blockID(blk+blockOffset+1)-1)*bSize,Nyb+2,MPI_REAL,RMA_win,ierr)
@@ -93,9 +119,14 @@ subroutine MPI_applyBC_RMA(local)
         end if
 
         !_______________________MPI BC for Low X______________________________!
+        ! Check if MPI boundary
         if(xLC(blk) > 0) then
+
+           ! Check if neighbouring block on same process
            if(blockLC(blk+blockOffset) == blockLC(blk+blockOffset-1)) then
               westORIGIN(:,blk) = local(Nxb+1,:,blockID(blk+blockOffset-1))
+
+           ! If not on same process then get info from RMA window
            else
               call MPI_GET(westORIGIN(1,blk),Nyb+2,MPI_REAL,blockLC(blk+blockOffset-1),&
                    target_disp+index1+(blockID(blk+blockOffset-1)-1)*bSize,Nyb+2,MPI_REAL,RMA_win,ierr)
@@ -103,9 +134,14 @@ subroutine MPI_applyBC_RMA(local)
         end if         
       
         !_______________________MPI BC for High Y______________________________!
+        ! Check if MPI boundary
         if(yLC(blk) < nblocky - 1) then
+
+           ! Check if neighbouring block on same process
            if(blockLC(blk+blockOffset) == blockLC(blk+blockOffset+nblockx)) then
               northORIGIN(:,blk) = local(:,2,blockID(blk+blockOffset+nblockx))
+
+           ! If not on same process then get info from RMA window
            else
               call MPI_GET(northORIGIN(1,blk),Nxb+2,MPI_REAL,blockLC(blk+blockOffset+nblockx),&
                    target_disp+index2+(blockID(blk+blockOffset+nblockx)-1)*bSize,Nxb+2,MPI_REAL,RMA_win,ierr)
@@ -114,9 +150,14 @@ subroutine MPI_applyBC_RMA(local)
         end if
 
         !_______________________MPI BC for Low Y______________________________!
+        ! Check if MPI boundary
         if(yLC(blk) > 0) then
+
+           ! Check if neighbouring block on same process
            if(blockLC(blk+blockOffset) == blockLC(blk+blockOffset-nblockx)) then
               southORIGIN(:,blk) = local(:,Nyb+1,blockID(blk+blockOffset-nblockx))
+
+           ! If not on same process then get info from RMA window
            else
               call MPI_GET(southORIGIN(1,blk),Nxb+2,MPI_REAL,blockLC(blk+blockOffset-nblockx),&
                    target_disp+index3+(blockID(blk+blockOffset-nblockx)-1)*bSize,Nxb+2,MPI_REAL,RMA_win,ierr)
@@ -129,6 +170,7 @@ subroutine MPI_applyBC_RMA(local)
         call MPI_BARRIER(solver_comm,ierr)
 #endif
 
+        ! Copy data 
         do blk=1,blockCount
         local(Nxb+2,:,blk) = eastORIGIN(:,blk)
         local(1,:,blk)     = westORIGIN(:,blk)

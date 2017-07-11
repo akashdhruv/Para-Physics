@@ -72,7 +72,7 @@ subroutine MPIsolver_init()
     !_________________Define Communication Based On Grid________________!
 
     ! Splitting communication environment in X and Y direction.
-    ! Used in previous version or para-physics, not relevant anymore.
+    ! Used in previous version of para-physics, not relevant anymore.
     ! Required if want to use subroutine MPI_applyBC_ORIG with blockCount = 1
 
     call MPI_COMM_SPLIT(solver_comm,myid/nblockx,myid,x_comm,ierr)
@@ -131,7 +131,7 @@ subroutine MPIsolver_init()
 
     ! Create info key for shared memory window allocation
     call MPI_INFO_CREATE(mpi_info_key,ierr)
-    call MPI_INFO_SET(mpi_info_key,"alloc_shared_noncontig","true",ierr)
+    call MPI_INFO_SET(mpi_info_key,"alloc_shared_noncontig","false",ierr)
 
    !_________Make on-node processes allocate their chunk of shared Memory____________________!
 
@@ -145,9 +145,9 @@ subroutine MPIsolver_init()
 
     ! Allocate shared memory window - each processes will allocate their chunk which is shared between all
     ! the processes in shared communication environment
-    call MPI_WIN_ALLOCATE_SHARED(center_size,disp_unit,MPI_INFO_NULL,shared_comm,center_ptr,center_win,ierr)
-    call MPI_WIN_ALLOCATE_SHARED(facex_size,disp_unit,MPI_INFO_NULL,shared_comm,facex_ptr,facex_win,ierr)
-    call MPI_WIN_ALLOCATE_SHARED(facey_size,disp_unit,MPI_INFO_NULL,shared_comm,facey_ptr,facey_win,ierr)
+    call MPI_WIN_ALLOCATE_SHARED(center_size,disp_unit,mpi_info_key,shared_comm,center_ptr,center_win,ierr)
+    call MPI_WIN_ALLOCATE_SHARED(facex_size,disp_unit,mpi_info_key,shared_comm,facex_ptr,facex_win,ierr)
+    call MPI_WIN_ALLOCATE_SHARED(facey_size,disp_unit,mpi_info_key,shared_comm,facey_ptr,facey_win,ierr)
 
     !__________________Point to local chunk of the shared data_______________________________!
     call MPI_WIN_SHARED_QUERY(center_win, shared_id, center_size, disp_unit, center_ptr,ierr)
