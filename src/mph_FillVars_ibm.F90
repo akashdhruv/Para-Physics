@@ -13,8 +13,6 @@ subroutine mph_FillVars_ibm(s,pf,thco,cprs,visc,rhox,rhoy,alpx,alpy,T,T_old,beta
     do j=2,Nyb+1
      do i=2,Nxb+1
 
-         !visc(i,j) = visc(i,j)*(((T(i,j))/(T_old(i,j)))**0.7)
-
          visc(i,j) = visc(i,j)*(1+beta*(T(i,j)-T_old(i,j)))
 
          rhox(i,j) = rhox(i,j)*(1+beta*((T(i,j)+T(i+1,j))*0.5-&

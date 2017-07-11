@@ -31,7 +31,7 @@ subroutine Multiphase_init()
    mph_cp1   = 1.0*mph_rho1  ! Vapor/Gas specific heat
    mph_vis1  = 1.0           ! Vapor/Gas viscosity
 
-   mph_beta  = 0.1           ! Thermal expansion coefficient
+   mph_beta  = 1.0           ! Thermal expansion coefficient
    mph_sten  = 1.0           ! inverse Weber number 
 
    solnData(:,:,DFUN_VAR,:)  = 0.0
@@ -69,14 +69,14 @@ subroutine Multiphase_init()
    !mph_r0 =  0.05
 
    !___Multiphase Test__!
-   mph_x0 = 0.0
-   mph_y0 = 0.0
-   mph_r0 = 0.5
+   !mph_x0 = 0.0
+   !mph_y0 = 0.0
+   !mph_r0 = 0.5
 
    !___Conjugate Heat Test_!
-   !mph_x0 = -5.0
-   !mph_y0 =  0.0
-   !mph_r0 = 0.5
+   mph_x0 =  0.5
+   mph_y0 =  0.0
+   mph_r0 =  0.1
 
    ! Distance function calculation
 

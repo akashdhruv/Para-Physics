@@ -13,10 +13,8 @@ subroutine MPI_physicalBC_vel(u_ex,v_ex)
        integer :: status(MPI_STATUS_SIZE),blk
 
 
-#ifdef LID_DRIVEN_FLOW
-      
-      do blk=1,blockCount
- 
+#ifdef LID_DRIVEN_FLOW      
+   do blk=1,blockCount
        if ( xLC(blk) == 0) then
 
            v_ex(1,:,blk)=-v_ex(2,:,blk)
@@ -47,13 +45,11 @@ subroutine MPI_physicalBC_vel(u_ex,v_ex)
            u_ex(:,Nyb+2,blk)=2-u_ex(:,Nyb+1,blk)
 
        end if
-      end do
-
+   end do
 #endif
 
 #ifdef CHANNEL_FLOW
-
-       do blk=1,blockCount
+   do blk=1,blockCount
        if ( xLC(blk) == 0) then
 
            v_ex(1,:,blk)=v_ex(2,:,blk)
@@ -75,7 +71,7 @@ subroutine MPI_physicalBC_vel(u_ex,v_ex)
        if ( yLC(blk) == 0) then
 
            v_ex(:,1,blk)=0.0
-           u_ex(:,1,blk)=2.0-u_ex(:,2,blk)
+           u_ex(:,1,blk)=-u_ex(:,2,blk)
 
        end if
 
@@ -83,78 +79,10 @@ subroutine MPI_physicalBC_vel(u_ex,v_ex)
 
            v_ex(:,Nyb+2,blk)=0.0
            v_ex(:,Nyb+1,blk)=0.0
-           u_ex(:,Nyb+2,blk)=2.0-u_ex(:,Nyb+1,blk)
+           u_ex(:,Nyb+2,blk)=-u_ex(:,Nyb+1,blk)
 
        end if
-       end do
-
-#endif
-
-#ifdef COUETTE_FLOW
-
-       call MPI_periodicBC(u_ex,v_ex,1)
-
-       do blk=1,blockCount
-       if ( xLC(blk) == nblockx-1) then
-
-           u_ex(Nxb+2,:,blk)=u_ex(Nxb+1,:,blk)
-
-       end if
-
-
-       if ( yLC(blk) == 0) then
-
-           v_ex(:,1,blk)=0
-           u_ex(:,1,blk)=-2-u_ex(:,2,blk)
-
-       end if
-
-       if ( yLC(blk) == nblocky-1) then
-
-           v_ex(:,Nyb+2,blk)=0
-           v_ex(:,Nyb+1,blk)=0
-           u_ex(:,Nyb+2,blk)=2-u_ex(:,Nyb+1,blk)
-
-       end if
-       end do
-
-#endif
-
-#ifdef MPH_FLOW
-
-       do blk=1,blockCount
-       if ( xLC(blk) == 0) then
-
-           v_ex(1,:,blk) = v_ex(2,:,blk)
-           u_ex(1,:,blk) = 0.0
-
-       end if
-
-       if ( xLC(blk) == nblockx-1) then
-
-           v_ex(Nxb+2,:,blk) = v_ex(Nxb+1,:,blk)
-           u_ex(Nxb+1,:,blk) = 0.0
-           u_ex(Nxb+2,:,blk) = 0.0
-
-       end if
-
-
-       if ( yLC(blk) == 0) then
-
-           v_ex(:,1,blk) = 0.0
-           u_ex(:,1,blk) = -u_ex(:,2,blk)
-
-       end if
-
-       if ( yLC(blk) == nblocky-1) then
-
-           !v_ex(:,Nyb+1,blk)=v_ex(:,Nyb,blk)
-           v_ex(:,Nyb+2,blk)=v_ex(:,Nyb+1,blk)
-           u_ex(:,Nyb+2,blk)=u_ex(:,Nyb+1,blk)
-
-       end if
-       end do
-
+   end do
 #endif
 
 end subroutine MPI_physicalBC_vel

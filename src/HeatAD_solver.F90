@@ -27,6 +27,18 @@ subroutine HeatAD_solver(tstep)
    solnData(:,:,TOLD_VAR,:) = solnData(:,:,TEMP_VAR,:) 
 
 #ifdef SINGLEPHASE
+#ifdef IBM
+   do blk=1,blockCount
+   call heat_tempSolver_ibm(tstep,solnData(:,:,TEMP_VAR,blk),solnData(:,:,TOLD_VAR,blk),&
+                         solnData(:,:,MDOT_VAR,blk),solnData(:,:,SMRH_VAR,blk),&
+                         facexData(:,:,VELC_VAR,blk),faceyData(:,:,VELC_VAR,blk),&
+                         facexData(:,:,AL1F_VAR,blk),faceyData(:,:,AL1F_VAR,blk),&
+                         facexData(:,:,AL2F_VAR,blk),faceyData(:,:,AL2F_VAR,blk),&
+                         solnData(:,:,DFUN_VAR,blk),solnData(:,:,PFUN_VAR,blk),&
+                         solnData(:,:,THCO_VAR,blk),solnData(:,:,CPRS_VAR,blk))   
+   end do
+
+#else
    do blk=1,blockCount
    call heat_tempSolver(tstep,solnData(:,:,TEMP_VAR,blk),solnData(:,:,TOLD_VAR,blk),&
                          solnData(:,:,MDOT_VAR,blk),solnData(:,:,SMRH_VAR,blk),&
@@ -36,6 +48,7 @@ subroutine HeatAD_solver(tstep)
                          solnData(:,:,DFUN_VAR,blk),solnData(:,:,PFUN_VAR,blk),&
                          solnData(:,:,THCO_VAR,blk),solnData(:,:,CPRS_VAR,blk))
    end do
+#endif
 #endif
 
 #ifdef MULTIPHASE

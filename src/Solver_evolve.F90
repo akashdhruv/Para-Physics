@@ -2,7 +2,7 @@ subroutine Solver_evolve
 
 #include "Solver.h"
 
-!#define SOLVER_DEBUG
+#define SOLVER_DEBUG
 
     use IncompNS_interface, only: IncompNS_solver
     use HeatAD_interface, only: HeatAD_solver
@@ -20,11 +20,8 @@ subroutine Solver_evolve
     implicit none
 
     integer :: tstep,p_counter,blk
-
     real, dimension(Nxb+1,Nyb+1) :: uu,vv,pp,tt,ww,rr
-
     real :: solnX
-  
     real, pointer, dimension(:,:,:,:) :: solnData,facexData,faceyData 
 
     tstep     = 0
@@ -52,19 +49,13 @@ subroutine Solver_evolve
        call IBM_solver(tstep)
 #endif
 
-#ifdef ONLY_POISSON
-! call FOR Poisson_analytical GOES HERE
-#endif
+       if (mod(tstep,20) == 0 .and. myid == 0) &
+       call IO_display(ins_u_res,ins_v_res,ins_w_res,ins_p_res,ht_T_res,p_counter,tstep*dr_dt,ins_maxdiv,ins_mindiv,&
+                       ins_umaxmin,ins_vmaxmin)
 
-       if (mod(tstep,20) == 0 .and. myid == 0) then
-          call IO_display(ins_u_res,ins_v_res,ins_w_res,ins_p_res,ht_T_res,p_counter,tstep*dr_dt,ins_maxdiv,ins_mindiv,&
-                          ins_umaxmin,ins_vmaxmin)
-       endif
-
-       if((ins_u_res .lt. 0.0000001) .and. (ins_u_res .ne. 0).and. (ins_v_res .lt. 0.0000001) .and. (ins_v_res .ne. 0) ) exit
+       !if((ins_u_res .lt. 0.0000001) .and. (ins_u_res .ne. 0).and. (ins_v_res .lt. 0.0000001) .and. (ins_v_res .ne. 0) ) exit
 
 #ifdef SOLVER_DEBUG
-
        if(mod(tstep,10000) == 0) then
 
           solnData  => localCENTER
@@ -72,8 +63,8 @@ subroutine Solver_evolve
           faceyData => localFACEY     
 
           do blk=1,blockCount
-          uu = (facexData(1:Nxb+1,1:Nyb+1,VELC_VAR,blk)+facexData(1:Nxb+1,2:Nyb+2,VELC_VAR,blk))/2 
-
+          uu = (facexData(1:Nxb+1,1:Nyb+1,VELC_VAR,blk)+facexData(1:Nxb+1,2:Nyb+2,VELC_VAR,blk))/2
+ 
           vv = (faceyData(1:Nxb+1,1:Nyb+1,VELC_VAR,blk)+faceyData(2:Nxb+2,1:Nyb+1,VELC_VAR,blk))/2
 
           pp = ((solnData(1:Nxb+1,1:Nyb+1,PRES_VAR,blk)+solnData(2:Nxb+2,1:Nyb+1,PRES_VAR,blk))/2 &
@@ -90,12 +81,10 @@ subroutine Solver_evolve
 
          call IO_write(gr_x(:,:,blk),gr_y(:,:,blk),uu,vv,pp,tt,ww,rr,blk,blockOffset)
          end do
-
          nullify(solnData,facexData,faceyData)
 
-        end if
+      end if
 #endif
-        
         tstep     = tstep +1
         dr_dt_old = dr_dt
 
@@ -124,7 +113,6 @@ subroutine Solver_evolve
 
     call IO_write(gr_x(:,:,blk),gr_y(:,:,blk),uu,vv,pp,tt,ww,rr,blk,blockOffset)
     end do
-
     nullify(solnData,facexData,faceyData)
 
 end subroutine Solver_evolve

@@ -36,8 +36,9 @@ subroutine IBM_init()
    facexData(:,:,IBMF_VAR,:) = 0.0 
    faceyData(:,:,IBMF_VAR,:) = 0.0
 
-   ibm_x0 = 0.0             ! parameters for cylinder's location
-   ibm_y0 = 0.5
+   ! parameters for cylinder's location
+   ibm_x0 = 0.5
+   ibm_y0 = 0.0
    ibm_r0 = 0.1
 
   ! Calculate distance function

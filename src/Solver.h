@@ -47,11 +47,11 @@ _______________________Grid Parameters___________________________
 #define Nyb 20
 
 
-#define D_xmin -0.5
+#define D_xmin  0.0
 #define D_ymin -0.5
 
 
-#define D_xmax  0.5
+#define D_xmax  2.0
 #define D_ymax  0.5
 
 #define TIME_END 60.00
@@ -104,7 +104,7 @@ _______________________Grid Parameters___________________________
 _______________________Defining Flow Type_____________________
 #endif
 
-#define FLOW 1
+#define FLOW 2
 
 #if FLOW == 1
 #define LID_DRIVEN_FLOW
@@ -112,10 +112,6 @@ _______________________Defining Flow Type_____________________
 
 #if FLOW == 2
 #define CHANNEL_FLOW
-#endif
-
-#if FLOW == 3
-#define MPH_FLOW
 #endif
 
 #if 0
@@ -166,7 +162,7 @@ _____________________Only Poisson On/Off_____________________
 ___________________Immersed Boundary On/Off________________
 #endif
 
-#define IB 0
+#define IB 1
 
 #if IB == 1
 #define IBM

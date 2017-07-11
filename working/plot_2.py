@@ -1,8 +1,8 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-k=2
-d=2
+k=4
+d=3
 
 M=20+1
 N=20+1
@@ -79,8 +79,8 @@ for i in range(0,k*d):
 x_c = np.linspace(-r_c,r_c,200)
 y_c = np.sqrt(r_c**2-x_c**2)
 
-x_circle = np.concatenate([x_c,np.fliplr([x_c[:-1]])[0]]) 
-y_circle = np.concatenate([y_c,-np.fliplr([y_c[:-1]])[0]]) + 0.5 
+x_circle = np.concatenate([x_c,np.fliplr([x_c[:-1]])[0]]) + 0.5
+y_circle = np.concatenate([y_c,-np.fliplr([y_c[:-1]])[0]])  
 
 plt.figure()
 plt.title('Velocity Vector')

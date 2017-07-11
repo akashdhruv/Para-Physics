@@ -10,6 +10,7 @@ subroutine IncompNS_solver(tstep,p_counter)
     use Driver_data, only: dr_dt
     use Poisson_interface, only: Poisson_solver, Poisson_solver_VC
     use MPI_interface, ONLY: MPI_applyBC, MPI_CollectResiduals,MPI_physicalBC_vort,MPI_physicalBC_vel
+    use IBM_interface, ONLY: IBM_ApplyForcing
             
     implicit none
 
@@ -53,17 +54,17 @@ subroutine IncompNS_solver(tstep,p_counter)
     end do
 #endif
 
-    call MPI_BARRIER(solver_comm,ierr)
-    call MPI_applyBC(USTR_VAR,FACEX)
-    call MPI_applyBC(USTR_VAR,FACEY)
-    call MPI_physicalBC_vel(facexData(:,:,USTR_VAR,:),faceyData(:,:,USTR_VAR,:))
-
 #ifdef IBM
     do blk=1,blockCount
        call IBM_ApplyForcing(facexData(:,:,USTR_VAR,blk),faceyData(:,:,USTR_VAR,blk),&
                              facexData(:,:,IBMF_VAR,blk),faceyData(:,:,IBMF_VAR,blk))
     end do
 #endif    
+
+    call MPI_BARRIER(solver_comm,ierr)
+    call MPI_applyBC(USTR_VAR,FACEX)
+    call MPI_applyBC(USTR_VAR,FACEY)
+    call MPI_physicalBC_vel(facexData(:,:,USTR_VAR,:),faceyData(:,:,USTR_VAR,:))
 
 #ifdef SINGLEPHASE
     do blk=1,blockCount
@@ -148,11 +149,11 @@ subroutine IncompNS_solver(tstep,p_counter)
 
     end do
 
-    umax = maxval(facexData(:,:,VELC_VAR,:))
-    umin = minval(facexData(:,:,VELC_VAR,:))
+    umax = maxval(facexData(2:Nxb+1,2:Nyb+1,VELC_VAR,:))
+    umin = minval(facexData(2:Nxb+1,2:Nyb+1,VELC_VAR,:))
 
-    vmax = maxval(faceyData(:,:,VELC_VAR,:))
-    vmin = minval(faceyData(:,:,VELC_VAR,:))
+    vmax = maxval(faceyData(2:Nxb+1,2:Nyb+1,VELC_VAR,:))
+    vmin = minval(faceyData(2:Nxb+1,2:Nyb+1,VELC_VAR,:))
 
     call MPI_CollectResiduals(maxdiv,ins_maxdiv,MAX_DATA)
     call MPI_CollectResiduals(mindiv,ins_mindiv,MIN_DATA)
