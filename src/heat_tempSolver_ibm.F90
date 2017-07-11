@@ -8,7 +8,7 @@ subroutine heat_tempSolver_ibm(tstep,T,T_old,mdot,smrh,u,v,a1x,a1y,a2x,a2y,s,pf,
    use HeatAD_data
    use Driver_data
    use Multiphase_data, only: mph_cp2,mph_thco2,mph_max_s,mph_min_s
-   use IBM_data, only: ibm_cp1,ibm_thco1
+   use IBM_data, only: ibm_cp1,ibm_thco1,ibm_r0
 
    implicit none
       
@@ -135,18 +135,15 @@ subroutine heat_tempSolver_ibm(tstep,T,T_old,mdot,smrh,u,v,a1x,a1y,a2x,a2y,s,pf,
     if(s(i,j) .ge. 0.0) then
     T(i,j) = T_old(i,j)+((dr_dt*ins_inRe*(ibm_thco1/ibm_cp1))/(ht_Pr*gr_dx*gr_dx))*(Tx_plus+Tx_mins-2*Tij)&
                        +((dr_dt*ins_inRe*(ibm_thco1/ibm_cp1))/(ht_Pr*gr_dy*gr_dy))*(Ty_plus+Ty_mins-2*Tij)&
-                       -((dr_dt))*(u_plus*(Tij-Tx_mins)/gr_dx + u_mins*(Tx_plus-Tij)/gr_dx)&
-                       -((dr_dt))*(v_plus*(Tij-Ty_mins)/gr_dy + v_mins*(Ty_plus-Tij)/gr_dy)
+                       +(ibm_r0-s(i,j))*ht_src
 
     else
-
     T(i,j) = T_old(i,j)+dr_dt*((a1x(i,j)+a2x(i,j))*(ins_inRe/ht_Pr)*(Tx_plus-Tij)/gr_dx - &
                                (a1x(i-1,j)+a2x(i-1,j))*(ins_inRe/ht_Pr)*(Tij-Tx_mins)/gr_dx)/gr_dx&
                        +dr_dt*((a1y(i,j)+a2y(i,j))*(ins_inRe/ht_Pr)*(Ty_plus-Tij)/gr_dy - &
                                (a1y(i,j-1)+a2y(i,j-1))*(ins_inRe/ht_Pr)*(Tij-Ty_mins)/gr_dy)/gr_dy&
                        -((dr_dt))*(u_plus*(Tij-Tx_mins)/gr_dx + u_mins*(Tx_plus-Tij)/gr_dx)&
                        -((dr_dt))*(v_plus*(Tij-Ty_mins)/gr_dy + v_mins*(Ty_plus-Tij)/gr_dy)
-
 
     end if
 

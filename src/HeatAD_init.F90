@@ -18,10 +18,10 @@ subroutine HeatAD_init()
 
    solnData  => localCENTER
 
-   ht_Pr  = 0.7                                 ! Prandtl number
-   ht_Nu  = 0.332*(ht_Pr**0.33)/(ins_inRe**0.5) ! Nusselt number
-   ht_src = 0.0                                 ! Heat source
-   ht_St  = 1.0                                 ! Stefan number
+   ht_Pr  =  0.7                                 ! Prandtl number
+   ht_Nu  =  0.332*(ht_Pr**0.33)/(ins_inRe**0.5) ! Nusselt number
+   ht_src = -0.01                                ! Heat source
+   ht_St  =  1.0                                 ! Stefan number
 
    ! Initialize variables relevant to Heat AD unit
    solnData(:,:,TEMP_VAR,:) = 0.0               

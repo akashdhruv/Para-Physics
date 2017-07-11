@@ -54,10 +54,10 @@ _______________________Grid Parameters___________________________
 #define D_xmax  2.0
 #define D_ymax  0.5
 
-#define TIME_END 200.00
+#define TIME_END 100.00
 
-#define nblockx 4
-#define nblocky 3
+#define nblockx 8
+#define nblocky 4
 
 #define MaxIt 1500
 
