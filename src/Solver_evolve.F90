@@ -76,8 +76,8 @@ subroutine Solver_evolve
           ww = ((solnData(1:Nxb+1,1:Nyb+1,VISC_VAR,blk)+solnData(2:Nxb+2,1:Nyb+1,VISC_VAR,blk))/2 &
                +(solnData(1:Nxb+1,2:Nyb+2,VISC_VAR,blk)+solnData(2:Nxb+2,2:Nyb+2,VISC_VAR,blk))/2)/2
 
-          rr = ((facexData(1:Nxb+1,1:Nyb+1,RH1F_VAR,blk)+facexData(1:Nxb+1,2:Nyb+2,RH2F_VAR,blk)) + &
-                (faceyData(1:Nxb+1,1:Nyb+1,RH1F_VAR,blk)+faceyData(2:Nxb+2,1:Nyb+1,RH2F_VAR,blk)))/2
+          rr = (1./(facexData(1:Nxb+1,1:Nyb+1,RH1F_VAR,blk)+facexData(1:Nxb+1,2:Nyb+2,RH2F_VAR,blk)) + &
+                1./(faceyData(1:Nxb+1,1:Nyb+1,RH1F_VAR,blk)+faceyData(2:Nxb+2,1:Nyb+1,RH2F_VAR,blk)))/2
 
          call IO_write(gr_x(:,:,blk),gr_y(:,:,blk),uu,vv,pp,tt,ww,rr,blk,blockOffset)
          end do
@@ -108,8 +108,8 @@ subroutine Solver_evolve
     ww = ((solnData(1:Nxb+1,1:Nyb+1,VISC_VAR,blk)+solnData(2:Nxb+2,1:Nyb+1,VISC_VAR,blk))/2 &
          +(solnData(1:Nxb+1,2:Nyb+2,VISC_VAR,blk)+solnData(2:Nxb+2,2:Nyb+2,VISC_VAR,blk))/2)/2
 
-    rr = ((facexData(1:Nxb+1,1:Nyb+1,RH1F_VAR,blk)+facexData(1:Nxb+1,2:Nyb+2,RH2F_VAR,blk)) + &
-          (faceyData(1:Nxb+1,1:Nyb+1,RH1F_VAR,blk)+faceyData(2:Nxb+2,1:Nyb+1,RH2F_VAR,blk)))/2
+    rr = (1./(facexData(1:Nxb+1,1:Nyb+1,RH1F_VAR,blk)+facexData(1:Nxb+1,2:Nyb+2,RH2F_VAR,blk)) + &
+          1./(faceyData(1:Nxb+1,1:Nyb+1,RH1F_VAR,blk)+faceyData(2:Nxb+2,1:Nyb+1,RH2F_VAR,blk)))/2
 
     call IO_write(gr_x(:,:,blk),gr_y(:,:,blk),uu,vv,pp,tt,ww,rr,blk,blockOffset)
     end do
