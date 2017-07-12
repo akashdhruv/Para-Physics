@@ -47,7 +47,7 @@
 ### 1. Wake suppression through conjugate heat transfer 
 
 <p align="center">
-  <img src="./images/Vort_WakeSup.png" width="900"/>
+  <img src="./images/Vort_WakeSup.png" width="800"/>
 </p>
 <p align="center">
 <b>
@@ -67,7 +67,7 @@ Figure 2. (a) Non-dimensional temperature distribution (b) Density ratio for con
 ### 2. Lid Driven Cavity
 
 <p align="center">
-  <img src="./images/Ghia_Comparison.png" width="500"/>
+  <img src="./images/Ghia_Comparison.png" width="550"/>
 </p>
 <p align="center">
 <b>
