@@ -70,6 +70,16 @@
   Figure 4. Conjugate heat transfer between air and three solid cylinders, Re = 500, t = 25 units, (Block size - 20 x 20) (Num blocks - 40 x 40)
 </p>**
 
+### 4. MPI shared memory vs distributed memory model
+
+**<p align="center">
+  <img src="./images/XeonPhi_Sp.png" width="700"/>
+  Figure 5. Speed up comparison on a 64 core Xeon Phi KNL processor  
+</p>**
+
+MPI SHM gives almost twice as much speed up in comparison to traditional distributed memory model.
+
+##__________________________________________
 ### Author - Akash V. Dhruv  
 ### License - Refer LICENSE.md
 
