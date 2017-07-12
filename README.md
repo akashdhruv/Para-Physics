@@ -46,46 +46,46 @@
 
 ### 1. Wake suppression through conjugate heat transfer 
 
-<center>
+<p align="center">
   <img src="./images/Vort_WakeSup.png" width="900"/>
-</center>
-<center> <font face="Arial" size=2.5> 
+</p>
+<p align="center">
   Figure 1. Vorticity contours at t = 100 units for Re = 2500 (a) Without heat transfer (b) With heat transfer (Block size - 20 x 20) (Num blocks - 8 x 4)
-</font> <center>
+</p>
 
-<center>
+<p align="center">
   <img src="./images/Temp_Dens.png" width="500"/>
-</center>
-<center>
+</p>
+<p align="center">
   Figure 2. (a) Non-dimensional temperature distribution (b) Density ratio for conjugate heat transfer at Re = 2500
-</center>
+</p>
 
 ### 2. Lid Driven Cavity
 
-<center>
-  <img src="./images/Ghia_Comparison.png" width="500"/>
-</center>
-<center>
+<p align="center">
+  <img src="./images/Ghia_Comparison.png" width="600"/>
+</p>
+<p align="center">
   Figure 3. (a) Numerical solution, (Block size - 20 x 20) (Num blocks - 6 x 6) (b) Reference solution by [Ghia .et .al]
 </p>
 
 ### 3. Conjugate heat transfer between fluid and multiple immersed boundaries
 
-<center>
-  <img src="./images/Image_10.png" width="700"/>
-</center>
-<center>
+<p align="center">
+  <img src="./images/Image_10.png" width="600"/>
+</p>
+<p align="center">
   Figure 4. Conjugate heat transfer between air and three solid cylinders, Re = 500, t = 25 units, (Block size - 20 x 20) (Num blocks - 40 x 40)
-</center>
+</p>
 
 ### 4. MPI shared memory vs distributed memory model
 
-<center>
-  <img src="./images/XeonPhi_Sp.png" width="500"/>
-</center>
-<center>
+<p align="center">
+  <img src="./images/XeonPhi_Sp.png" width="600"/>
+</p>
+<p align="center">
   Figure 5. Speed up comparison on a 64 core Xeon Phi KNL processor  
-</center>
+</p>
 
 MPI SHM gives almost twice as much speed up in comparison to traditional distributed memory model.
 
