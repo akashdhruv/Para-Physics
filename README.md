@@ -76,7 +76,7 @@ Figure 2. (a) Non-dimensional temperature distribution (b) Density ratio for con
 <p align="center">
 <font face="Arial" size=2.5>
 <b>
-Figure 3. (a) Numerical solution, (Block size - 20 x 20) (Num blocks - 6 x 6) (b) Reference solution by [Ghia .et .al] 
+Figure 3. (a) Numerical solution, (Block size - 20 x 20) (Num blocks - 6 x 6) (b) Reference solution by [Ghia .et .al](https://pdfs.semanticscholar.org/211b/45b6a06336a72ca064a6e59b14ebc520211c.pdf) 
 </b>
 </font>
 </p>
@@ -112,5 +112,3 @@ MPI SHM gives almost twice as much speed up in comparison to traditional distrib
 ### Author - Akash V. Dhruv  
 ### License - Refer LICENSE.md
 ### Cite as - Akash Dhruv. (2017, June 21). akidhruv/Para-Physics: Para-Physics. Zenodo. http://doi.org/10.5281/zenodo.815018
-
-[Ghia .et .al]: https://pdfs.semanticscholar.org/211b/45b6a06336a72ca064a6e59b14ebc520211c.pdf
