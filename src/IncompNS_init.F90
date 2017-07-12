@@ -27,10 +27,10 @@ subroutine IncompNS_init()
       facexData(:,:,GOLD_VAR,:) = 0.0
       faceyData(:,:,GOLD_VAR,:) = 0.0
      
-      ins_inRe  = 0.002        ! Reynolds number
+      ins_inRe  = 0.0005       ! Reynolds number
 
-      ins_sigma = 0.05         ! CFL for diffusive  dt
-      ins_cfl   = 0.05         ! CFL for convective dt
+      ins_sigma = 0.005        ! CFL for diffusive  dt
+      ins_cfl   = 0.005        ! CFL for convective dt
       ins_timePoisson = 0.0    ! variable to store Poisson solver time
 
       ins_gravX =  0.0         ! 1/(Fr**2) in X

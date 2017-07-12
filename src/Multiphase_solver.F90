@@ -14,6 +14,7 @@ subroutine Multiphase_solver(tstep,solnX,jump_flag)
     use MPI_interface, only: MPI_applyBC,MPI_physicalBC_dfun,MPI_physicalBC_vel
 
     use MPI_data, only: solver_comm,ierr,blockCount
+    use HeatAD_data, only: ht_St
 
     implicit none
 
@@ -41,7 +42,7 @@ subroutine Multiphase_solver(tstep,solnX,jump_flag)
                           facexData(:,:,RH2F_VAR,blk),faceyData(:,:,RH2F_VAR,blk),&
                           facexData(:,:,AL2F_VAR,blk),faceyData(:,:,AL2F_VAR,blk),&
                           solnData(:,:,TEMP_VAR,blk),solnData(:,:,TOLD_VAR,blk),&
-                          mph_beta)
+                          mph_beta,ht_St)
     end do
 
     call MPI_BARRIER(solver_comm,ierr)

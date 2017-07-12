@@ -74,9 +74,9 @@ subroutine Multiphase_init()
    !mph_r0 = 0.5
 
    !___Conjugate Heat Test_!
-   mph_x0 =  0.5
+   mph_x0 =  3.0
    mph_y0 =  0.0
-   mph_r0 =  0.1
+   mph_r0 =  0.5
 
    ! Distance function calculation
 

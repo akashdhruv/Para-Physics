@@ -7,7 +7,7 @@ d=4
 M=20+1
 N=20+1
 
-r_c = 0.1
+r_c = 0.5
 
 X=np.zeros((N*d,M*k),dtype=float)
 Y=np.zeros((N*d,M*k),dtype=float)
@@ -79,7 +79,7 @@ for i in range(0,k*d):
 x_c = np.linspace(-r_c,r_c,200)
 y_c = np.sqrt(r_c**2-x_c**2)
 
-x_circle = np.concatenate([x_c,np.fliplr([x_c[:-1]])[0]]) + 0.5
+x_circle = np.concatenate([x_c,np.fliplr([x_c[:-1]])[0]]) + 3.0
 y_circle = np.concatenate([y_c,-np.fliplr([y_c[:-1]])[0]])  
 
 plt.figure()

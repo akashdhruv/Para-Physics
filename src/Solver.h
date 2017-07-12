@@ -48,11 +48,11 @@ _______________________Grid Parameters___________________________
 
 
 #define D_xmin  0.0
-#define D_ymin -0.5
+#define D_ymin -2.5
 
 
-#define D_xmax  2.0
-#define D_ymax  0.5
+#define D_xmax  10.0
+#define D_ymax  2.5
 
 #define TIME_END 100.00
 
