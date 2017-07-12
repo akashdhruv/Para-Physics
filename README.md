@@ -2,12 +2,10 @@
 
 ### Important Information
 
-  1. This is version 2.0 of the software, previous versions can be found in the releases
-  2. Single phase heat equation, Navier-Stokes and Poisson solver modules are working
-  3. Immersed boundary module is working
-  4. Conjugate heat transfer is in beta
-  5. AMR module not yet implemented
-  6. Multiphase module is in beta
+  1. This is version 2.0 of the software, previous versions can be found in the old releases  
+  2. The software can solve Incompressible Navier-Stokes and Heat advection diffusion equations for both singlephase and multiphase problems
+  3. Immersed boundary method is implemented to compute flow over solid bodies
+  4. Progress is underway to add new physics modules
 
 ### Parallelization Options
 
@@ -22,7 +20,7 @@
   2. Array padding for spatial data
   3. Blocked data storage for stencil computations
 
-### Execution instructions
+### Compilation and Execution Instructions
 
   1. Download the source code.
   2. Make sure you have make utility and the latest version of GNU and MPI-3 or higher installed
@@ -35,82 +33,46 @@
         cd ../working
         mpirun -n [number_of_procs] ./Solver 
      ~~~
-
-  4. Note that the total number of MPI processes must be equal to the total number of blocks (nblockx X nblocky) defined in Solver.h
-
-  5. You can also optimize Poisson solver and heat equation by hyper-threading using OpenMP on each core. The number of threads are specified 
+  4. You can also optimize Poisson solver and heat equation by hyper-threading using OpenMP on each core. The number of threads are specified 
      in Solver.h
 
-  6. To plot results, edit the python file (plot.py) to match your grid size and simply type (make sure k = nblockx and d = nblocky)
+  5. To plot results, edit the python file (plot.py) to match your grid size and simply type (make sure k = nblockx and d = nblocky)
 
      ~~~terminal
         python plot.py
      ~~~ 
 
-  7. Use make clean in src and working folder to remove rebuildables
+## Examples
 
-### Software outline
+### 1. Wake suppression through conjugate heat transfer 
 
-  1. The header file Solver.h handles simulation parameters like number of grid points per block, total number of blocks, module on/off, etc
+**<p align="center">
+  <img src="./images/Vort_WakeSup.png" width="700"/>
+  Figure 1. Vorticity contours at t = 100 units for Re = 2500 (a) Without heat transfer (b) With heat transfer (Block size - 20 x 20) (Num blocks - 8 x 4)
+</p>**
 
-  2. The main program file is Solver.F90, which calls the functions Solver_init, Solver_evolve and Solver_finalize, which in turn calls
-     module specific subroutines (module_init, module_solver, module_finalize)
+**<p align="center">
+  <img src="./images/Temp_Dens.png" width="400"/>  
+  Figure 2. (a) Non-dimensional temperature distribution (b) Density ratio for conjugate heat transfer at Re = 2500
+</p>**
 
-  3. The best way to understand the code is to start with Solver.F90 and follow function calls one by one
+### 2. Lid Driven Cavity
 
-  4. All Grid data is stored in separate multi-dimensional arrays for cell-centers and faces located in the module, physicaldata.F90
+**<p align="center">
+  <img src="./images/Ghia_Comparison.png" width="700"/>
+  Figure 3. (a) Numerical solution, (Block size - 20 x 20) (Num blocks - 6 x 6) (b) Reference solution by [Ghia .et .al]
+</p>**
 
-  5. Module specific data is stored in files named module_data.F90. The interface for a given module, module_interface.F90 contains function
-     definitions
+### 3. Conjugate heat transfer between fluid and multiple immersed boundaries
 
-### Solver capabilities
-
-#### CASE 1 - Air flow ovear a solid cylinder with Conjugate Heat Transfer (CHT), Re = 500
-##### (Grid - 800 x 400) (4 x 4 MPI processes) (2 OpenMP threads per process)
-
-<p align="center">
-  <img src="./images/Image_3.png" width="700"/>
-  <img src="./images/Image_4.png" width="700"/>
-</p>
-
-<p align="center">
-  Figure 1. Velocity Streamlines and Temperature Contours, Re = 500, t = 30.0 s
-</p>
-
-<p align="center">
-  <img src="./images/Image_8.png" width="700"/>
-  <img src="./images/Image_9.png" width="700"/>
-</p>
-
-<p align="center">
-  Figure 2. Vorticity Contours, Re = 500, t=60.0 s
-</p>
-
-#### CASE 2 - Lid Driven Cavity Flow, Re = 1000
-##### (Grid - 100 x 80) (2 x 2 MPI processes) (4 OpenMP threads per process)
-
-<p align="center">
-  <img src="./images/Image_5.png" width="700"/>
-  <img src="./images/Image_6.png" width="700"/>
-  <img src="./images/Image_7.png" width="700"/>
-</p>
-
-<p align="center">
-  Figure 3. Velocity Streamlines and Pressure and Temperature Contours for Lid Driven Cavity flow, Re = 1000
-</p>
-
-#### CASE 3 - Conjugate Heat Transfer between fluid and multiple immersed boundaries, Re = 500
-##### (Grid - 800 x 400) (4 x 4 MPI processes) (2 OpenMP threads per process)
-
-<p align="center">
+**<p align="center">
   <img src="./images/Image_10.png" width="700"/>
-</p>
-
-<p align="center">
-  Figure 4. Conjugate Heat Transfer between air and three solid cylinders, Re = 500, t=25 s
-</p>
+  Figure 4. Conjugate heat transfer between air and three solid cylinders, Re = 500, t = 25 units, (Block size - 20 x 20) (Num blocks - 40 x 40)
+</p>**
 
 ### Author - Akash V. Dhruv  
 ### License - Refer LICENSE.md
 
 ### Cite as - Akash Dhruv. (2017, June 21). akidhruv/Para-Physics: Para-Physics. Zenodo. http://doi.org/10.5281/zenodo.815018
+
+[Ghia .et .al]: https://pdfs.semanticscholar.org/211b/45b6a06336a72ca064a6e59b14ebc520211c.pdf
