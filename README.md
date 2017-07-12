@@ -48,15 +48,13 @@
 
 <p align="center">
   <img src="./images/Vort_WakeSup.png" width="1000"/>
-</p>
-<p align="center"> <b>
+ <b>
   Figure 1. Vorticity contours at t = 100 units for Re = 2500 (a) Without heat transfer (b) With heat transfer (Block size - 20 x 20) (Num blocks - 8 x 4)</b>
 </p>
 
 <p align="center">
   <img src="./images/Temp_Dens.png" width="500"/>
-</p>
-<p align="center"> <b>
+ <b>
   Figure 2. (a) Non-dimensional temperature distribution (b) Density ratio for conjugate heat transfer at Re = 2500 </b>
 </p>
 
@@ -64,8 +62,7 @@
 
 <p align="center">
   <img src="./images/Ghia_Comparison.png" width="700"/>
-</p>
-<p align="center"> <b>
+ <b>
   Figure 3. (a) Numerical solution, (Block size - 20 x 20) (Num blocks - 6 x 6) (b) Reference solution by [Ghia .et .al] </b>
 </p>
 
@@ -73,8 +70,7 @@
 
 <p align="center">
   <img src="./images/Image_10.png" width="600"/>
-</p>
-<p align="center"> <b>
+ <b>
   Figure 4. Conjugate heat transfer between air and three solid cylinders, Re = 500, t = 25 units, (Block size - 20 x 20) (Num blocks - 40 x 40) </b>
 </p>
 
@@ -82,8 +78,7 @@
 
 <p align="center">
   <img src="./images/XeonPhi_Sp.png" width="500"/>
-</p>
-<p align="center"> <b>
+ <b>
   Figure 5. Speed up comparison on a 64 core Xeon Phi KNL processor </b>
 </p>
 
