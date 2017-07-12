@@ -48,38 +48,63 @@
 
 <p align="center">
   <img src="./images/Vort_WakeSup.png" width="1000"/>
- <b>
-  Figure 1. Vorticity contours at t = 100 units for Re = 2500 (a) Without heat transfer (b) With heat transfer (Block size - 20 x 20) (Num blocks - 8 x 4)</b>
+</p>
+<p align="center">
+<font face="Arial" size=2.5>
+<b>
+Figure 1. Vorticity contours at t = 100 units for Re = 2500 (a) Without heat transfer (b) With heat transfer (Block size - 20 x 20) (Num blocks - 8 x 4)
+</b>
+</font>
 </p>
 
 <p align="center">
   <img src="./images/Temp_Dens.png" width="500"/>
- <b>
-  Figure 2. (a) Non-dimensional temperature distribution (b) Density ratio for conjugate heat transfer at Re = 2500 </b>
+</p>
+<p align="center">
+<font face="Arial" size=2.5>
+<b>
+Figure 2. (a) Non-dimensional temperature distribution (b) Density ratio for conjugate heat transfer at Re = 2500 
+</b>
+</font>
 </p>
 
 ### 2. Lid Driven Cavity
 
 <p align="center">
   <img src="./images/Ghia_Comparison.png" width="700"/>
- <b>
-  Figure 3. (a) Numerical solution, (Block size - 20 x 20) (Num blocks - 6 x 6) (b) Reference solution by [Ghia .et .al] </b>
+</p>
+<p align="center">
+<font face="Arial" size=2.5>
+<b>
+Figure 3. (a) Numerical solution, (Block size - 20 x 20) (Num blocks - 6 x 6) (b) Reference solution by [Ghia .et .al] 
+</b>
+</font>
 </p>
 
 ### 3. Conjugate heat transfer between fluid and multiple immersed boundaries
 
 <p align="center">
   <img src="./images/Image_10.png" width="600"/>
- <b>
-  Figure 4. Conjugate heat transfer between air and three solid cylinders, Re = 500, t = 25 units, (Block size - 20 x 20) (Num blocks - 40 x 40) </b>
+</p>
+<p align="center">
+<font face="Arial" size=2.5>
+<b>
+Figure 4. Conjugate heat transfer between air and three solid cylinders, Re = 500, t = 25 units, (Block size - 20 x 20) (Num blocks - 40 x 40) 
+</b>
+</font>
 </p>
 
 ### 4. MPI shared memory vs distributed memory model
 
 <p align="center">
   <img src="./images/XeonPhi_Sp.png" width="500"/>
- <b>
-  Figure 5. Speed up comparison on a 64 core Xeon Phi KNL processor </b>
+</p>
+<p align="center">
+<font face="Arial" size=2.5>
+<b>
+Figure 5. Speed up comparison on a 64 core Xeon Phi KNL processor 
+</b>
+</font>
 </p>
 
 MPI SHM gives almost twice as much speed up in comparison to traditional distributed memory model.
