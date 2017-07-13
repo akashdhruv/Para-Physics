@@ -8,7 +8,7 @@
 	<li>Immersed boundary method is implemented to compute flow over solid bodies</li>
 	<li>Progress is underway to add new physics modules</li>
 </ol>
-</p>
+</p> 
 
 ### Parallelization Options
 <p align="justify">
