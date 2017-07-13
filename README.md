@@ -53,7 +53,7 @@
 </p>
 <p align="center">
 <b>
-<font size=2>
+<font size="2">
 Figure 1. Vorticity contours around a cylinder in channel flow, t = 50 units and Re = 1000 (Red-CCW, Blue-CW) (Block grid size - 20 x 20) (Num blocks - 16 x 8)
 </font>
 </b>
