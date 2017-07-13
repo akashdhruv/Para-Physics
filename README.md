@@ -3,13 +3,12 @@
 <h3> Important Information </h3>
 <p align="justify"> <font size="4">
 <ol>
-	<li>This is version 2.0 of the software, previous versions can be found in the old releases</li>
-	<li>The software can solve Incompressible Navier-Stokes and Heat advection diffusion equations for both singlephase and multiphase problems</li>
-	<li>Immersed boundary method is implemented to compute flow over solid bodies</li>
-	<li>Progress is underway to add new physics modules</li>
+	<li>This is version 2.0 of the software, previous versions can be found in the old releases
+	<li>The software can solve Incompressible Navier-Stokes and Heat advection diffusion equations for both singlephase and multiphase problems
+	<li>Immersed boundary method is implemented to compute flow over solid bodies
+	<li>Progress is underway to add new physics modules
 </ol>
 </font> </p>
-
 
 <h3> Parallelization Options </h3>
 <p align="justify"> <font size="4">
@@ -21,7 +20,6 @@
 </ol>
 </font> </p>
 
-
 <h3> Cache Optimization Features </h3>
 <p align="justify"> <font size="4">
 <ol>
@@ -30,7 +28,6 @@
 	<li>Blocked data storage for stencil computations</li>
 </ol>
 </font> </p>
-
 
 <h3> Compilation and Execution Instructions </h3>
 <p align="justify"> <font size="4">
@@ -121,7 +118,7 @@ Figure 3. (a) Numerical solution, (Block grid size - 20 x 20) (Num blocks - 6 x 
 
 <p align="justify"> <font size="4">
 
-Lid driven cavity is a traditional benchmark problem where the top wall is free slip and moves at a speed <i>U</i> and the remaining three walls are no slip. These conditions leading to interesting vortex patterns which depend on the Reynolds number. It is used here to validate the numerical results with reference data.
+Lid driven cavity is a traditional benchmark problem where the top wall is free slip and moves at a speed <i>U</i> and the remaining three walls are no slip. These conditions lead to interesting vortex patterns which depend on the Reynolds number. This test case is used here to validate the numerical results with reference data.
 
 </font> </p>
 
@@ -129,7 +126,7 @@ Lid driven cavity is a traditional benchmark problem where the top wall is free 
 
 <p align="justify"> <font size="4">
 
-This example is to show the capability of software in handling multiple immersed boundaries. The test case here shows temperature distributed inside the fluid due to the presence of three heated cylinders. 
+This example is to show the capability of software in handling multiple immersed boundaries. The test case here shows temperature distribution inside the fluid due to the presence of three heated cylinders. 
 
 </font> </p>
 
@@ -147,7 +144,7 @@ Figure 4. Conjugate heat transfer between air and three solid cylinders, Re = 50
 
 <p align="justify"> <font size="4">
 
-This type of situation are typically found in heat-exchangers and nuclear reactors and can be further understood using simulation tools. 
+This type of situation is typically found in heat-exchangers and nuclear reactors and can be further understood using simulation tools. 
 
 </font> </p>
 
