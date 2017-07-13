@@ -18,7 +18,7 @@
 	<li>MPI Shared Memory (SHM) model
 	<li>Hyper-threading using OpenMP
 </ol>
-</p>
+</p> 
 
 ### Cache Optimization Features
 <p align="justify">
