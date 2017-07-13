@@ -1,6 +1,7 @@
 <h2> PARA-PHYSICS, A parallel block structured computational multi-physics solver </h2> 
 
 <h3> Important Information </h3>
+
 <p align="justify">
 <ol>
 	<li>This is version 2.0 of the software, previous versions can be found in the old releases  
@@ -11,6 +12,7 @@
 </p>
 
 <h3> Parallelization Options </h3>
+
 <p align="justify">
 <ol>
 	<li>Standard MPI distributed memory model
@@ -21,6 +23,7 @@
 </p>
 
 <h3> Cache Optimization Features </h3>
+
 <p align="justify">
 <ol>
 	<li>Loop tiling for linear algebra solvers
@@ -30,6 +33,7 @@
 </p>
 
 <h3> Compilation and Execution Instructions </h3>
+
 <p align="justify">
 <ol>
 	<li>Download the source code
