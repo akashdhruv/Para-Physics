@@ -1,46 +1,58 @@
 ## PARA-PHYSICS, A parallel block structured computational multi-physics solver 
 
 ### Important Information
-
-  1. This is version 2.0 of the software, previous versions can be found in the old releases  
-  2. The software can solve Incompressible Navier-Stokes and Heat advection diffusion equations for both singlephase and multiphase problems
-  3. Immersed boundary method is implemented to compute flow over solid bodies
-  4. Progress is underway to add new physics modules
+<p align="justify">
+<ol>
+	<li>This is version 2.0 of the software, previous versions can be found in the old releases  
+	<li>The software can solve Incompressible Navier-Stokes and Heat advection diffusion equations for both singlephase and multiphase problems
+	<li>Immersed boundary method is implemented to compute flow over solid bodies
+	<li>Progress is underway to add new physics modules
+</ol>
+</p>
 
 ### Parallelization Options
-
-  1. Standard MPI distributed memory model
-  2. MPI Remote Memory Access (RMA) model
-  3. MPI Shared Memory (SHM) model
-  4. Hyper-threading using OpenMP
+<p align="justify">
+<ol>
+	<li>Standard MPI distributed memory model
+	<li>MPI Remote Memory Access (RMA) model
+	<li>MPI Shared Memory (SHM) model
+	<li>Hyper-threading using OpenMP
+</ol>
+</p>
 
 ### Cache Optimization Features
-
-  1. Loop tiling for linear algebra solvers
-  2. Array padding for spatial data
-  3. Blocked data storage for stencil computations
+<p align="justify">
+<ol>
+	<li>Loop tiling for linear algebra solvers
+	<li>Array padding for spatial data
+	<li>Blocked data storage for stencil computations
+</ol>
+</p>
 
 ### Compilation and Execution Instructions
+<p align="justify">
+<ol>
+	<li>Download the source code
+	<li>Make sure you have make utility and the latest version of GNU and MPI-3 or higher installed
+	<li>Edit the Makefile in ./src to include your MPI path
+</ol>
+</p>
 
-  1. Download the source code.
-  2. Make sure you have make utility and the latest version of GNU and MPI-3 or higher installed
-  3. Edit the Makefile in ./src to include your MPI path
-
-     ~~~terminal 
-        cd src
+        src
         make
         cp Solver ../working/.
         cd ../working
-        mpirun -n [number_of_procs] ./Solver 
-     ~~~
-  4. You can also optimize Poisson solver and heat equation by hyper-threading using OpenMP on each core. The number of threads are specified 
+        mpirun -n [number_of_procs] ./Solver
+        
+<p aling="justify">
+<ol start="4">
+	<li>You can also optimize Poisson solver and heat equation by hyper-threading using OpenMP on each core. The number of threads are specified 
      in Solver.h
+   <li>To plot results, edit the python file (plot.py) to match your grid size and simply type (make sure k = nblockx and d = nblocky)
+</ol>
+</p>
 
-  5. To plot results, edit the python file (plot.py) to match your grid size and simply type (make sure k = nblockx and d = nblocky)
-
-     ~~~terminal
         python plot.py
-     ~~~ 
 
 ## Examples
 
@@ -80,7 +92,7 @@ Figure 2. Fluid properties during conjugate heat transfer for Re = 1000
 </p>
 <p align="center">
 <b>
-<font size="2">
+<font size="3">
 Figure 3. (a) Numerical solution, (Block grid size - 20 x 20) (Num blocks - 6 x 6) (b) Reference solution by <a href="https://pdfs.semanticscholar.org/211b/45b6a06336a72ca064a6e59b14ebc520211c.pdf"> Ghia .et .al </a>
 </font>
 </b>
