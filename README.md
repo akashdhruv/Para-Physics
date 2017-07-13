@@ -1,6 +1,6 @@
 <h2> PARA-PHYSICS, A parallel block structured computational multi-physics solver </h2> 
 
-<h3> Important Information </h3>
+### Important Information
 
 <p align="justify">
 <ol>
@@ -8,9 +8,10 @@
 	<li>The software can solve Incompressible Navier-Stokes and Heat advection diffusion equations for both singlephase and multiphase problems</li>
 	<li>Immersed boundary method is implemented to compute flow over solid bodies</li>
 	<li>Progress is underway to add new physics modules</li>
+</ol>
+</p>
 
-
-<h3> Parallelization Options </h3>
+### Parallelization Options
 
 <p align="justify">
 <ol>
@@ -21,7 +22,7 @@
 </ol>
 </p>
 
-<h3> Cache Optimization Features </h3>
+### Cache Optimization Features
 
 <p align="justify">
 <ol>
@@ -31,7 +32,7 @@
 </ol>
 </p>
 
-<h3> Compilation and Execution Instructions </h3>
+### Compilation and Execution Instructions
 
 <p align="justify">
 <ol>
@@ -84,7 +85,7 @@ Figure 2. Fluid properties during conjugate heat transfer for Re = 1000
 </b>
 </p>
 
-<p align="justify" size="4"> From an engineering perspective, it is important to study the effect of their behavior during design stages and find a way to mitigate them. One way is to suppress the frequency of vortex release through conjugate heat transfer from the body itself. For example, consider a two-dimensional case of a solid cylinder placed inside a channel flow at Re = 1000. <b>Fig 1(a)</b> shows the vorticity contours with clock-wise and counter clock-wise behavior. Now, when the surface of this cylinder starts to heat up we see that these counter-rotating vortices begin to dissipate as shown in <b>Fig 1 (b) & (c)</b> . The vortex release frequency reduces with increase in temperature and at higher temperatures the von Kármán vortices completely disappear as in <b>Fig 1 (d)</b>. </p>
+<p align="justify"> <font size="4"> From an engineering perspective, it is important to study the effect of their behavior during design stages and find a way to mitigate them. One way is to suppress the frequency of vortex release through conjugate heat transfer from the body itself. For example, consider a two-dimensional case of a solid cylinder placed inside a channel flow at Re = 1000. <b>Fig 1(a)</b> shows the vorticity contours with clock-wise and counter clock-wise behavior. Now, when the surface of this cylinder starts to heat up we see that these counter-rotating vortices begin to dissipate as shown in <b>Fig 1 (b) & (c)</b> . The vortex release frequency reduces with increase in temperature and at higher temperatures the von Kármán vortices completely disappear as in <b>Fig 1 (d)</b>. </font> </p>
 
 <p align="justify"> This behavior can be explained by observing the temperature and density distribution inside the fluid. <b>Fig 2</b> shows contoured distribution of these properties for one such case. As temperature inside the fluid increases it undergoes thermal expansion which leads to a decrease in density, this causes a reduction in local Reynolds number thus suppressing the vortex formation in the wake region. </p>
 
