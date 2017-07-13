@@ -1,6 +1,6 @@
-## PARA-PHYSICS, A parallel block structured computational multi-physics solver 
+<h2> PARA-PHYSICS, A parallel block structured computational multi-physics solver </h2>
 
-### Important Information
+<h3> Important Information </h3>
 <p align="justify">
 <ol>
 	<li>This is version 2.0 of the software, previous versions can be found in the old releases</li>
@@ -8,9 +8,11 @@
 	<li>Immersed boundary method is implemented to compute flow over solid bodies</li>
 	<li>Progress is underway to add new physics modules</li>
 </ol>
-</p> 
+</p>
 
-### Parallelization Options
+
+
+<h3> Parallelization Options </h3>
 <p align="justify">
 <ol>
 	<li>Standard MPI distributed memory model</li>
@@ -18,14 +20,11 @@
 	<li>MPI Shared Memory (SHM) model</li>
 	<li>Hyper-threading using OpenMP</li>
 </ol>
-</p> 
+</p>
 
 
 
-
-
-
-### Cache Optimization Features
+<h3> Cache Optimization Features </h3>
 <p align="justify">
 <ol>
 	<li>Loop tiling for linear algebra solvers</li>
@@ -34,7 +33,9 @@
 </ol>
 </p>
 
-### Compilation and Execution Instructions
+
+
+<h3> Compilation and Execution Instructions </h3>
 <p align="justify">
 <ol>
 	<li>Download the source code</li>
