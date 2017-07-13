@@ -8,8 +8,7 @@
 	<li>The software can solve Incompressible Navier-Stokes and Heat advection diffusion equations for both singlephase and multiphase problems</li>
 	<li>Immersed boundary method is implemented to compute flow over solid bodies</li>
 	<li>Progress is underway to add new physics modules</li>
-</ol>
-</p>
+
 
 <h3> Parallelization Options </h3>
 
