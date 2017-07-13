@@ -1,4 +1,4 @@
-## PARA-PHYSICS, A parallel block structured computational multi-physics solver </h2> 
+## PARA-PHYSICS, A parallel block structured computational multi-physics solver 
 
 ### Important Information
 <p align="justify">
@@ -13,28 +13,28 @@
 ### Parallelization Options
 <p align="justify">
 <ol>
-	<li>Standard MPI distributed memory model
-	<li>MPI Remote Memory Access (RMA) model
-	<li>MPI Shared Memory (SHM) model
-	<li>Hyper-threading using OpenMP
+	<li>Standard MPI distributed memory model</li>
+	<li>MPI Remote Memory Access (RMA) model</li>
+	<li>MPI Shared Memory (SHM) model</li>
+	<li>Hyper-threading using OpenMP</li>
 </ol>
 </p> 
 
 ### Cache Optimization Features
 <p align="justify">
 <ol>
-	<li>Loop tiling for linear algebra solvers
-	<li>Array padding for spatial data
-	<li>Blocked data storage for stencil computations
+	<li>Loop tiling for linear algebra solvers</li>
+	<li>Array padding for spatial data</li>
+	<li>Blocked data storage for stencil computations</li>
 </ol>
 </p>
 
 ### Compilation and Execution Instructions
 <p align="justify">
 <ol>
-	<li>Download the source code
-	<li>Make sure you have make utility and the latest version of GNU and MPI-3 or higher installed
-	<li>Edit the Makefile in ./src to include your MPI path
+	<li>Download the source code</li>
+	<li>Make sure you have make utility and the latest version of GNU and MPI-3 or higher installed</li>
+	<li>Edit the Makefile in ./src to include your MPI path</li>
 </ol>
 </p>
 
@@ -47,8 +47,8 @@
 <p aling="justify">
 <ol start="4">
 	<li>You can also optimize Poisson solver and heat equation by hyper-threading using OpenMP on each core. The number of threads are specified 
-     in Solver.h
-   <li>To plot results, edit the python file (plot.py) to match your grid size and simply type (make sure k = nblockx and d = nblocky)
+     in Solver.h</li>
+   <li>To plot results, edit the python file (plot.py) to match your grid size and simply type (make sure k = nblockx and d = nblocky)</li>
 </ol>
 </p>
 
