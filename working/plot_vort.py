@@ -1,8 +1,9 @@
 import matplotlib.pyplot as plt
 import numpy as np
+from scipy.ndimage.filters import gaussian_filter
 
-k=8
-d=4
+k=16
+d=8
 
 M=20+1
 N=20+1
@@ -82,81 +83,53 @@ y_c = np.sqrt(r_c**2-x_c**2)
 x_circle = np.concatenate([x_c,np.fliplr([x_c[:-1]])[0]]) + 3.0
 y_circle = np.concatenate([y_c,-np.fliplr([y_c[:-1]])[0]])  
 
-plt.figure()
-plt.title('Velocity Vector')
-plt.quiver(X,Y,U,V)
-plt.plot(X[:,0],Y[:,0],'k')
-plt.plot(X[:,-1],Y[:,-1],'k')
-plt.plot(X[0,:],Y[0,:],'k')
-plt.plot(X[-1,:],Y[-1,:],'k')
-plt.plot(x_circle,y_circle,'k')
-plt.xlabel('X')
-plt.ylabel('Y')
-plt.axis('equal') 
+level_max =  5
+level_min = -level_max
 
-plt.figure()
-plt.title('V Velocity')
-plt.contourf(X,Y,V,density=20)
-plt.plot(X[:,0],Y[:,0],'k')
-plt.plot(X[:,-1],Y[:,-1],'k')
-plt.plot(X[0,:],Y[0,:],'k')
-plt.plot(X[-1,:],Y[-1,:],'k')
-plt.plot(X,Y,'g')
-plt.plot(X.T,Y.T,'g')
-plt.xlabel('X')
-plt.ylabel('Y')
-plt.plot(x_circle,y_circle,'k')
-plt.colorbar()
-plt.axis('equal')
-
-plt.figure()
-plt.title('Pressure')
-plt.contourf(X,Y,P,density=5)
-plt.plot(X[:,0],Y[:,0],'k')
-plt.plot(X[:,-1],Y[:,-1],'k')
-plt.plot(X[0,:],Y[0,:],'k')
-plt.plot(X[-1,:],Y[-1,:],'k')
-plt.xlabel('X')
-plt.ylabel('Y')
-plt.plot(x_circle,y_circle,'k')
-plt.colorbar()
-plt.axis('equal') 
+for i in range(0,N*d):
+	for j in range(0,M*k):
+		if(W[i][j] >= level_max):
+			W[i][j] = level_max
+		if(W[i][j] <= level_min):
+			W[i][j] = level_min
 
 plt.figure()
 plt.title('Temperature')
-plt.contourf(X,Y,T,density=5)
+plt.contourf(X,Y,T,100,density=5)
 plt.plot(X[:,0],Y[:,0],'k')
 plt.plot(X[:,-1],Y[:,-1],'k')
 plt.plot(X[0,:],Y[0,:],'k')
 plt.plot(X[-1,:],Y[-1,:],'k')
 plt.xlabel('X')
 plt.ylabel('Y')
+plt.fill(x_circle,y_circle,'w')
 plt.plot(x_circle,y_circle,'k')
 plt.colorbar()
 plt.axis('equal')
 
 plt.figure()
-plt.title('Viscosity')
-plt.contourf(X,Y,W,density=5)
+plt.title('Vorticity')
+plt.contourf(X,Y,W,100,density=5)
 plt.plot(X[:,0],Y[:,0],'k')
 plt.plot(X[:,-1],Y[:,-1],'k')
 plt.plot(X[0,:],Y[0,:],'k')
 plt.plot(X[-1,:],Y[-1,:],'k')
 plt.xlabel('X')
 plt.ylabel('Y')
+plt.fill(x_circle,y_circle,'w')
 plt.plot(x_circle,y_circle,'k')
-plt.colorbar()
 plt.axis('equal')
 
 plt.figure()
 plt.title('Density')
-plt.contourf(X,Y,R,density=5)
+plt.contourf(X,Y,R,100,density=5)
 plt.plot(X[:,0],Y[:,0],'k')
 plt.plot(X[:,-1],Y[:,-1],'k')
 plt.plot(X[0,:],Y[0,:],'k')
 plt.plot(X[-1,:],Y[-1,:],'k')
 plt.xlabel('X')
 plt.ylabel('Y')
+plt.fill(x_circle,y_circle,'w')
 plt.plot(x_circle,y_circle,'k')
 plt.colorbar()
 plt.axis('equal')

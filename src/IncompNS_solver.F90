@@ -37,6 +37,8 @@ subroutine IncompNS_solver(tstep,p_counter)
     faceyData(:,:,UOLD_VAR,:) = faceyData(:,:,VELC_VAR,:)
     solnData(:,:,VORO_VAR,:)  = solnData(:,:,VORT_VAR,:)
 
+    ! Predictor Step
+
 #ifdef SINGLEPHASE
     do blk=1,blockCount
        call ins_predictor(tstep,facexData(:,:,VELC_VAR,blk),faceyData(:,:,VELC_VAR,blk),&
@@ -54,6 +56,8 @@ subroutine IncompNS_solver(tstep,p_counter)
     end do
 #endif
 
+    ! Immersed Boundary Calculation
+
 #ifdef IBM
     do blk=1,blockCount
        call IBM_ApplyForcing(facexData(:,:,USTR_VAR,blk),faceyData(:,:,USTR_VAR,blk),&
@@ -61,10 +65,14 @@ subroutine IncompNS_solver(tstep,p_counter)
     end do
 #endif    
 
+    ! MPI and Domain Predictor BCs
+
     call MPI_BARRIER(solver_comm,ierr)
     call MPI_applyBC(USTR_VAR,FACEX)
     call MPI_applyBC(USTR_VAR,FACEY)
     call MPI_physicalBC_vel(facexData(:,:,USTR_VAR,:),faceyData(:,:,USTR_VAR,:))
+
+    ! Poisson RHS
 
 #ifdef SINGLEPHASE
     do blk=1,blockCount
@@ -85,6 +93,8 @@ subroutine IncompNS_solver(tstep,p_counter)
 
     nullify(solnData,facexData,faceyData)
 
+   ! Poisson Solve
+
 #ifdef SINGLEPHASE
     call Poisson_solver(PRHS_VAR,PRES_VAR,p_counter)
 #else
@@ -94,6 +104,8 @@ subroutine IncompNS_solver(tstep,p_counter)
     solnData  => localCENTER
     facexData => localFACEX
     faceyData => localFACEY
+
+   ! Corrector Step
 
 #ifdef SINGLEPHASE
     do blk=1,blockCount
@@ -130,6 +142,8 @@ subroutine IncompNS_solver(tstep,p_counter)
     end do
 #endif
 
+    ! MPI and Domain Corrector BCs
+
     call MPI_BARRIER(solver_comm,ierr)
     call MPI_applyBC(VELC_VAR,FACEX)
     call MPI_applyBC(VELC_VAR,FACEY)
@@ -148,6 +162,8 @@ subroutine IncompNS_solver(tstep,p_counter)
                               +((1/(gr_dx))*(facexData(2:Nxb+1,2:Nyb+1,VELC_VAR,blk)-facexData(1:Nxb,2:Nyb+1,VELC_VAR,blk)))))
 
     end do
+
+    ! Max-Min Velocity
 
     umax = maxval(facexData(2:Nxb+1,2:Nyb+1,VELC_VAR,:))
     umin = minval(facexData(2:Nxb+1,2:Nyb+1,VELC_VAR,:))
@@ -179,31 +195,37 @@ subroutine IncompNS_solver(tstep,p_counter)
     call MPI_CollectResiduals(ins_v_res,v_res1,SUM_DATA)
     ins_v_res = sqrt(v_res1/((nblockx*nblocky)*(Nxb+2)*(Nyb+2)))
 
-    !do blk=1,blockCount
+    ! Vorticity Calculation
+
+    do blk=1,blockCount
   
-    !solnData(2:Nxb+1,2:Nyb+1,VORT_VAR,blk) = (((faceyData(2:Nxb+1,1:Nyb,VELC_VAR,blk)-faceyData(1:Nxb,1:Nyb,VELC_VAR,blk))/gr_dx &
-    !                                        -  (facexData(1:Nxb,2:Nyb+1,VELC_VAR,blk)-facexData(1:Nxb,1:Nyb,VELC_VAR,blk))/gr_dy)&
+    solnData(2:Nxb+1,2:Nyb+1,VORT_VAR,blk) = (((faceyData(2:Nxb+1,1:Nyb,VELC_VAR,blk)-faceyData(1:Nxb,1:Nyb,VELC_VAR,blk))/gr_dx &
+                                            -  (facexData(1:Nxb,2:Nyb+1,VELC_VAR,blk)-facexData(1:Nxb,1:Nyb,VELC_VAR,blk))/gr_dy)&
 
-    !                                        + ((faceyData(3:Nxb+2,1:Nyb,VELC_VAR,blk)-faceyData(2:Nxb+1,1:Nyb,VELC_VAR,blk))/gr_dx & 
-    !                                        -  (facexData(2:Nxb+1,2:Nyb+1,VELC_VAR,blk)-facexData(2:Nxb+1,1:Nyb,VELC_VAR,blk))/gr_dy)&
+                                            + ((faceyData(3:Nxb+2,1:Nyb,VELC_VAR,blk)-faceyData(2:Nxb+1,1:Nyb,VELC_VAR,blk))/gr_dx & 
+                                            -  (facexData(2:Nxb+1,2:Nyb+1,VELC_VAR,blk)-facexData(2:Nxb+1,1:Nyb,VELC_VAR,blk))/gr_dy)&
 
-    !                                        + ((faceyData(2:Nxb+1,2:Nyb+1,VELC_VAR,blk)-faceyData(1:Nxb,2:Nyb+1,VELC_VAR,blk))/gr_dx &
-    !                                        -  (facexData(1:Nxb,3:Nyb+2,VELC_VAR,blk)-facexData(1:Nxb,2:Nyb+1,VELC_VAR,blk))/gr_dy) &
+                                            + ((faceyData(2:Nxb+1,2:Nyb+1,VELC_VAR,blk)-faceyData(1:Nxb,2:Nyb+1,VELC_VAR,blk))/gr_dx &
+                                            -  (facexData(1:Nxb,3:Nyb+2,VELC_VAR,blk)-facexData(1:Nxb,2:Nyb+1,VELC_VAR,blk))/gr_dy) &
 
-    !                                  + ((faceyData(3:Nxb+2,2:Nyb+1,VELC_VAR,blk)-faceyData(2:Nxb+1,2:Nyb+1,VELC_VAR,blk))/gr_dx)&
-    !                                  -  (facexData(2:Nxb+1,3:Nyb+2,VELC_VAR,blk)-facexData(2:Nxb+1,2:Nyb+1,VELC_VAR,blk))/gr_dy)/4
+                                      + ((faceyData(3:Nxb+2,2:Nyb+1,VELC_VAR,blk)-faceyData(2:Nxb+1,2:Nyb+1,VELC_VAR,blk))/gr_dx)&
+                                      -  (facexData(2:Nxb+1,3:Nyb+2,VELC_VAR,blk)-facexData(2:Nxb+1,2:Nyb+1,VELC_VAR,blk))/gr_dy)/4
 
-    !end do
+    end do
 
-    !call MPI_BARRIER(solver_comm,ierr)
-    !call MPI_applyBC(VORT_VAR,CENTER)
-    !call MPI_physicalBC_vort(solnData(:,:,VORT_VAR,:))
+    ! Vorticity BC
+
+    call MPI_BARRIER(solver_comm,ierr)
+    call MPI_applyBC(VORT_VAR,CENTER)
+    call MPI_physicalBC_vort(solnData(:,:,VORT_VAR,:))
 
     !do blk=1,blockCount
     !call ins_vorticity(tstep,solnData(:,:,VORT_VAR,blk),solnData(:,:,VORO_VAR,blk),&
     !                   facexData(:,:,VELC_VAR,blk),faceyData(:,:,VELC_VAR,blk),&
     !                   solnData(:,:,DFUN_VAR,blk))
     !end do
+
+    !! Vorticity BC
 
     !call MPI_BARRIER(solver_comm,ierr)
     !call MPI_applyBC(VORT_VAR,CENTER)
