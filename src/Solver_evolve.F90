@@ -73,8 +73,8 @@ subroutine Solver_evolve
           tt = ((solnData(1:Nxb+1,1:Nyb+1,TEMP_VAR,blk)+solnData(2:Nxb+2,1:Nyb+1,TEMP_VAR,blk))/2 &
                +(solnData(1:Nxb+1,2:Nyb+2,TEMP_VAR,blk)+solnData(2:Nxb+2,2:Nyb+2,TEMP_VAR,blk))/2)/2
 
-          ww = ((solnData(1:Nxb+1,1:Nyb+1,VISC_VAR,blk)+solnData(2:Nxb+2,1:Nyb+1,VISC_VAR,blk))/2 &
-               +(solnData(1:Nxb+1,2:Nyb+2,VISC_VAR,blk)+solnData(2:Nxb+2,2:Nyb+2,VISC_VAR,blk))/2)/2
+          ww = ((solnData(1:Nxb+1,1:Nyb+1,VORT_VAR,blk)+solnData(2:Nxb+2,1:Nyb+1,VORT_VAR,blk))/2 &
+               +(solnData(1:Nxb+1,2:Nyb+2,VORT_VAR,blk)+solnData(2:Nxb+2,2:Nyb+2,VORT_VAR,blk))/2)/2
 
           rr = (1./(facexData(1:Nxb+1,1:Nyb+1,RH1F_VAR,blk)+facexData(1:Nxb+1,2:Nyb+2,RH2F_VAR,blk)) + &
                 1./(faceyData(1:Nxb+1,1:Nyb+1,RH1F_VAR,blk)+faceyData(2:Nxb+2,1:Nyb+1,RH2F_VAR,blk)))/2
@@ -105,8 +105,8 @@ subroutine Solver_evolve
     tt = ((solnData(1:Nxb+1,1:Nyb+1,TEMP_VAR,blk)+solnData(2:Nxb+2,1:Nyb+1,TEMP_VAR,blk))/2 &
          +(solnData(1:Nxb+1,2:Nyb+2,TEMP_VAR,blk)+solnData(2:Nxb+2,2:Nyb+2,TEMP_VAR,blk))/2)/2
 
-    ww = ((solnData(1:Nxb+1,1:Nyb+1,VISC_VAR,blk)+solnData(2:Nxb+2,1:Nyb+1,VISC_VAR,blk))/2 &
-         +(solnData(1:Nxb+1,2:Nyb+2,VISC_VAR,blk)+solnData(2:Nxb+2,2:Nyb+2,VISC_VAR,blk))/2)/2
+    ww = ((solnData(1:Nxb+1,1:Nyb+1,VORT_VAR,blk)+solnData(2:Nxb+2,1:Nyb+1,VORT_VAR,blk))/2 &
+         +(solnData(1:Nxb+1,2:Nyb+2,VORT_VAR,blk)+solnData(2:Nxb+2,2:Nyb+2,VORT_VAR,blk))/2)/2
 
     rr = (1./(facexData(1:Nxb+1,1:Nyb+1,RH1F_VAR,blk)+facexData(1:Nxb+1,2:Nyb+2,RH2F_VAR,blk)) + &
           1./(faceyData(1:Nxb+1,1:Nyb+1,RH1F_VAR,blk)+faceyData(2:Nxb+2,1:Nyb+1,RH2F_VAR,blk)))/2

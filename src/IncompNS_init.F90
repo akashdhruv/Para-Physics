@@ -27,7 +27,7 @@ subroutine IncompNS_init()
       facexData(:,:,GOLD_VAR,:) = 0.0
       faceyData(:,:,GOLD_VAR,:) = 0.0
      
-      ins_inRe  = 0.002        ! Reynolds number
+      ins_inRe  = 0.001        ! Reynolds number
 
       ins_sigma = 0.008        ! CFL for diffusive  dt
       ins_cfl   = 0.008        ! CFL for convective dt
