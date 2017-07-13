@@ -46,14 +46,14 @@
 
 ### 1. Vortex suppression through conjugate heat transfer 
 
-<p align="justify"> <font size="4"> Formation of von Kármán vortices behind bluff and aerodynamic bodies in a fluid flow generate structural vibrations which, especially at high Reynolds number can lead to disastrous consequences. These counter-rotating vortices are not uncommon and can easily form around objects like buildings, powerplant equipments, aircrafts, ships and submarines. The magnitude of damages is directly proportional to the frequency of vortex release which increases with the flow speed. </font> </p>
+<p align="justify"> Formation of von Kármán vortices behind bluff and aerodynamic bodies in a fluid flow generate structural vibrations which, especially at high Reynolds number can lead to disastrous consequences. These counter-rotating vortices are not uncommon and can easily form around objects like buildings, powerplant equipments, aircrafts, ships and submarines. The magnitude of damages is directly proportional to the frequency of vortex release which increases with the flow speed.</p>
 
 <p align="center">
   <img src="./images/Vort_WakeSup.png" width="650"/>
 </p>
 <p align="center">
 <b>
-<font size="3" face="Arial">
+<font size="3">
 Figure 1. Vorticity contours around a cylinder in channel flow, t = 50 units and Re = 1000 (Red-CCW, Blue-CW) (Block grid size - 20 x 20) (Num blocks - 16 x 8)
 </font>
 </b>
@@ -63,7 +63,7 @@ Figure 1. Vorticity contours around a cylinder in channel flow, t = 50 units and
 </p>
 <p align="center">
 <b>
-<font size="3" face="Arial">
+<font size="3">
 Figure 2. Fluid properties during conjugate heat transfer for Re = 1000
 </font>
 </b>
@@ -80,7 +80,7 @@ Figure 2. Fluid properties during conjugate heat transfer for Re = 1000
 </p>
 <p align="center">
 <b>
-<font size="2" face="Arial">
+<font size="2">
 Figure 3. (a) Numerical solution, (Block grid size - 20 x 20) (Num blocks - 6 x 6) (b) Reference solution by <a href="https://pdfs.semanticscholar.org/211b/45b6a06336a72ca064a6e59b14ebc520211c.pdf"> Ghia .et .al </a>
 </font>
 </b>
@@ -97,7 +97,7 @@ Figure 3. (a) Numerical solution, (Block grid size - 20 x 20) (Num blocks - 6 x 
 </p>
 <p align="center">
 <b>
-<font size="2" face="Arial">
+<font size="3">
 Figure 4. Conjugate heat transfer between air and three solid cylinders, Re = 500, t = 25 units, (Block grid size - 20 x 20) (Num blocks - 40 x 40) 
 </font>
 </b>
@@ -111,7 +111,9 @@ Figure 4. Conjugate heat transfer between air and three solid cylinders, Re = 50
 </p>
 <p align="center">
 <b>
+<font size="3">
 Figure 5. Speed up comparison on a 64 core Xeon Phi KNL processor 
+</font>
 </b>
 </p>
 
