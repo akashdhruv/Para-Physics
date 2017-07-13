@@ -67,7 +67,7 @@ Figure 2. Fluid properties during conjugate heat transfer for Re = 1000
 ### 2. Lid Driven Cavity
 
 <p align="center">
-  <img src="./images/Ghia_Comparison.png" width="550"/>
+  <img src="./images/Ghia_Comparison.png" width="450"/>
 </p>
 <p align="center">
 <b>
@@ -78,7 +78,7 @@ Figure 3. (a) Numerical solution, (Block size - 20 x 20) (Num blocks - 6 x 6) (b
 ### 3. Conjugate heat transfer between fluid and multiple immersed boundaries
 
 <p align="center">
-  <img src="./images/Image_10.png" width="500"/>
+  <img src="./images/Image_10.png" width="450"/>
 </p>
 <p align="center">
 <b>
@@ -89,7 +89,7 @@ Figure 4. Conjugate heat transfer between air and three solid cylinders, Re = 50
 ### 4. MPI shared memory vs distributed memory model
 
 <p align="center">
-  <img src="./images/XeonPhi_Sp.png" width="400"/>
+  <img src="./images/XeonPhi_Sp.png" width="350"/>
 </p>
 <p align="center">
 <b>
