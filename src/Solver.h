@@ -47,14 +47,14 @@ _______________________Grid Parameters___________________________
 #define Nyb 20
 
 
-#define D_xmin  0.0
-#define D_ymin -2.5
+#define D_xmin  00.0
+#define D_ymin -02.5
 
 
 #define D_xmax  10.0
-#define D_ymax  2.5
+#define D_ymax  02.5
 
-#define TIME_END 100.00
+#define TIME_END 60.00
 
 #define nblockx 8
 #define nblocky 4
