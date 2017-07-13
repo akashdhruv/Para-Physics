@@ -47,20 +47,20 @@
 ### 1. Wake suppression through conjugate heat transfer 
 
 <p align="center">
-  <img src="./images/Wake_Sup_2.png" width="320"/>
+  <img src="./images/Vort_WakeSup.png" width="650"/>
 </p>
 <p align="center">
 <b>
-Figure 1. Vorticity contours at t = 60 units for Re = 500 (Block size - 20 x 20) (Num blocks - 8 x 4)
+Figure 1. Vorticity contours for a cylinder in channel flow, t = 60 units and Re = 1000 (Block size - 20 x 20) (Num blocks - 16 x 8)
 </b>
 </p>
 
 <p align="center">
-  <img src="./images/Temp_Dens_2.png" width="450"/>
+  <img src="./images/Temp_Dens.png" width="400"/>
 </p>
 <p align="center">
 <b>
-Figure 2. Fluid properties during conjugate heat transfer for Re = 500 and temprature difference 20
+Figure 2. Fluid properties during conjugate heat transfer for Re = 1000
 </b>
 </p>
 
