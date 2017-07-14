@@ -1,16 +1,16 @@
 <h2> PARA-PHYSICS, A parallel block structured computational multi-physics solver </h2>
 
 <h3> Important Information </h3>
-<p align="justify"> <font size="4"> 
+<p align="justify"> 
+<font size="4"> 
 <ol>
 	<li>This is version 2.0 of the software, previous versions can be found in the old releases</li>
 	<li>The software can solve Incompressible Navier-Stokes and Heat advection diffusion equations for both singlephase and multiphase problems</li>
 	<li>Immersed boundary method is implemented to compute flow over solid bodies</li>
 	<li>Progress is underway to add new physics modules</li>
 </ol> 
-</font> </p>	
-
-
+</font> 
+</p> 
 
 <h3> Parallelization Options </h3>
 <p align="justify"> <font size="4">
