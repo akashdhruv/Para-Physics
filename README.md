@@ -6,9 +6,9 @@
 	<li>This is version 2.0 of the software, previous versions can be found in the old releases
 	<li>The software can solve Incompressible Navier-Stokes and Heat advection diffusion equations for both singlephase and multiphase problems
 	<li>Immersed boundary method is implemented to compute flow over solid bodies
-	<li>Progress is underway to add new physics modules
-</ol>
-</font> </p>     
+	<li>Progress is underway to add new physics modules 
+</ol> 
+</font> </p>   
 
 <h3> Parallelization Options </h3>
 <p align="justify"> <font size="4">
@@ -18,7 +18,7 @@
 	<li>MPI Shared Memory (SHM) model
 	<li>Hyper-threading using OpenMP
 </ol>
-</font> </p>   
+</font> </p> 
 
 <h3> Cache Optimization Features </h3>
 <p align="justify"> <font size="4">
