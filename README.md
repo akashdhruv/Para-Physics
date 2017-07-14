@@ -8,7 +8,7 @@
 	<li>Immersed boundary method is implemented to compute flow over solid bodies</li>
 	<li>Progress is underway to add new physics modules</li>
 </ol> 
-</font> </p> 
+</font> </p>
 
 <h3> Parallelization Options </h3>
 <p align="justify"> <font size="4">
@@ -35,7 +35,6 @@
 	<li>Download the source code</li>
 	<li>Make sure you have make utility and the latest version of GNU and MPI-3 or higher installed</li>
 	<li>Edit the Makefile in ./src to include your MPI path
-	
 <pre class="bash">
 src
 make
