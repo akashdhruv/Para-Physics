@@ -11,6 +11,7 @@
 </font> </p>
 
 
+
 <h3> Parallelization Options </h3>
 <p align="justify"> <font size="4">
 <ol>
@@ -22,6 +23,7 @@
 </font> </p>
 
 
+
 <h3> Cache Optimization Features </h3>
 <p align="justify"> <font size="4">
 <ol>
@@ -30,6 +32,7 @@
 	<li>Blocked data storage for stencil computations
 </ol>
 </font> </p>
+
 
 
 <h3> Compilation and Execution Instructions </h3>
