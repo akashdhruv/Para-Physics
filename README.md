@@ -121,7 +121,7 @@ This type of situation is typically found in heat-exchangers and nuclear reactor
 
 <h3> 4. MPI shared memory vs distributed memory model </h3>
 <p align="center">
-  <img src="./images/SP_graph.png" width="700"/>
+  <img src="./images/SP_graph.png" width="750"/>
 </p>
 
 <p align="center"> <font size="3"> <b>
