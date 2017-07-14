@@ -8,7 +8,7 @@
 	<li>Immersed boundary method is implemented to compute flow over solid bodies
 	<li>Progress is underway to add new physics modules
 </ol>
-</font> </p> 
+</font> </p>   
 
 <h3> Parallelization Options </h3>
 <p align="justify"> <font size="4">
@@ -18,7 +18,7 @@
 	<li>MPI Shared Memory (SHM) model
 	<li>Hyper-threading using OpenMP
 </ol>
-</font> </p> 
+</font> </p>   
 
 <h3> Cache Optimization Features </h3>
 <p align="justify"> <font size="4">
