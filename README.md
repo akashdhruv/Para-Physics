@@ -8,7 +8,7 @@
 	<li>Immersed boundary method is implemented to compute flow over solid bodies
 	<li>Progress is underway to add new physics modules
 </ol>
-</font> </p>   
+</font> </p> 
 
 <h3> Parallelization Options </h3>
 <p align="justify"> <font size="4">
@@ -18,8 +18,7 @@
 	<li>MPI Shared Memory (SHM) model
 	<li>Hyper-threading using OpenMP
 </ol>
-</font> </p>
-
+</font> </p> 
 
 <h3> Cache Optimization Features </h3>
 <p align="justify"> <font size="4">
@@ -28,8 +27,7 @@
 	<li>Array padding for spatial data
 	<li>Blocked data storage for stencil computations
 </ol>
-</font> </p>
-
+</font> </p> 
 
 <h3> Compilation and Execution Instructions </h3>
 <p align="justify"> <font size="4">
@@ -55,8 +53,7 @@ python plot.py
 </pre>
  
 </ol>
-</font> </p>     
-
+</font> </p> 
 
 <h2> Examples </h2>
 
