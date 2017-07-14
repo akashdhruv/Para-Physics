@@ -18,7 +18,7 @@
 	<li>MPI Shared Memory (SHM) model</li>
 	<li>Hyper-threading using OpenMP</li>
 </ol>
-</font> </p> 
+</font> </p>
 
 <h3> Cache Optimization Features </h3>
 <p align="justify"> <font size="4">
@@ -27,7 +27,7 @@
 	<li>Array padding for spatial data</li>
 	<li>Blocked data storage for stencil computations</li>
 </ol>
-</font> </p> 
+</font> </p>
 
 <h3> Compilation and Execution Instructions </h3>
 <p align="justify"> <font size="4">
@@ -53,7 +53,7 @@ python plot.py
 </li>
 
 </ol>
-</font> </p> 
+</font> </p>
 
 <h2> Examples </h2>
 
