@@ -121,15 +121,15 @@ This type of situation is typically found in heat-exchangers and nuclear reactor
 
 <h3> 4. MPI shared memory vs distributed memory model </h3>
 <p align="center">
-  <img src="./images/XeonPhi_Sp.png" width="400"/>
+  <img src="./images/SP_graph.png" width="700"/>
 </p>
 
 <p align="center"> <font size="3"> <b>
-Figure 5. Speed up comparison on a 64 core Xeon Phi KNL processor 
+Figure 5. Speed up comparison on (a) 64 core xeon phi KNL processor (b) multi - node cluster with 16 cores per node
 </b> </font> </p>
 
 <p align="justify"> <font size="4">
-The new MPI-3 library enables use of shared memory parallelization for processes on the same node. Whether you are running simulation on a multi-node cluster or a single MIC (Many Integrated Cores) processor you can use shared memory intra-node and distributed memory inter-node. Experimental tests for this software show that MPI shared memory parallelization gives almost twice as much speed up in comparison to traditional distributed memory model. 
+The new MPI-3 library enables use of shared memory parallelization for processes on the same node. Whether you are running simulation on a multi-node cluster or a single MIC (Many Integrated Cores) processor you can use shared memory intra-node and distributed memory inter-node. Experimental tests for this software show that MPI shared memory parallelization gives almost twice as much speed up on Xeon Phi KNL in comparison to traditional distributed memory model. However, on a typical cluster improvement is not that significant. Efforts are underway to address the latter.
 </font> </p>
 
 <h2></h2>
