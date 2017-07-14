@@ -64,7 +64,7 @@ Formation of von Kármán vortices behind bluff and aerodynamic bodies in a flui
 </font> </p>
 
 <p align="center">
-  <img src="./images/Vort_WakeSup.png" width="650"/>
+  <img src="./images/Vort_WakeSup.png" width="800"/>
 </p>
 
 <p align="center"> <font size="3"> <b>
@@ -72,7 +72,7 @@ Figure 1. Vorticity contours around a cylinder in channel flow, t = 50 units and
 </b> </font> </p>
 
 <p align="center">
-  <img src="./images/Temp_Dens.png" width="400"/>
+  <img src="./images/Temp_Dens.png" width="500"/>
 </p>
 
 <p align="center"> <font size="3"> <b>
@@ -90,7 +90,7 @@ This behavior can be explained by observing the temperature and density distribu
 <h3> 2. Lid Driven Cavity </h3>
 
 <p align="center">
-  <img src="./images/Ghia_Comparison.png" width="480"/>
+  <img src="./images/Ghia_Comparison.png" width="580"/>
 </p>
 
 <p align="center"> <font size="3"> <b>
@@ -108,7 +108,7 @@ This example is to show the capability of software in handling multiple immersed
 </font> </p>
 
 <p align="center">
-  <img src="./images/Image_10.png" width="450"/>
+  <img src="./images/Image_10.png" width="580"/>
 </p>
 
 <p align="center"> <font size="3"> <b>
@@ -121,7 +121,7 @@ This type of situation is typically found in heat-exchangers and nuclear reactor
 
 <h3> 4. MPI shared memory vs distributed memory model </h3>
 <p align="center">
-  <img src="./images/SP_graph.png" width="750"/>
+  <img src="./images/SP_graph.png" width="850"/>
 </p>
 
 <p align="center"> <font size="3"> <b>
