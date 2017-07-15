@@ -45,9 +45,8 @@ cd ../working
 mpirun -n [number_of_procs] ./Solver
 </pre>
 </li>
-	<li>You can also optimize Poisson solver and heat equation by hyper-threading using OpenMP on each core. The number of threads are specified 
-     in Solver.h</li>
-   <li>To plot results, edit the python file (plot.py) to match your grid size and simply type (make sure k = nblockx and d = nblocky)
+	<li>You can also optimize Poisson solver and heat equation by hyper-threading using OpenMP on each core. The number of threads are specified in Solver.h</li>
+   	<li>To plot results, edit the python file (plot.py) to match your grid size and simply type (make sure k = nblockx and d = nblocky)
 
 <pre class="bash">
 python plot.py
