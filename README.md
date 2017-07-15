@@ -44,4 +44,4 @@
 
 ### Author - Akash V. Dhruv
 ### License - Refer LICENSE.md
-### Cite as - Akash Dhruv. (2017, June 21). akidhruv/Para-Physics: Para-Physics. Zenodo. http://doi.org/10.5281/zenodo.815017
+### Cite as - Akash Dhruv, akidhruv/Para-Physics: Para-Physics, Zenodo. http://doi.org/10.5281/zenodo.815017
