@@ -2,7 +2,7 @@ subroutine Solver_evolve
 
 #include "Solver.h"
 
-!#define SOLVER_DEBUG
+#define SOLVER_DEBUG
 
     use IncompNS_interface, only: IncompNS_solver
     use HeatAD_interface, only: HeatAD_solver
@@ -56,7 +56,7 @@ subroutine Solver_evolve
        !if((ins_u_res .lt. 0.0000001) .and. (ins_u_res .ne. 0).and. (ins_v_res .lt. 0.0000001) .and. (ins_v_res .ne. 0) ) exit
 
 #ifdef SOLVER_DEBUG
-       if(mod(tstep,10000) == 0) then
+       if(mod(tstep,1) == 0) then
 
           solnData  => localCENTER
           facexData => localFACEX

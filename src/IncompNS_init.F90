@@ -19,7 +19,7 @@ subroutine IncompNS_init()
       solnData(:,:,VORT_VAR,:) = 0.0
 
       facexData(:,:,VELC_VAR,:) = 1.0
-      faceyData(:,:,VELC_VAR,:) = 1.0
+      faceyData(:,:,VELC_VAR,:) = 0.0
 
       facexData(:,:,USTR_VAR,:) = 0.0
       faceyData(:,:,USTR_VAR,:) = 0.0

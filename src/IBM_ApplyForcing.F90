@@ -18,25 +18,39 @@ subroutine IBM_ApplyForcing(ut,vt,s,s2)
 
 
     do j=2,Nyb+1
-       do i=2,Nxb+1
+      do i=2,Nxb+1
 
-          if(s(i,j) >= 0. .and. s(i-1,j) <0.) ut(i-1,j) = 0.0
+        if(s(i,j) .le. ibm_xr .and. s(i+1,j) .ge. ibm_xr .and. s2(i,j) .le. ibm_yr) then
+           ut(i+1,j) = 0.0
+        end if
 
-          if(s(i,j) >= 0. .and. s(i+1,j) <0.) ut(i+1,j) = 0.0
+        if(s2(i,j) .le. ibm_yr .and. s2(i,j+1) .ge. ibm_yr .and. s(i,j) .le. ibm_xr) then
+           vt(i,j+1) = 0.0
+        end if
 
-          if(s(i,j) >= 0. .and. s(i,j-1) <0.) ut(i,j-1) = 0.0
-
-          if(s(i,j) >= 0. .and. s(i,j+1) <0.) ut(i,j+1) = 0.0
-
-          if(s2(i,j) >= 0. .and. s2(i-1,j) <0.) vt(i-1,j) = 0.0
-
-          if(s2(i,j) >= 0. .and. s2(i+1,j) <0.) vt(i+1,j) = 0.0
-
-          if(s2(i,j) >= 0. .and. s2(i,j-1) <0.) vt(i,j-1) = 0.0
-
-          if(s2(i,j) >= 0. .and. s2(i,j+1) <0.) vt(i,j+1) = 0.0
-
-       end do
+      end do
     end do
+
+    !do j=2,Nyb+1
+    !   do i=2,Nxb+1
+
+    !      if(s(i,j) >= 0. .and. s(i-1,j) <0.) ut(i-1,j) = 0.0
+
+    !      if(s(i,j) >= 0. .and. s(i+1,j) <0.) ut(i+1,j) = 0.0
+
+    !      if(s(i,j) >= 0. .and. s(i,j-1) <0.) ut(i,j-1) = 0.0
+
+    !      if(s(i,j) >= 0. .and. s(i,j+1) <0.) ut(i,j+1) = 0.0
+
+    !      if(s2(i,j) >= 0. .and. s2(i-1,j) <0.) vt(i-1,j) = 0.0
+
+    !      if(s2(i,j) >= 0. .and. s2(i+1,j) <0.) vt(i+1,j) = 0.0
+
+    !      if(s2(i,j) >= 0. .and. s2(i,j-1) <0.) vt(i,j-1) = 0.0
+
+    !      if(s2(i,j) >= 0. .and. s2(i,j+1) <0.) vt(i,j+1) = 0.0
+
+    !   end do
+    !end do
 
 end subroutine IBM_ApplyForcing

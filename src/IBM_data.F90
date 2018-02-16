@@ -15,5 +15,7 @@ module IBM_data
   real, save :: ibm_r1,ibm_x1,ibm_y1
 
   real, save :: ibm_omega
+ 
+  real, save :: ibm_xl, ibm_xr, ibm_yl, ibm_yr
 
 end module IBM_data

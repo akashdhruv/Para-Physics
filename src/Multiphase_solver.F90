@@ -72,7 +72,7 @@ subroutine Multiphase_solver(tstep,solnX,jump_flag)
       call MPI_BARRIER(solver_comm,ierr)
       call MPI_applyBC(VELI_VAR,FACEX)
       call MPI_applyBC(VELI_VAR,FACEY)
-      call MPI_physicalBC_vel(facexData(:,:,VELI_VAR,:),faceyData(:,:,VELI_VAR,:))
+      call MPI_physicalBC_vel(facexData(:,:,VELI_VAR,:),faceyData(:,:,VELI_VAR,:),solnData(:,:,PFUN_VAR,:))
 
     end if
 

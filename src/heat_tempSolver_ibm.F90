@@ -8,7 +8,7 @@ subroutine heat_tempSolver_ibm(tstep,T,T_old,mdot,smrh,u,v,a1x,a1y,a2x,a2y,s,pf,
    use HeatAD_data
    use Driver_data
    use Multiphase_data, only: mph_cp2,mph_thco2,mph_max_s,mph_min_s
-   use IBM_data, only: ibm_cp1,ibm_thco1,ibm_r0
+   use IBM_data, only: ibm_cp1,ibm_thco1,ibm_r0,ibm_xl,ibm_xr,ibm_yl,ibm_yr
 
    implicit none
       
@@ -60,92 +60,45 @@ subroutine heat_tempSolver_ibm(tstep,T,T_old,mdot,smrh,u,v,a1x,a1y,a2x,a2y,s,pf,
 
      Tij = T_old(i,j)
 
-     ! Case 1 !
-     if(s(i,j)*s(i+1,j).le.0.d0) then
+     if(s(i,j) .le. ibm_xr .and. s(i+1,j) .ge. ibm_xr .and. pf(i,j) .le. ibm_yr) then
+        Tx_plus = (Tsat-Tij)/(ibm_xr-s(i,j)) + Tij
+     end if
 
-       if (abs(s(i,j))/(abs(s(i,j))+abs(s(i+1,j))) .gt. tol) then
+     if(s(i,j) .ge. ibm_xr .and. s(i-1,j) .le. ibm_xr .and. pf(i,j) .le. ibm_yr) then
+        Tx_mins = (Tsat-Tij)/(s(i,j)-ibm_xr) + Tij
+     end if
 
-        th = abs(s(i,j))/(abs(s(i,j))+abs(s(i+1,j)))
+     if(pf(i,j) .le. ibm_yr .and. pf(i,j+1) .ge. ibm_yr .and. s(i,j) .le. ibm_xr) then
+        Ty_plus = (Tsat-Tij)/(ibm_yr-pf(i,j)) + Tij
+     end if
+
+     if(pf(i,j) .ge. ibm_yr .and. pf(i,j-1) .le. ibm_yr .and. s(i,j) .le. ibm_xr) then
+        Ty_mins = (Tsat-Tij)/(pf(i,j)-ibm_yr) + Tij
+     end if
+
  
-       else
+     !if(s(i,j) .ge. 0.0) then
+     !T(i,j) = T_old(i,j)+((dr_dt*ins_inRe*(ibm_thco1/ibm_cp1))/(ht_Pr*gr_dx*gr_dx))*(Tx_plus+Tx_mins-2*Tij)&
+     !                   +((dr_dt*ins_inRe*(ibm_thco1/ibm_cp1))/(ht_Pr*gr_dy*gr_dy))*(Ty_plus+Ty_mins-2*Tij)&
+     !                   +(ibm_r0-s(i,j))*ht_src
 
-        th = tol
+     !else
+     !T(i,j) = T_old(i,j)+dr_dt*((a1x(i,j)+a2x(i,j))*(ins_inRe/ht_Pr)*(Tx_plus-Tij)/gr_dx - &
+     !                           (a1x(i-1,j)+a2x(i-1,j))*(ins_inRe/ht_Pr)*(Tij-Tx_mins)/gr_dx)/gr_dx&
+     !                   +dr_dt*((a1y(i,j)+a2y(i,j))*(ins_inRe/ht_Pr)*(Ty_plus-Tij)/gr_dy - &
+     !                           (a1y(i,j-1)+a2y(i,j-1))*(ins_inRe/ht_Pr)*(Tij-Ty_mins)/gr_dy)/gr_dy&
+     !                   -((dr_dt))*(u_plus*(Tij-Tx_mins)/gr_dx + u_mins*(Tx_plus-Tij)/gr_dx)&
+     !                   -((dr_dt))*(v_plus*(Tij-Ty_mins)/gr_dy + v_mins*(Ty_plus-Tij)/gr_dy)
 
-       end if
+     !end if
 
-       Tx_plus = (Tsat-Tij)/th + Tij
+     T(i,j) = T_old(i,j)+dr_dt*((ins_inRe/ht_Pr)*(Tx_plus-Tij)/gr_dx - &
+                                (ins_inRe/ht_Pr)*(Tij-Tx_mins)/gr_dx)/gr_dx &
+                        +dr_dt*((ins_inRe/ht_Pr)*(Ty_plus-Tij)/gr_dy - &
+                                (ins_inRe/ht_Pr)*(Tij-Ty_mins)/gr_dy)/gr_dy &
+                        -((dr_dt))*(u_plus*(Tij-Tx_mins)/gr_dx + u_mins*(Tx_plus-Tij)/gr_dx) &
+                        -((dr_dt))*(v_plus*(Tij-Ty_mins)/gr_dy + v_mins*(Ty_plus-Tij)/gr_dy)
 
-     end if
-     ! End of Case 1 !
-
-     ! Case 2 !
-     if(s(i,j)*s(i-1,j).le.0.d0) then
-
-       if (abs(s(i,j))/(abs(s(i,j))+abs(s(i-1,j))) .gt. tol) then
-
-        th = abs(s(i,j))/(abs(s(i,j))+abs(s(i-1,j)))
-
-       else
-
-        th = tol
-
-       end if
-
-       Tx_mins = (Tsat-Tij)/th + Tij
-
-     end if
-     ! End of Case 2 !
-
-    ! Case 3 !
-    if(s(i,j)*s(i,j+1).le.0.d0) then
-
-      if (abs(s(i,j))/(abs(s(i,j))+abs(s(i,j+1))) .gt. tol) then
-
-       th = abs(s(i,j))/(abs(s(i,j))+abs(s(i,j+1)))
-
-      else
-
-       th = tol
-
-      end if
-
-      Ty_plus = (Tsat-Tij)/th + Tij
-
-    end if
-    ! End of Case 3 !
-
-    ! Case 4 !
-    if(s(i,j)*s(i,j-1).le.0.d0) then
-
-      if (abs(s(i,j))/(abs(s(i,j))+abs(s(i,j-1))) .gt. tol) then
-
-        th = abs(s(i,j))/(abs(s(i,j))+abs(s(i,j-1)))
-
-      else
-
-        th = tol
-
-      end if
-
-      Ty_mins = (Tsat-Tij)/th + Tij
-
-    end if
-    ! End of Case 4 !
-
-    if(s(i,j) .ge. 0.0) then
-    T(i,j) = T_old(i,j)+((dr_dt*ins_inRe*(ibm_thco1/ibm_cp1))/(ht_Pr*gr_dx*gr_dx))*(Tx_plus+Tx_mins-2*Tij)&
-                       +((dr_dt*ins_inRe*(ibm_thco1/ibm_cp1))/(ht_Pr*gr_dy*gr_dy))*(Ty_plus+Ty_mins-2*Tij)&
-                       +(ibm_r0-s(i,j))*ht_src
-
-    else
-    T(i,j) = T_old(i,j)+dr_dt*((a1x(i,j)+a2x(i,j))*(ins_inRe/ht_Pr)*(Tx_plus-Tij)/gr_dx - &
-                               (a1x(i-1,j)+a2x(i-1,j))*(ins_inRe/ht_Pr)*(Tij-Tx_mins)/gr_dx)/gr_dx&
-                       +dr_dt*((a1y(i,j)+a2y(i,j))*(ins_inRe/ht_Pr)*(Ty_plus-Tij)/gr_dy - &
-                               (a1y(i,j-1)+a2y(i,j-1))*(ins_inRe/ht_Pr)*(Tij-Ty_mins)/gr_dy)/gr_dy&
-                       -((dr_dt))*(u_plus*(Tij-Tx_mins)/gr_dx + u_mins*(Tx_plus-Tij)/gr_dx)&
-                       -((dr_dt))*(v_plus*(Tij-Ty_mins)/gr_dy + v_mins*(Ty_plus-Tij)/gr_dy)
-
-    end if
 
     end do
   end do

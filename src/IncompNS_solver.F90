@@ -60,8 +60,11 @@ subroutine IncompNS_solver(tstep,p_counter)
 
 #ifdef IBM
     do blk=1,blockCount
+       !call IBM_ApplyForcing(facexData(:,:,USTR_VAR,blk),faceyData(:,:,USTR_VAR,blk),&
+       !                      facexData(:,:,IBMF_VAR,blk),faceyData(:,:,IBMF_VAR,blk))
+
        call IBM_ApplyForcing(facexData(:,:,USTR_VAR,blk),faceyData(:,:,USTR_VAR,blk),&
-                             facexData(:,:,IBMF_VAR,blk),faceyData(:,:,IBMF_VAR,blk))
+                             solnData(:,:,DFUN_VAR,blk),solnData(:,:,PFUN_VAR,blk))
     end do
 #endif    
 
@@ -70,7 +73,7 @@ subroutine IncompNS_solver(tstep,p_counter)
     call MPI_BARRIER(solver_comm,ierr)
     call MPI_applyBC(USTR_VAR,FACEX)
     call MPI_applyBC(USTR_VAR,FACEY)
-    call MPI_physicalBC_vel(facexData(:,:,USTR_VAR,:),faceyData(:,:,USTR_VAR,:))
+    call MPI_physicalBC_vel(facexData(:,:,USTR_VAR,:),faceyData(:,:,USTR_VAR,:),solnData(:,:,PFUN_VAR,:))
 
     ! Poisson RHS
 
@@ -147,7 +150,7 @@ subroutine IncompNS_solver(tstep,p_counter)
     call MPI_BARRIER(solver_comm,ierr)
     call MPI_applyBC(VELC_VAR,FACEX)
     call MPI_applyBC(VELC_VAR,FACEY)
-    call MPI_physicalBC_vel(facexData(:,:,VELC_VAR,:),faceyData(:,:,VELC_VAR,:))
+    call MPI_physicalBC_vel(facexData(:,:,VELC_VAR,:),faceyData(:,:,VELC_VAR,:),solnData(:,:,PFUN_VAR,:))
 
     ! Divergence
 
