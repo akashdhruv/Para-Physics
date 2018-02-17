@@ -42,21 +42,26 @@ module IncompNS_interface
        end interface
 
        interface
-           subroutine ins_computeQinout()
-           end subroutine
+           subroutine ins_computeQinout(v,flg)
+           implicit none
+           real, dimension(:,:,:), intent(inout) :: v
+           logical, intent(in) :: flg
+           end subroutine ins_computeQinout
        end interface
 
 
        interface 
-           subroutine ins_rescaleVel(u,v)
+           subroutine ins_rescaleVel(v)
             implicit none
-            real, dimension(:,:), intent(inout) :: u,v
-           end subroutine
+            real, dimension(:,:,:), intent(inout) :: v
+           end subroutine ins_rescaleVel
        end interface
 
        interface 
-           subroutine ins_convVelout()
-           end subroutine
+           subroutine ins_convVelout(v)
+           implicit none
+           real, dimension(:,:,:), intent(in) :: v
+           end subroutine ins_convVelout
        end interface
 
 end module IncompNS_interface

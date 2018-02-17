@@ -180,7 +180,7 @@ _________________OpenMP threads per MPI rank_______________
 _________________MPI with shared memory on/off_______________
 #endif
 
-#define SHARE_TYPE 2
+#define SHARE_TYPE 1
 
 #if SHARE_TYPE == 1
 #define MPI_DIS
@@ -202,3 +202,17 @@ __________________Data Operation Parameters________________
 #define SUM_DATA 1
 #define MIN_DATA 2
 #define MAX_DATA 3
+
+#if 0
+__________________Test problem forward/backward facing step________________
+#endif
+
+#define STEP 1
+
+#if STEP == 1
+#define BACKWARD_FACING_STEP
+#endif
+
+#if STEP == 2
+#define FORWARD_FACING_STEP
+#endif

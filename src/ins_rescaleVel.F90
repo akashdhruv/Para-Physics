@@ -1,23 +1,28 @@
-subroutine ins_rescaleVel(u,v)
+subroutine ins_rescaleVel(u)
 
 #include "Solver.h"
 
-    use IncompNS_data, only: ins_maxU
-    use MPI_interface, only: MPI_CollectResiduals
+    use IncompNS_data, only: ins_Qin,ins_Qout,ins_Qinout
+    use Grid_data
+    use MPI_data
 
     implicit none
 
-    real,dimension(:,:),intent(inout) :: u,v
-    real :: maxU,maxV,maxVel
+    real,dimension(:,:,:),intent(inout) :: u
+   
+    real :: tol=1e-10
+    integer :: blk
 
-    maxU = maxval(abs(u))
-    maxV = maxval(abs(v))
-
-    maxVel = max(maxU,maxV)
-
-    call MPI_CollectResiduals(maxVel,ins_maxU,3) 
-
-    u = u/ins_maxU
-    v = v/ins_maxU
+    if(ins_Qout == 0) then 
+      ins_Qinout = 1.0
+    else
+      ins_Qinout = ins_Qin/ins_Qout
+    end if
+  
+    do blk=1,blockCount
+       if ( xLC(blk) == nblockx-1) then
+          u(Nxb+1,2:Nyb+1,blk) = u(Nxb+1,2:Nyb+1,blk)*ins_Qinout
+       end if
+    end do 
 
 end subroutine

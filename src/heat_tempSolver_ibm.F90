@@ -60,6 +60,7 @@ subroutine heat_tempSolver_ibm(tstep,T,T_old,mdot,smrh,u,v,a1x,a1y,a2x,a2y,s,pf,
 
      Tij = T_old(i,j)
 
+#ifdef BACKWARD_FACING_STEP
      if(s(i,j) .le. ibm_xr .and. s(i+1,j) .ge. ibm_xr .and. pf(i,j) .le. ibm_yr) then
         Tx_plus = (Tsat-Tij)/(ibm_xr-s(i,j)) + Tij
      end if
@@ -75,8 +76,26 @@ subroutine heat_tempSolver_ibm(tstep,T,T_old,mdot,smrh,u,v,a1x,a1y,a2x,a2y,s,pf,
      if(pf(i,j) .ge. ibm_yr .and. pf(i,j-1) .le. ibm_yr .and. s(i,j) .le. ibm_xr) then
         Ty_mins = (Tsat-Tij)/(pf(i,j)-ibm_yr) + Tij
      end if
+#endif 
 
- 
+#ifdef FORWARD_FACING_STEP
+     if(s(i,j) .le. ibm_xl .and. s(i+1,j) .ge. ibm_xl .and. pf(i,j) .le. ibm_yr) then
+        Tx_plus = (Tsat-Tij)/(ibm_xl-s(i,j)) + Tij
+     end if
+
+     if(s(i,j) .ge. ibm_xl .and. s(i-1,j) .le. ibm_xl .and. pf(i,j) .le. ibm_yr) then
+        Tx_mins = (Tsat-Tij)/(s(i,j)-ibm_xl) + Tij
+     end if
+
+     if(pf(i,j) .le. ibm_yr .and. pf(i,j+1) .ge. ibm_yr .and. s(i,j) .ge. ibm_xl) then
+        Ty_plus = (Tsat-Tij)/(ibm_yr-pf(i,j)) + Tij
+     end if
+
+     if(pf(i,j) .ge. ibm_yr .and. pf(i,j-1) .le. ibm_yr .and. s(i,j) .ge. ibm_xl) then
+        Ty_mins = (Tsat-Tij)/(pf(i,j)-ibm_yr) + Tij
+     end if
+#endif 
+
      !if(s(i,j) .ge. 0.0) then
      !T(i,j) = T_old(i,j)+((dr_dt*ins_inRe*(ibm_thco1/ibm_cp1))/(ht_Pr*gr_dx*gr_dx))*(Tx_plus+Tx_mins-2*Tij)&
      !                   +((dr_dt*ins_inRe*(ibm_thco1/ibm_cp1))/(ht_Pr*gr_dy*gr_dy))*(Ty_plus+Ty_mins-2*Tij)&

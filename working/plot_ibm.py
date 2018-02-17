@@ -82,24 +82,29 @@ y_c = np.sqrt(r_c**2-x_c**2)
 x_circle = np.concatenate([x_c,np.fliplr([x_c[:-1]])[0]]) + 3.0
 y_circle = np.concatenate([y_c,-np.fliplr([y_c[:-1]])[0]])  
 
-x_quad = np.array([-5.0,-1.0,-1.0,-5.0,-5.0])
-y_quad = np.array([-2.5,-2.5,-1.0,-1.0,-2.5])
+#backward facing step
+xl = -5.0
+xr =  2.5
+yl = -2.5
+yr = -1.0
+
+#forward facing step
+#xl = 7.5
+#xr = 15.0
+#yl = -2.5
+#yr = -1.0
+
+x_quad = np.array([xl,xr,xr,xl,xl])
+y_quad = np.array([yl,yl,yr,yr,yl])
+
+x_line1 = np.array([xl,xr,xr])
+y_line1 = np.array([yr,yr,yl])
+
+x_line2 = np.array([xl,xl,xr])
+y_line2 = np.array([yr,yl,yl])
 
 plt.figure()
-plt.title('Velocity Vector')
-plt.quiver(X,Y,U,V)
-plt.plot(X[:,0],Y[:,0],'k')
-plt.plot(X[:,-1],Y[:,-1],'k')
-plt.plot(X[0,:],Y[0,:],'k')
-plt.plot(X[-1,:],Y[-1,:],'k')
-plt.plot(x_quad,y_quad,'k')
-plt.xlabel('X')
-plt.ylabel('Y')
-plt.axis('equal') 
-
-plt.figure()
-plt.title('V Velocity')
-plt.contourf(X,Y,V,density=20)
+plt.title('Grid')
 plt.plot(X[:,0],Y[:,0],'k')
 plt.plot(X[:,-1],Y[:,-1],'k')
 plt.plot(X[0,:],Y[0,:],'k')
@@ -109,8 +114,21 @@ plt.plot(X.T,Y.T,'g')
 plt.xlabel('X')
 plt.ylabel('Y')
 plt.plot(x_quad,y_quad,'k')
-plt.colorbar()
 plt.axis('equal')
+
+plt.figure()
+plt.title('Velocity Vector')
+plt.quiver(X,Y,U,V)
+plt.plot(X[:,0],Y[:,0],'k')
+plt.plot(X[:,-1],Y[:,-1],'k')
+plt.plot(X[0,:],Y[0,:],'k')
+plt.plot(X[-1,:],Y[-1,:],'k')
+plt.fill(x_quad,y_quad,'w',edgecolor='w')
+plt.plot(x_line2,y_line2,'w')
+plt.plot(x_line1,y_line1,'k')
+plt.xlabel('X')
+plt.ylabel('Y')
+plt.axis('equal') 
 
 plt.figure()
 plt.title('Pressure')
@@ -121,7 +139,9 @@ plt.plot(X[0,:],Y[0,:],'k')
 plt.plot(X[-1,:],Y[-1,:],'k')
 plt.xlabel('X')
 plt.ylabel('Y')
-plt.plot(x_quad,y_quad,'k')
+plt.fill(x_quad,y_quad,'w',edgecolor='w')
+plt.plot(x_line2,y_line2,'w')
+plt.plot(x_line1,y_line1,'k')
 plt.colorbar()
 plt.axis('equal') 
 
@@ -134,10 +154,13 @@ plt.plot(X[0,:],Y[0,:],'k')
 plt.plot(X[-1,:],Y[-1,:],'k')
 plt.xlabel('X')
 plt.ylabel('Y')
-plt.plot(x_quad,y_quad,'k')
+plt.fill(x_quad,y_quad,'w',edgecolor='w')
+plt.plot(x_line2,y_line2,'w')
+plt.plot(x_line1,y_line1,'k')
 plt.colorbar()
 plt.axis('equal')
 
+'''
 plt.figure()
 plt.title('Vorticity')
 plt.contourf(X,Y,W,density=5)
@@ -147,7 +170,9 @@ plt.plot(X[0,:],Y[0,:],'k')
 plt.plot(X[-1,:],Y[-1,:],'k')
 plt.xlabel('X')
 plt.ylabel('Y')
-plt.plot(x_quad,y_quad,'k')
+plt.fill(x_quad,y_quad,'w',edgecolor='w')
+plt.plot(x_line2,y_line2,'w')
+plt.plot(x_line1,y_line1,'k')
 plt.colorbar()
 plt.axis('equal')
 
@@ -160,8 +185,11 @@ plt.plot(X[0,:],Y[0,:],'k')
 plt.plot(X[-1,:],Y[-1,:],'k')
 plt.xlabel('X')
 plt.ylabel('Y')
-plt.plot(x_quad,y_quad,'k')
+plt.fill(x_quad,y_quad,'w',edgecolor='w')
+plt.plot(x_line2,y_line2,'w')
+plt.plot(x_line1,y_line1,'k')
 plt.colorbar()
 plt.axis('equal')
+'''
 
 plt.show()

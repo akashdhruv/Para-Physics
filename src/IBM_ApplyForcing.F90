@@ -20,6 +20,7 @@ subroutine IBM_ApplyForcing(ut,vt,s,s2)
     do j=2,Nyb+1
       do i=2,Nxb+1
 
+#ifdef BACKWARD_FACING_STEP
         if(s(i,j) .le. ibm_xr .and. s(i+1,j) .ge. ibm_xr .and. s2(i,j) .le. ibm_yr) then
            ut(i+1,j) = 0.0
         end if
@@ -27,6 +28,17 @@ subroutine IBM_ApplyForcing(ut,vt,s,s2)
         if(s2(i,j) .le. ibm_yr .and. s2(i,j+1) .ge. ibm_yr .and. s(i,j) .le. ibm_xr) then
            vt(i,j+1) = 0.0
         end if
+#endif
+
+#ifdef FORWARD_FACING_STEP
+        if(s(i,j) .le. ibm_xl .and. s(i+1,j) .ge. ibm_xl .and. s2(i,j) .le. ibm_yr) then
+           ut(i+1,j) = 0.0
+        end if
+
+        if(s2(i,j) .le. ibm_yr .and. s2(i,j+1) .ge. ibm_yr .and. s(i,j) .ge. ibm_xl) then
+           vt(i,j+1) = 0.0
+        end if
+#endif
 
       end do
     end do

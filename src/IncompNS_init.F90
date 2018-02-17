@@ -18,7 +18,16 @@ subroutine IncompNS_init()
       solnData(:,:,PRES_VAR,:) = 0.0
       solnData(:,:,VORT_VAR,:) = 0.0
 
-      facexData(:,:,VELC_VAR,:) = 1.0
+      facexData(:,:,VELC_VAR,:) = 0.0
+
+#ifdef BACKWARD_FACING_STEP
+      facexData(:,:,VELC_VAR,:) = 0.7
+#endif
+
+#ifdef FORWARD_FACING_STEP
+      facexData(:,:,VELC_VAR,:) = 1.5
+#endif
+
       faceyData(:,:,VELC_VAR,:) = 0.0
 
       facexData(:,:,USTR_VAR,:) = 0.0

@@ -2,7 +2,9 @@ subroutine IncompNS_solver(tstep,p_counter)
 
 #include "Solver.h"
 
-    use IncompNS_interface, only: ins_predictor,ins_vorticity,ins_predictor_VD
+    use IncompNS_interface, only: ins_predictor,ins_vorticity,ins_predictor_VD,&
+                                  ins_convVelout,ins_rescaleVel,ins_computeQinout
+
     use physicaldata, only: localCENTER,localFACEX,localFACEY
     use MPI_data, only: blockCount,solver_comm,ierr
     use IncompNS_data, only: ins_v_res,ins_u_res,ins_maxdiv,ins_mindiv,ins_umaxmin,ins_vmaxmin,ins_w_res
@@ -36,6 +38,12 @@ subroutine IncompNS_solver(tstep,p_counter)
     facexData(:,:,UOLD_VAR,:) = facexData(:,:,VELC_VAR,:)
     faceyData(:,:,UOLD_VAR,:) = faceyData(:,:,VELC_VAR,:)
     solnData(:,:,VORO_VAR,:)  = solnData(:,:,VORT_VAR,:)
+
+    ! Get Qin and convective velocity
+
+    call ins_computeQinout(facexData(:,:,VELC_VAR,:),.true.)
+
+    call ins_convVelout(facexData(:,:,VELC_VAR,:))
 
     ! Predictor Step
 
@@ -74,6 +82,14 @@ subroutine IncompNS_solver(tstep,p_counter)
     call MPI_applyBC(USTR_VAR,FACEX)
     call MPI_applyBC(USTR_VAR,FACEY)
     call MPI_physicalBC_vel(facexData(:,:,USTR_VAR,:),faceyData(:,:,USTR_VAR,:),solnData(:,:,PFUN_VAR,:))
+
+    ! Compute Qout
+  
+    call ins_computeQinout(facexData(:,:,VELC_VAR,:),.false.)
+
+    ! Rescale velocity
+
+    call ins_rescaleVel(facexData(:,:,VELC_VAR,:))
 
     ! Poisson RHS
 

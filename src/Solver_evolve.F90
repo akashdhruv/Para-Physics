@@ -49,10 +49,16 @@ subroutine Solver_evolve
        call IBM_solver(tstep)
 #endif
 
-       if (mod(tstep,20) == 0 .and. myid == 0) &
+       if (mod(tstep,20) == 0 .and. myid == 0) then
        call IO_display(ins_u_res,ins_v_res,ins_w_res,ins_p_res,ht_T_res,p_counter,tstep*dr_dt,ins_maxdiv,ins_mindiv,&
                        ins_umaxmin,ins_vmaxmin)
 
+       print *,"Convective velocity: ",ins_convvel
+       print *,"ins_Qin: ",ins_Qin
+       print *,"ins_Qout: ",ins_Qout
+       print *,"Qinout: ",ins_Qinout
+
+       end if
        !if((ins_u_res .lt. 0.0000001) .and. (ins_u_res .ne. 0).and. (ins_v_res .lt. 0.0000001) .and. (ins_v_res .ne. 0) ) exit
 
 #ifdef SOLVER_DEBUG

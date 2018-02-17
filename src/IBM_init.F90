@@ -45,10 +45,22 @@ subroutine IBM_init()
    ibm_r0 = 0.5
 
    ! parameters for square block
+
+#ifdef BACKWARD_FACING_STEP
+   ! backward facing step
    ibm_xl = -5.0
-   ibm_xr = -1.0
+   ibm_xr =  2.5
    ibm_yl = -2.5
    ibm_yr = -1.0
+#endif
+
+#ifdef FORWARD_FACING_STEP
+   ! forward facing step
+   ibm_xl =  7.5
+   ibm_xr = 15.0
+   ibm_yl = -2.5
+   ibm_yr = -1.0
+#endif
 
    ! Calculate distance function
    do blk=1,blockCount
