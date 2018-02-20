@@ -4,6 +4,7 @@ subroutine IBM_ApplyForcing(ut,vt,s,s2)
 
     use Grid_data
     use IBM_data
+    use IncompNS_data
 
     implicit none
 
@@ -17,8 +18,8 @@ subroutine IBM_ApplyForcing(ut,vt,s,s2)
     integer :: i,j
 
 
-    do j=2,Nyb+1
-      do i=2,Nxb+1
+    do j=1,Nyb+1
+      do i=1,Nxb+1
 
 #ifdef BACKWARD_FACING_STEP
         if(s(i,j) .le. ibm_xr .and. s(i+1,j) .ge. ibm_xr .and. s2(i,j) .le. ibm_yr) then
@@ -38,6 +39,34 @@ subroutine IBM_ApplyForcing(ut,vt,s,s2)
         if(s2(i,j) .le. ibm_yr .and. s2(i,j+1) .ge. ibm_yr .and. s(i,j) .ge. ibm_xl) then
            vt(i,j+1) = 0.0
         end if
+#endif
+
+#ifdef HOME_HEATING_SYSTEM
+
+        if(s(i,j) .le. ibm_xl .and. s(i+1,j) .ge. ibm_xl .and. &
+           s2(i,j) .le. ibm_yr .and. s2(i,j) .ge. ibm_yl) then
+           ut(i+1,j) = 0.0
+           vt(i+1,j) = -vt(i,j)
+        end if
+
+        if(s2(i,j) .le. ibm_yr .and. s2(i,j+1) .ge. ibm_yr .and. &
+           s(i,j) .le. ibm_xr .and. s(i,j) .ge. ibm_xl) then
+           vt(i,j+1) = 0.0
+           ut(i,j+1) = -ut(i,j)
+        end if
+
+        if(s2(i,j) .le. ibm_yl .and. s2(i,j+1) .ge. ibm_yl .and. &
+           s(i,j) .le. ins_dnIn1 .and. s(i,j) .ge. ibm_xl) then
+           vt(i,j+1) = 0.0
+           ut(i,j+1) = -ut(i,j)
+        end if
+
+        if(s2(i,j) .le. ibm_yl .and. s2(i,j+1) .ge. ibm_yl .and. &
+           s(i,j) .le. ins_dnIn2 .and. s(i,j) .ge. ins_dnIn1) then
+           vt(i,j+1) = -1.0
+           ut(i,j+1) = -ut(i,j)          
+        end if
+
 #endif
 
       end do

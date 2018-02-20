@@ -94,6 +94,32 @@ subroutine heat_tempSolver_ibm(tstep,T,T_old,mdot,smrh,u,v,a1x,a1y,a2x,a2y,s,pf,
      if(pf(i,j) .ge. ibm_yr .and. pf(i,j-1) .le. ibm_yr .and. s(i,j) .ge. ibm_xl) then
         Ty_mins = (Tsat-Tij)/(pf(i,j)-ibm_yr) + Tij
      end if
+#endif
+
+#ifdef HOME_HEATING_SYSTEM
+     if(s(i,j) .le. ibm_xl .and. s(i+1,j) .ge. ibm_xl .and. &
+       pf(i,j) .le. ibm_yr .and. pf(i,j)  .ge. ibm_yl) Tx_plus = 0.0
+
+     if(s(i,j) .ge. ibm_xl .and. s(i-1,j) .le. ibm_xl .and. &
+       pf(i,j) .le. ibm_yr .and. pf(i,j)  .ge. ibm_yl) Tx_mins = 0.0
+
+     if(pf(i,j) .le. ibm_yr .and. pf(i,j+1) .ge. ibm_yr .and. &
+        s(i,j)  .le. ibm_xr .and. s(i,j)    .le. ibm_xl) Ty_plus = 0.0
+    
+     if(pf(i,j) .ge. ibm_yr .and. pf(i,j-1) .le. ibm_yr .and. &
+        s(i,j)  .le. ibm_xr .and. s(i,j)    .le. ibm_xl) Ty_mins = 0.0
+
+     if(pf(i,j) .le. ibm_yl .and. pf(i,j+1) .ge. ibm_yl .and. &
+        s(i,j)  .ge. ibm_xl .and. s(i,j)    .le. ins_dnIn1) Ty_plus = 0.0
+
+     if(pf(i,j) .le. ibm_yl .and. pf(i,j+1) .ge. ibm_yl .and. &
+        s(i,j)  .ge. ins_dnIn1 .and. s(i,j) .le. ins_dnIn2) Ty_plus = (Tsat-Tij)/(ibm_yl-pf(i,j)) + Tij
+
+      if(pf(i,j) .ge. ibm_yl .and. pf(i,j-1) .le. ibm_yl .and. &
+        s(i,j)   .ge. ibm_xl .and. s(i,j)    .le. ins_dnIn1) Ty_mins = 0.0
+
+     if(pf(i,j) .ge. ibm_yl .and. pf(i,j-1) .le. ibm_yl .and. &
+        s(i,j)  .ge. ins_dnIn1 .and. s(i,j) .le. ins_dnIn2) Ty_mins = (Tsat-Tij)/(pf(i,j)-ibm_yl) + Tij
 #endif 
 
      !if(s(i,j) .ge. 0.0) then

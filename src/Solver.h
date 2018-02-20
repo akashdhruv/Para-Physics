@@ -47,17 +47,17 @@ _______________________Grid Parameters___________________________
 #define Nyb 20
 
 
-#define D_xmin -05.0
-#define D_ymin -02.5
+#define D_xmin -10.0
+#define D_ymin -10.0
 
 
-#define D_xmax  15.0
-#define D_ymax  02.5
+#define D_xmax  10.0
+#define D_ymax  10.0
 
 #define TIME_END 50.00
 
 #define nblockx 8
-#define nblocky 2
+#define nblocky 8
 
 #define MaxIt 1500
 
@@ -101,18 +101,15 @@ _______________________Grid Parameters___________________________
 #define FACEY 3
 
 #if 0
-_______________________Defining Flow Type_____________________
+_______________________Boundary Conditions_____________________
 #endif
 
-#define FLOW 2
-
-#if FLOW == 1
-#define LID_DRIVEN_FLOW
-#endif
-
-#if FLOW == 2
-#define CHANNEL_FLOW
-#endif
+#define NOSLIP  1
+#define SLIP    2
+#define NEUMANN 3
+#define INFLOW  4
+#define OUTFLOW 5
+#define MOVLID  6
 
 #if 0
 _______________________Multiphase On/Off_____________________
@@ -207,7 +204,7 @@ __________________Data Operation Parameters________________
 __________________Test problem forward/backward facing step________________
 #endif
 
-#define STEP 1
+#define STEP 0
 
 #if STEP == 1
 #define BACKWARD_FACING_STEP
@@ -215,4 +212,14 @@ __________________Test problem forward/backward facing step________________
 
 #if STEP == 2
 #define FORWARD_FACING_STEP
+#endif
+
+#if 0
+_____________________Test problem home heating system_____________________
+#endif
+
+#define HHS 1
+
+#if HHS == 1
+#define HOME_HEATING_SYSTEM
 #endif

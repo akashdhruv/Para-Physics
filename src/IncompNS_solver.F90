@@ -41,9 +41,9 @@ subroutine IncompNS_solver(tstep,p_counter)
 
     ! Get Qin and convective velocity
 
-    call ins_computeQinout(facexData(:,:,VELC_VAR,:),.true.)
+    call ins_computeQinout(facexData(:,:,VELC_VAR,:),faceyData(:,:,VELC_VAR,:),solnData(:,:,DFUN_VAR,:),solnData(:,:,PFUN_VAR,:),.true.)
 
-    call ins_convVelout(facexData(:,:,VELC_VAR,:))
+    call ins_convVelout(facexData(:,:,VELC_VAR,:),faceyData(:,:,VELC_VAR,:),solnData(:,:,DFUN_VAR,:),solnData(:,:,PFUN_VAR,:))
 
     ! Predictor Step
 
@@ -81,15 +81,15 @@ subroutine IncompNS_solver(tstep,p_counter)
     call MPI_BARRIER(solver_comm,ierr)
     call MPI_applyBC(USTR_VAR,FACEX)
     call MPI_applyBC(USTR_VAR,FACEY)
-    call MPI_physicalBC_vel(facexData(:,:,USTR_VAR,:),faceyData(:,:,USTR_VAR,:),solnData(:,:,PFUN_VAR,:))
+    call MPI_physicalBC_vel(facexData(:,:,USTR_VAR,:),faceyData(:,:,USTR_VAR,:),solnData(:,:,DFUN_VAR,:),solnData(:,:,PFUN_VAR,:))
 
     ! Compute Qout
   
-    call ins_computeQinout(facexData(:,:,VELC_VAR,:),.false.)
+    call ins_computeQinout(facexData(:,:,VELC_VAR,:),faceyData(:,:,VELC_VAR,:),solnData(:,:,DFUN_VAR,:),solnData(:,:,PFUN_VAR,:),.false.)
 
     ! Rescale velocity
 
-    call ins_rescaleVel(facexData(:,:,VELC_VAR,:))
+    call ins_rescaleVel(facexData(:,:,VELC_VAR,:),faceyData(:,:,VELC_VAR,:),solnData(:,:,DFUN_VAR,:),solnData(:,:,PFUN_VAR,:))
 
     ! Poisson RHS
 
@@ -166,7 +166,7 @@ subroutine IncompNS_solver(tstep,p_counter)
     call MPI_BARRIER(solver_comm,ierr)
     call MPI_applyBC(VELC_VAR,FACEX)
     call MPI_applyBC(VELC_VAR,FACEY)
-    call MPI_physicalBC_vel(facexData(:,:,VELC_VAR,:),faceyData(:,:,VELC_VAR,:),solnData(:,:,PFUN_VAR,:))
+    call MPI_physicalBC_vel(facexData(:,:,VELC_VAR,:),faceyData(:,:,VELC_VAR,:),solnData(:,:,DFUN_VAR,:),solnData(:,:,PFUN_VAR,:))
 
     ! Divergence
 

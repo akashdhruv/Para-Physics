@@ -62,6 +62,14 @@ subroutine IBM_init()
    ibm_yr = -1.0
 #endif
 
+#ifdef HOME_HEATING_SYSTEM
+   ! Home heating system
+   ibm_xl = -03.0
+   ibm_xr =  10.0
+   ibm_yl =  0.5
+   ibm_yr =  1.25
+#endif 
+
    ! Calculate distance function
    do blk=1,blockCount
 

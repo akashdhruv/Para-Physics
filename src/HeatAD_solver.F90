@@ -90,7 +90,7 @@ subroutine HeatAD_solver(tstep)
 
    call MPI_BARRIER(solver_comm,ierr)
    call MPI_applyBC(TEMP_VAR,CENTER)
-   call MPI_physicalBC_temp(solnData(:,:,TEMP_VAR,:))
+   call MPI_physicalBC_temp(solnData(:,:,TEMP_VAR,:),solnData(:,:,DFUN_VAR,:),solnData(:,:,PFUN_VAR,:))
 
    do blk =1,blockCount
      do j=1,Nyb+2
