@@ -17,7 +17,7 @@ subroutine Poisson_solver_VC(rvar,ivar,ps_counter,cvar,dvar)
   integer, intent(out) :: ps_counter
 
 
-  real, pointer, dimension(:,:,:) :: ps, ps_RHS
+  real, pointer, dimension(:,:,:) :: ps, ps_RHS,xx,yy
   real, dimension(Nxb+2,Nyb+2,blockCount) :: ps_old,ps_rx,ps_ry
       
   real :: ps_res1
@@ -26,6 +26,8 @@ subroutine Poisson_solver_VC(rvar,ivar,ps_counter,cvar,dvar)
 
   ps     => localCENTER(:,:,ivar,:)
   ps_RHS => localCENTER(:,:,rvar,:)
+  xx     => localCENTER(:,:,DFUN_VAR,:)
+  yy     => localCENTER(:,:,PFUN_VAR,:)
 
   ps_old = 0
   ps_counter = 0
@@ -96,7 +98,7 @@ subroutine Poisson_solver_VC(rvar,ivar,ps_counter,cvar,dvar)
 
      call MPI_BARRIER(solver_comm,ierr)
      call MPI_applyBC(ivar,CENTER)
-     call MPI_physicalBC_pres(ps)
+     call MPI_physicalBC_pres(ps,xx,yy)
  
      ps_counter = ps_counter + 1
 

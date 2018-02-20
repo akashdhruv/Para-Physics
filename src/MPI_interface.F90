@@ -69,9 +69,10 @@ module MPI_interface
     end interface
 
     interface
-        subroutine MPI_physicalBC_pres(p_ex)
+        subroutine MPI_physicalBC_pres(p_ex,x,y)
         implicit none
         real, dimension(:,:,:), intent(inout) :: p_ex
+        real, dimension(:,:,:), intent(in) :: x,y
         end subroutine MPI_physicalBC_pres
     end interface
 

@@ -1,8 +1,9 @@
-subroutine ins_predictor(tstep,u,v,ut,vt,g1_old,g2_old)
+subroutine ins_predictor(tstep,u,v,ut,vt,g1_old,g2_old,temp)
 
        use Grid_data
        use Driver_data
        use IncompNS_data
+       use HeatAD_data, only: ht_alpha
 
 #include "Solver.h"
 
@@ -12,6 +13,7 @@ subroutine ins_predictor(tstep,u,v,ut,vt,g1_old,g2_old)
        integer, intent(in) :: tstep
        real, intent(inout), dimension(:,:) :: u, v
        real, intent(inout), dimension(:,:) :: ut,vt,g1_old,g2_old
+       real, intent(in), dimension(:,:) :: temp
 
        !-Local Variables
        real, dimension(Nxb,Nyb) :: C1,G1,D1,C2,G2,D2
@@ -37,7 +39,7 @@ subroutine ins_predictor(tstep,u,v,ut,vt,g1_old,g2_old)
        call Convective_V(u,v,gr_dx,gr_dy,C2)
        call Diffusive_V(v,gr_dx,gr_dy,ins_inRe,D2)
 
-       G2 = C2 + D2 + ins_gravY
+       G2 = C2 + D2 - ins_gravY*ht_alpha*(temp(2:Nxb+1,2:Nyb+1)+temp(2:Nxb+1,3:Nyb+2))/2.0d0
 
        if (tstep == 0) then
 

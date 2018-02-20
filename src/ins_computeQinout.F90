@@ -38,7 +38,7 @@ subroutine ins_computeQinout(u,v,x,y,flg)
               do i=1,Nxb+2
 
                 if(y(i,j,blk) .le. ibm_yl .and. y(i,j+1,blk) .ge. ibm_yl .and. &
-                   x(i,j,blk) .ge. ins_dnIn1 .and. x(i,j,blk) .le. ins_dnIn2) Qaux = Qaux - v(i,j+1,blk)*dxdz
+                   x(i,j,blk) .ge. ins_dnIn1 .and. x(i,j,blk) .le. ins_dnIn2) Qaux = Qaux - v(i,j,blk)*dxdz
 
               end do
            end do

@@ -130,13 +130,18 @@ subroutine MPI_physicalBC_vel(u_ex,v_ex,x,y)
               if(xLC(blk) == nblockx-1) then
                 do i=2,Nyb+1
                    if(y(Nxb+1,i,blk) .ge. ins_dnEx1 .and. y(Nxb+1,i,blk) .le. ins_dnEx2) then                        
-                        u_ex(Nxb+1,i,blk) = u_old(4,i,blk) - &
-                                            ins_convvel(2,1)*(dr_dt/gr_dx)* &
-                                           (u_old(4,i,blk)- &
-                                            u_old(3,i,blk))
+                        !u_ex(Nxb+1,i,blk) = u_old(4,i,blk) - &
+                        !                    ins_convvel(2,1)*(dr_dt/gr_dx)* &
+                        !                   (u_old(4,i,blk)- &
+                        !                    u_old(3,i,blk))
 
-                        u_ex(Nxb+2,i,blk) = u_ex(Nxb,i,blk)
+                        u_ex(Nxb+1,i,blk) = u_ex(Nxb,i,blk)
+                        u_ex(Nxb+2,i,blk) = u_ex(Nxb+1,i,blk)
                         v_ex(Nxb+2,i,blk) = v_ex(Nxb+1,i,blk)
+                        !v_ex(Nxb+2,i,blk) = u_old(2,i,blk) - &
+                        !                    ins_convvel(2,1)*(dr_dt/gr_dx)* &
+                        !                   (u_old(2,i,blk)- &
+                        !                    u_old(1,i,blk))
 
                    end if
                 end do
@@ -146,20 +151,25 @@ subroutine MPI_physicalBC_vel(u_ex,v_ex,x,y)
              if(yLC(blk) == nblocky-1) then
                do i=1,Nxb+2
                   if(x(i,Nyb+1,blk) .ge. ins_upEx1 .and. x(i,Nyb+1,blk) .le. ins_upEx2) then
-                        v_ex(i,Nyb+1,blk) = v_old(i,4,blk) - &
-                                            ins_convvel(2,2)*(dr_dt/gr_dy)* &
-                                           (v_old(i,4,blk)- &
-                                            v_old(i,3,blk))
+                        !v_ex(i,Nyb+1,blk) = v_old(i,4,blk) - &
+                        !                    ins_convvel(2,2)*(dr_dt/gr_dy)* &
+                        !                   (v_old(i,4,blk)- &
+                        !                    v_old(i,3,blk))
 
-                        v_ex(i,Nyb+2,blk) = v_ex(i,Nyb,blk)
+                        v_ex(i,Nyb+1,blk) = v_ex(i,Nyb,blk)
+                        v_ex(i,Nyb+2,blk) = v_ex(i,Nyb+1,blk)
                         u_ex(i,Nyb+2,blk) = u_ex(i,Nyb+1,blk)
+                        !u_ex(i,Nyb+2,blk) = v_old(i,2,blk) - &
+                        !                    ins_convvel(2,2)*(dr_dt/gr_dy)* &
+                        !                   (v_old(i,2,blk)- &
+                        !                    v_old(i,1,blk))
 
                   end if
 
                   if(x(i,Nyb+1,blk) .ge. ins_upIn1 .and. x(i,Nyb+1,blk) .le. ins_upIn2) then
                         v_ex(i,Nyb+1,blk) = -1.0
                         v_ex(i,Nyb+2,blk) = v_ex(i,Nyb,blk)
-                        u_ex(i,Nyb+2,blk) = u_ex(i,Nyb+1,blk)
+                        u_ex(i,Nyb+2,blk) = -u_ex(i,Nyb+1,blk)
 
                   end if
                end do

@@ -1,8 +1,8 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-k=8
-d=8
+k=6
+d=6
 
 M=20+1
 N=20+1
@@ -110,7 +110,7 @@ plt.plot(X[:,0],Y[:,0],'k')
 plt.plot(X[:,-1],Y[:,-1],'k')
 plt.plot(X[0,:],Y[0,:],'k')
 plt.plot(X[-1,:],Y[-1,:],'k')
-plt.fill(x_quad,y_quad,'w',edgecolor='w')
+#plt.fill(x_quad,y_quad,'w',edgecolor='k')
 plt.xlabel('X')
 plt.ylabel('Y')
 plt.axis('equal') 
@@ -124,7 +124,7 @@ plt.plot(X[0,:],Y[0,:],'k')
 plt.plot(X[-1,:],Y[-1,:],'k')
 plt.xlabel('X')
 plt.ylabel('Y')
-plt.fill(x_quad,y_quad,'w',edgecolor='w')
+plt.fill(x_quad,y_quad,'w',edgecolor='k')
 plt.colorbar()
 plt.axis('equal') 
 
@@ -138,7 +138,7 @@ plt.plot(X[-1,:],Y[-1,:],'k')
 plt.xlabel('X')
 plt.ylabel('Y')
 #plt.quiver(X,Y,U,V)
-plt.fill(x_quad,y_quad,'w',edgecolor='w')
+plt.fill(x_quad,y_quad,'w',edgecolor='k')
 plt.colorbar()
 plt.axis('equal')
 

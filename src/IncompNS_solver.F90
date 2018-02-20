@@ -51,7 +51,8 @@ subroutine IncompNS_solver(tstep,p_counter)
     do blk=1,blockCount
        call ins_predictor(tstep,facexData(:,:,VELC_VAR,blk),faceyData(:,:,VELC_VAR,blk),&
                                 facexData(:,:,USTR_VAR,blk),faceyData(:,:,USTR_VAR,blk),&
-                                facexData(:,:,GOLD_VAR,blk),faceyData(:,:,GOLD_VAR,blk))
+                                facexData(:,:,GOLD_VAR,blk),faceyData(:,:,GOLD_VAR,blk),&
+                                solnData(:,:,TEMP_VAR,blk))
     end do
 #else
     do blk=1,blockCount
@@ -89,7 +90,7 @@ subroutine IncompNS_solver(tstep,p_counter)
 
     ! Rescale velocity
 
-    call ins_rescaleVel(facexData(:,:,VELC_VAR,:),faceyData(:,:,VELC_VAR,:),solnData(:,:,DFUN_VAR,:),solnData(:,:,PFUN_VAR,:))
+    !call ins_rescaleVel(facexData(:,:,VELC_VAR,:),faceyData(:,:,VELC_VAR,:),solnData(:,:,DFUN_VAR,:),solnData(:,:,PFUN_VAR,:))
 
     ! Poisson RHS
 

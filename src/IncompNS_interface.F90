@@ -16,11 +16,12 @@ module IncompNS_interface
        end interface
 
        interface
-           subroutine ins_predictor(tstep,u,v,ut,vt,g1_old,g2_old)
+           subroutine ins_predictor(tstep,u,v,ut,vt,g1_old,g2_old,temp)
             implicit none
             integer, intent(in) :: tstep
             real, intent(inout), dimension(:,:) :: u, v
             real, intent(inout), dimension(:,:) :: ut,vt,g1_old,g2_old
+            real, intent(in), dimension(:,:) :: temp
            end subroutine ins_predictor
        end interface
 

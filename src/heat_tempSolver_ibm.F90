@@ -110,16 +110,23 @@ subroutine heat_tempSolver_ibm(tstep,T,T_old,mdot,smrh,u,v,a1x,a1y,a2x,a2y,s,pf,
         s(i,j)  .le. ibm_xr .and. s(i,j)    .le. ibm_xl) Ty_mins = 0.0
 
      if(pf(i,j) .le. ibm_yl .and. pf(i,j+1) .ge. ibm_yl .and. &
-        s(i,j)  .ge. ibm_xl .and. s(i,j)    .le. ins_dnIn1) Ty_plus = 0.0
+        s(i,j)  .ge. ibm_xl .and. s(i,j)    .lt. ins_dnIn1) Ty_plus = 0.0
 
      if(pf(i,j) .le. ibm_yl .and. pf(i,j+1) .ge. ibm_yl .and. &
         s(i,j)  .ge. ins_dnIn1 .and. s(i,j) .le. ins_dnIn2) Ty_plus = (Tsat-Tij)/(ibm_yl-pf(i,j)) + Tij
 
+     !if(pf(i,j) .le. ibm_yl .and. pf(i,j+1) .ge. ibm_yl .and. &
+     !   s(i,j)  .gt. ins_dnIn2 .and. s(i,j) .le. ibm_xr) Ty_plus = 0.0
+
       if(pf(i,j) .ge. ibm_yl .and. pf(i,j-1) .le. ibm_yl .and. &
-        s(i,j)   .ge. ibm_xl .and. s(i,j)    .le. ins_dnIn1) Ty_mins = 0.0
+        s(i,j)   .ge. ibm_xl .and. s(i,j)    .lt. ins_dnIn1) Ty_mins = 0.0
 
      if(pf(i,j) .ge. ibm_yl .and. pf(i,j-1) .le. ibm_yl .and. &
         s(i,j)  .ge. ins_dnIn1 .and. s(i,j) .le. ins_dnIn2) Ty_mins = (Tsat-Tij)/(pf(i,j)-ibm_yl) + Tij
+
+     !if(pf(i,j) .ge. ibm_yl .and. pf(i,j-1) .le. ibm_yl .and. &
+     !   s(i,j)  .gt. ins_dnIn2 .and. s(i,j) .le. ibm_xr) Ty_mins = 0.0
+
 #endif 
 
      !if(s(i,j) .ge. 0.0) then
