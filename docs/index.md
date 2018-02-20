@@ -58,7 +58,7 @@ python plot.py
 
 <h2> Examples </h2>
 
-<h3> 1. Vortex suppression through conjugate heat transfer </h3>
+<h3> 1. Vortex suppression through heat transfer </h3>
 
 <p align="justify"> <font size="3"> 
 Formation of von Kármán vortices behind bluff and aerodynamic bodies in a fluid flow generate structural vibrations which, especially at high Reynolds number can lead to disastrous consequences. These counter-rotating vortices are not uncommon and can easily form around objects like buildings, powerplant equipments, aircrafts, ships and submarines. The magnitude of damages is directly proportional to the frequency of vortex release which increases with the flow speed.
@@ -77,11 +77,11 @@ Figure 1. Vorticity contours around a cylinder in channel flow, t = 50 units and
 </p>
 
 <p align="center"> <font size="2"> <b>
-Figure 2. Fluid properties during conjugate heat transfer for Re = 1000
+Figure 2. Fluid properties during heat transfer for Re = 1000
 </b> </font> </p>
 
 <p align="justify"> <font size="3"> 
-From an engineering perspective, it is important to study the effect of their behavior during design stages and find a way to mitigate them. One way is to suppress the frequency of vortex release through conjugate heat transfer from the body itself. For example, consider a two-dimensional case of a solid cylinder placed inside a channel flow at Re = 1000. <b>Fig 1(a)</b> shows the vorticity contours with clock-wise and counter clock-wise behavior. Now, when the surface of this cylinder starts to heat up we see that these counter-rotating vortices begin to dissipate as shown in <b>Fig 1 (b) & (c)</b> . The vortex release frequency reduces with increase in temperature and at higher temperatures the von Kármán vortices completely disappear as in <b>Fig 1 (d)</b>. 
+From an engineering perspective, it is important to study the effect of their behavior during design stages and find a way to mitigate them. One way is to suppress the frequency of vortex release through heat transfer from the body itself. For example, consider a two-dimensional case of a solid cylinder placed inside a channel flow at Re = 1000. <b>Fig 1(a)</b> shows the vorticity contours with clock-wise and counter clock-wise behavior. Now, when the surface of this cylinder starts to heat up we see that these counter-rotating vortices begin to dissipate as shown in <b>Fig 1 (b) & (c)</b> . The vortex release frequency reduces with increase in temperature and at higher temperatures the von Kármán vortices completely disappear as in <b>Fig 1 (d)</b>. 
 </font> </p>
 
 <p align="justify"> <font size="3">
@@ -102,7 +102,7 @@ Figure 3. (a) Numerical solution, (Block grid size - 20 x 20) (Num blocks - 6 x 
 Lid driven cavity is a traditional benchmark problem where the top wall is free slip and moves at a speed <i>U</i> and the remaining three walls are no slip. These conditions lead to interesting vortex patterns which depend on the Reynolds number. This test case is used here to validate the numerical results with reference data.
 </font> </p>
 
-<h3> 3. Conjugate heat transfer between fluid and multiple immersed boundaries </h3>
+<h3> 3. Heat transfer between fluid and multiple immersed boundaries </h3>
 
 <p align="justify"> <font size="3">
 This example is to show the capability of software in handling multiple immersed boundaries. The test case here shows temperature distribution inside the fluid due to the presence of three heated cylinders. 
@@ -113,7 +113,7 @@ This example is to show the capability of software in handling multiple immersed
 </p>
 
 <p align="center"> <font size="2"> <b>
-Figure 4. Conjugate heat transfer between air and three solid cylinders, Re = 500, t = 25 units, (Block grid size - 20 x 20) (Num blocks - 40 x 40) 
+Figure 4. Heat transfer between air and three solid cylinders, Re = 500, t = 25 units, (Block grid size - 20 x 20) (Num blocks - 40 x 40) 
 </b> </font> </p>
 
 <p align="justify"> <font size="3">
