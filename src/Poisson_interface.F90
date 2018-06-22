@@ -27,6 +27,15 @@ module Poisson_interface
              end subroutine
        end interface
 
+       interface
+             subroutine Poisson_test(tstep,p_counter,ext_mean,num_mean,error_min,error_max)
+             implicit none
+             integer, intent(in) :: tstep
+             integer, intent(out) :: p_counter
+             real, intent(out) :: ext_mean,num_mean,error_min,error_max
+             end subroutine
+       end interface
+
        interface 
              subroutine Poisson_analytical
              implicit none

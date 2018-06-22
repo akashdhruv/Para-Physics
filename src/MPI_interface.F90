@@ -64,7 +64,7 @@ module MPI_interface
         subroutine MPI_physicalBC_vel(u_ex,v_ex,x,y)
         implicit none
         real, dimension(:,:,:), intent(inout) :: u_ex, v_ex
-        real, dimension(:,:,:), intent(out) :: x,y
+        real, dimension(:,:,:), intent(in) :: x,y
         end subroutine MPI_physicalBC_vel
     end interface
 

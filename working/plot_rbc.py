@@ -1,13 +1,11 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-k=24
-d=6
+k=4
+d=2
 
-M=16+1
-N=16+1
-
-r_c = 0.5
+M=20+1
+N=20+1
 
 X=np.zeros((N*d,M*k),dtype=float)
 Y=np.zeros((N*d,M*k),dtype=float)
@@ -76,33 +74,6 @@ for i in range(0,k*d):
 	R[(i/k)*N:(i/k)*N+N,(i%k)*M:(i%k)*M+M]=r
 
 
-x_c = np.linspace(-r_c,r_c,200)
-y_c = np.sqrt(r_c**2-x_c**2)
-
-x_circle = np.concatenate([x_c,np.fliplr([x_c[:-1]])[0]]) + 3.0
-y_circle = np.concatenate([y_c,-np.fliplr([y_c[:-1]])[0]])  
-
-#backward facing step
-xl = -5.0
-xr =  2.5
-yl = -2.5
-yr = -1.0
-
-#forward facing step
-#xl = 7.5
-#xr = 15.0
-#yl = -2.5
-#yr = -1.0
-
-x_quad = np.array([xl,xr,xr,xl,xl])
-y_quad = np.array([yl,yl,yr,yr,yl])
-
-x_line1 = np.array([xl,xr,xr])
-y_line1 = np.array([yr,yr,yl])
-
-x_line2 = np.array([xl,xl,xr])
-y_line2 = np.array([yr,yl,yl])
-
 plt.figure()
 plt.title('Grid')
 plt.plot(X[:,0],Y[:,0],'k')
@@ -113,7 +84,6 @@ plt.plot(X,Y,'g')
 plt.plot(X.T,Y.T,'g')
 plt.xlabel('X')
 plt.ylabel('Y')
-plt.plot(x_quad,y_quad,'k')
 plt.axis('equal')
 
 plt.figure()
@@ -123,9 +93,6 @@ plt.plot(X[:,0],Y[:,0],'k')
 plt.plot(X[:,-1],Y[:,-1],'k')
 plt.plot(X[0,:],Y[0,:],'k')
 plt.plot(X[-1,:],Y[-1,:],'k')
-#plt.fill(x_quad,y_quad,'w',edgecolor='w')
-plt.plot(x_line2,y_line2,'w')
-plt.plot(x_line1,y_line1,'k')
 plt.xlabel('X')
 plt.ylabel('Y')
 plt.axis('equal') 
@@ -139,9 +106,6 @@ plt.plot(X[0,:],Y[0,:],'k')
 plt.plot(X[-1,:],Y[-1,:],'k')
 plt.xlabel('X')
 plt.ylabel('Y')
-#plt.fill(x_quad,y_quad,'w',edgecolor='w')
-plt.plot(x_line2,y_line2,'w')
-plt.plot(x_line1,y_line1,'k')
 plt.colorbar()
 plt.axis('equal') 
 
@@ -154,42 +118,7 @@ plt.plot(X[0,:],Y[0,:],'k')
 plt.plot(X[-1,:],Y[-1,:],'k')
 plt.xlabel('X')
 plt.ylabel('Y')
-#plt.fill(x_quad,y_quad,'w',edgecolor='w')
-plt.plot(x_line2,y_line2,'w')
-plt.plot(x_line1,y_line1,'k')
 plt.colorbar()
 plt.axis('equal')
-
-'''
-plt.figure()
-plt.title('Vorticity')
-plt.contourf(X,Y,W,density=5)
-plt.plot(X[:,0],Y[:,0],'k')
-plt.plot(X[:,-1],Y[:,-1],'k')
-plt.plot(X[0,:],Y[0,:],'k')
-plt.plot(X[-1,:],Y[-1,:],'k')
-plt.xlabel('X')
-plt.ylabel('Y')
-plt.fill(x_quad,y_quad,'w',edgecolor='w')
-plt.plot(x_line2,y_line2,'w')
-plt.plot(x_line1,y_line1,'k')
-plt.colorbar()
-plt.axis('equal')
-
-plt.figure()
-plt.title('Density')
-plt.contourf(X,Y,R,density=5)
-plt.plot(X[:,0],Y[:,0],'k')
-plt.plot(X[:,-1],Y[:,-1],'k')
-plt.plot(X[0,:],Y[0,:],'k')
-plt.plot(X[-1,:],Y[-1,:],'k')
-plt.xlabel('X')
-plt.ylabel('Y')
-plt.fill(x_quad,y_quad,'w',edgecolor='w')
-plt.plot(x_line2,y_line2,'w')
-plt.plot(x_line1,y_line1,'k')
-plt.colorbar()
-plt.axis('equal')
-'''
 
 plt.show()

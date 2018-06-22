@@ -1,13 +1,11 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-k=6
-d=6
+k=8
+d=8
 
-M=20+1
-N=20+1
-
-r_c = 0.5
+M=16+1
+N=16+1
 
 X=np.zeros((N*d,M*k),dtype=float)
 Y=np.zeros((N*d,M*k),dtype=float)
@@ -75,71 +73,52 @@ for i in range(0,k*d):
 	W[(i/k)*N:(i/k)*N+N,(i%k)*M:(i%k)*M+M]=w
 	R[(i/k)*N:(i/k)*N+N,(i%k)*M:(i%k)*M+M]=r
 
-
-x_c = np.linspace(-r_c,r_c,200)
-y_c = np.sqrt(r_c**2-x_c**2)
-
-x_circle = np.concatenate([x_c,np.fliplr([x_c[:-1]])[0]]) + 3.0
-y_circle = np.concatenate([y_c,-np.fliplr([y_c[:-1]])[0]])  
-
-xl = -03.0
-xr =  10.0
-yl =  00.5
-yr =  01.25
-
-x_quad = np.array([xl,xr,xr,xl,xl])
-y_quad = np.array([yl,yl,yr,yr,yl])
-
 plt.figure()
-plt.title('Grid')
-plt.plot(X[:,0],Y[:,0],'k')
-plt.plot(X[:,-1],Y[:,-1],'k')
-plt.plot(X[0,:],Y[0,:],'k')
-plt.plot(X[-1,:],Y[-1,:],'k')
-plt.plot(X,Y,'g')
-plt.plot(X.T,Y.T,'g')
-plt.xlabel('X')
-plt.ylabel('Y')
-plt.plot(x_quad,y_quad,'k')
-plt.axis('equal')
-
-plt.figure()
-plt.title('Velocity Vector')
-plt.quiver(X,Y,U,V)
-plt.plot(X[:,0],Y[:,0],'k')
-plt.plot(X[:,-1],Y[:,-1],'k')
-plt.plot(X[0,:],Y[0,:],'k')
-plt.plot(X[-1,:],Y[-1,:],'k')
-#plt.fill(x_quad,y_quad,'w',edgecolor='k')
-plt.xlabel('X')
-plt.ylabel('Y')
-plt.axis('equal') 
-
-plt.figure()
-plt.title('Pressure')
-plt.contourf(X,Y,P,density=5)
+plt.title('Source')
+plt.contourf(X,Y,W)
 plt.plot(X[:,0],Y[:,0],'k')
 plt.plot(X[:,-1],Y[:,-1],'k')
 plt.plot(X[0,:],Y[0,:],'k')
 plt.plot(X[-1,:],Y[-1,:],'k')
 plt.xlabel('X')
 plt.ylabel('Y')
-plt.fill(x_quad,y_quad,'w',edgecolor='k')
 plt.colorbar()
 plt.axis('equal') 
 
 plt.figure()
-plt.title('Temperature')
-plt.contourf(X,Y,T,density=5)
+plt.title('Exact')
+plt.contourf(X,Y,T)
 plt.plot(X[:,0],Y[:,0],'k')
 plt.plot(X[:,-1],Y[:,-1],'k')
 plt.plot(X[0,:],Y[0,:],'k')
 plt.plot(X[-1,:],Y[-1,:],'k')
 plt.xlabel('X')
 plt.ylabel('Y')
-#plt.quiver(X,Y,U,V)
-plt.fill(x_quad,y_quad,'w',edgecolor='k')
 plt.colorbar()
-plt.axis('equal')
+plt.axis('equal') 
+
+plt.figure()
+plt.title('Numerical')
+plt.contourf(X,Y,P)
+plt.plot(X[:,0],Y[:,0],'k')
+plt.plot(X[:,-1],Y[:,-1],'k')
+plt.plot(X[0,:],Y[0,:],'k')
+plt.plot(X[-1,:],Y[-1,:],'k')
+plt.xlabel('X')
+plt.ylabel('Y')
+plt.colorbar()
+plt.axis('equal') 
+
+plt.figure()
+plt.title('Error')
+plt.contourf(X,Y,R)
+plt.plot(X[:,0],Y[:,0],'k')
+plt.plot(X[:,-1],Y[:,-1],'k')
+plt.plot(X[0,:],Y[0,:],'k')
+plt.plot(X[-1,:],Y[-1,:],'k')
+plt.xlabel('X')
+plt.ylabel('Y')
+plt.colorbar()
+plt.axis('equal') 
 
 plt.show()

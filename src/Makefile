@@ -1,15 +1,15 @@
 #MPI_PATH = /usr/local
 #MPI_PATH = /usr
-MPI_PATH = /opt/mpich2-1.4.1p1/
+#MPI_PATH = /opt/mpich2-1.4.1p1/
 #MPI_PATH = /c1/apps/mpich/3.1.4
 #HYPRE_PATH    = /usr/local/hypre
 #PGI_PATH = /opt/pgi/osx86-64/2016
 #MPI_PATH = /usr/lib64/mpich 
 
-MPIFF = $(MPI_PATH)/bin/mpif90
+#MPIFF = $(MPI_PATH)/bin/mpif90
 #MPIFF = mpiifort
 #MPIFF = mpif90
-#MPIFF = mpifort
+MPIFF = mpifort
 #FF = ifort
 #MPIFF = $(PGI_PATH)/bin/pgf90
 
@@ -106,6 +106,7 @@ Objects += physicaldata.o \
            Poisson_solver_VC.o \
            ins_predictor_VD.o \
            IncompNS_solver.o \
+           Poisson_test.o \
            Multiphase_solver.o \
            IBM_solver.o \
            Solver_evolve.o \

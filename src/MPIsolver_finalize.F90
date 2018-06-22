@@ -43,9 +43,9 @@ subroutine MPIsolver_finalize(sim_Complete)
       call MPI_COMM_FREE(x_comm,ierr)
       call MPI_COMM_FREE(y_comm,ierr)
 
-      if (sim_Complete) print '("Execution time: ",f20.10," seconds")',exec_time
+      !if (sim_Complete) print '("Execution time: ",f20.10," seconds")',exec_time
 
-      print '("Poisson time:   ",f20.10," seconds")',ins_timePoisson
+      !print '("Poisson time:   ",f20.10," seconds")',ins_timePoisson
 
       call MPI_FINALIZE(ierr)
 

@@ -24,7 +24,7 @@ subroutine HeatAD_init()
    ht_St  =  1.0                                 ! Stefan number
 
 
-   ht_alpha  = 1.0                               ! Thermal diffusivity x dT
+   ht_alpha  = 5000.0                            ! Thermal diffusivity x dT
 
    ! Initialize variables relevant to Heat AD unit
    solnData(:,:,TEMP_VAR,:) = 0.0               

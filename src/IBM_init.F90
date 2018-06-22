@@ -6,7 +6,8 @@ subroutine IBM_init()
    use Grid_data
    use IBM_data
    use Multiphase_interface, only: mph_FillVars
-   use MPI_data, only: blockCount
+   use MPI_data, only: blockCount,solver_comm,ierr
+   use MPI_interface, ONLY: MPI_applyBC, MPI_CollectResiduals, MPI_physicalBC_vort
 
    implicit none
 
@@ -62,14 +63,6 @@ subroutine IBM_init()
    ibm_yr = -1.0
 #endif
 
-#ifdef HOME_HEATING_SYSTEM
-   ! Home heating system
-   ibm_xl = -03.0
-   ibm_xr =  10.0
-   ibm_yl =  0.5
-   ibm_yr =  1.25
-#endif 
-
    ! Calculate distance function
    do blk=1,blockCount
 
@@ -101,10 +94,12 @@ subroutine IBM_init()
 
               solnData(i,j,DFUN_VAR,blk) = xcell
               solnData(i,j,PFUN_VAR,blk) = ycell
-
+                
       end do
     end do 
    end do
+
+   call MPI_BARRIER(solver_comm,ierr)
 
    nullify(facexData,faceyData,solnData)
 

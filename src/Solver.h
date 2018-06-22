@@ -25,7 +25,7 @@ _____________Defining Poisson Solver Parameters_________________
 _________________Defining Temperature Solver____________________
 #endif
 
-#define TEMP_SOLVER 2
+#define TEMP_SOLVER 1
 
 #if TEMP_SOLVER == 1
 #define TEMP_SOLVER_CENTRAL
@@ -40,26 +40,28 @@ _________________Defining Temperature Solver____________________
 _______________________Grid Parameters___________________________
 #endif
 
-#define MAX_BLOCKS 10
+#define MAX_BLOCKS 64
 
 
-#define Nxb 20
-#define Nyb 20
+#define Nxb 16
+#define Nyb 16
+#define Nzb 16
+
+#define D_xmin  0.0
+#define D_ymin  0.0
 
 
-#define D_xmin -10.0
-#define D_ymin -10.0
-
-
-#define D_xmax  10.0
-#define D_ymax  10.0
+#define D_xmax  1.0
+#define D_ymax  1.0
 
 #define TIME_END 200.00
+#define NEND_END 1
 
-#define nblockx 6
-#define nblocky 6
+#define nblockx 8
+#define nblocky 8
+#define nblockz 8
 
-#define MaxIt 1500
+#define MaxIt 5000
 
 #define PRES_VAR 1
 #define TEMP_VAR 2
@@ -79,8 +81,10 @@ _______________________Grid Parameters___________________________
 #define PFUN_VAR 16
 #define MDOT_VAR 17
 #define VORT_VAR 18
+#define EXCT_VAR 19
+#define EROR_VAR 20
 
-#define CENT_VAR 18
+#define CENT_VAR 20
 
 #define VELC_VAR 1
 #define IBMF_VAR 2
@@ -112,57 +116,7 @@ _______________________Boundary Conditions_____________________
 #define MOVLID  6
 
 #if 0
-_______________________Multiphase On/Off_____________________
-#endif
-
-#define MPH 0
-
-#if MPH == 1
-#define MULTIPHASE
-#endif
-
-#if MPH == 0
-#define SINGLEPHASE
-#endif
-
-#if 0
-______________________Navier Stokes On/Off___________________
-#endif
-
-#define NS 1
-
-#if NS == 1
-#define INS
-#endif
-
-#if 0
-_________________________Energy On/Off______________________
-#endif
-
-#define HEAT 1
-
-#if HEAT == 1
-#define ENERGY
-#endif
-
-#if 0
-_____________________Only Poisson On/Off_____________________
-#endif
-
-#define PS 0
-
-#if PS == 1
-#define ONLY_POISSON
-#endif
-
-#if 0
-___________________Immersed Boundary On/Off________________
-#endif
-
-#define IB 1
-
-#if IB == 1
-#define IBM
+_______________________Number of immersed boundaries_____________________
 #endif
 
 #define NBOD 1
@@ -177,7 +131,7 @@ _________________OpenMP threads per MPI rank_______________
 _________________MPI with shared memory on/off_______________
 #endif
 
-#define SHARE_TYPE 1
+#define SHARE_TYPE 2
 
 #if SHARE_TYPE == 1
 #define MPI_DIS
@@ -204,7 +158,7 @@ __________________Data Operation Parameters________________
 __________________Test problem forward/backward facing step________________
 #endif
 
-#define STEP 0
+#define STEP 1
 
 #if STEP == 1
 #define BACKWARD_FACING_STEP
@@ -212,14 +166,4 @@ __________________Test problem forward/backward facing step________________
 
 #if STEP == 2
 #define FORWARD_FACING_STEP
-#endif
-
-#if 0
-_____________________Test problem home heating system_____________________
-#endif
-
-#define HHS 1
-
-#if HHS == 1
-#define HOME_HEATING_SYSTEM
 #endif

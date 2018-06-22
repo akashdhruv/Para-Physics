@@ -47,27 +47,24 @@ subroutine IncompNS_solver(tstep,p_counter)
 
     ! Predictor Step
 
-#ifdef SINGLEPHASE
     do blk=1,blockCount
        call ins_predictor(tstep,facexData(:,:,VELC_VAR,blk),faceyData(:,:,VELC_VAR,blk),&
                                 facexData(:,:,USTR_VAR,blk),faceyData(:,:,USTR_VAR,blk),&
                                 facexData(:,:,GOLD_VAR,blk),faceyData(:,:,GOLD_VAR,blk),&
                                 solnData(:,:,TEMP_VAR,blk))
     end do
-#else
-    do blk=1,blockCount
-       call ins_predictor_VD(tstep,facexData(:,:,VELC_VAR,blk),faceyData(:,:,VELC_VAR,blk),&
-                                   facexData(:,:,USTR_VAR,blk),faceyData(:,:,USTR_VAR,blk),&
-                                   facexData(:,:,GOLD_VAR,blk),faceyData(:,:,GOLD_VAR,blk),&
-                                   solnData(:,:,VISC_VAR,blk),&
-                                   facexData(:,:,RH1F_VAR,blk),faceyData(:,:,RH1F_VAR,blk),&
-                                   facexData(:,:,RH2F_VAR,blk),faceyData(:,:,RH2F_VAR,blk))
-    end do
-#endif
+
+    !do blk=1,blockCount
+    !   call ins_predictor_VD(tstep,facexData(:,:,VELC_VAR,blk),faceyData(:,:,VELC_VAR,blk),&
+    !                               facexData(:,:,USTR_VAR,blk),faceyData(:,:,USTR_VAR,blk),&
+    !                               facexData(:,:,GOLD_VAR,blk),faceyData(:,:,GOLD_VAR,blk),&
+    !                               solnData(:,:,VISC_VAR,blk),&
+    !                               facexData(:,:,RH1F_VAR,blk),faceyData(:,:,RH1F_VAR,blk),&
+    !                               facexData(:,:,RH2F_VAR,blk),faceyData(:,:,RH2F_VAR,blk))
+    !end do
 
     ! Immersed Boundary Calculation
 
-#ifdef IBM
     do blk=1,blockCount
        !call IBM_ApplyForcing(facexData(:,:,USTR_VAR,blk),faceyData(:,:,USTR_VAR,blk),&
        !                      facexData(:,:,IBMF_VAR,blk),faceyData(:,:,IBMF_VAR,blk))
@@ -75,7 +72,6 @@ subroutine IncompNS_solver(tstep,p_counter)
        call IBM_ApplyForcing(facexData(:,:,USTR_VAR,blk),faceyData(:,:,USTR_VAR,blk),&
                              solnData(:,:,DFUN_VAR,blk),solnData(:,:,PFUN_VAR,blk))
     end do
-#endif    
 
     ! MPI and Domain Predictor BCs
 
@@ -90,36 +86,29 @@ subroutine IncompNS_solver(tstep,p_counter)
 
     ! Rescale velocity
 
-    !call ins_rescaleVel(facexData(:,:,VELC_VAR,:),faceyData(:,:,VELC_VAR,:),solnData(:,:,DFUN_VAR,:),solnData(:,:,PFUN_VAR,:))
+    call ins_rescaleVel(facexData(:,:,VELC_VAR,:),faceyData(:,:,VELC_VAR,:),solnData(:,:,DFUN_VAR,:),solnData(:,:,PFUN_VAR,:))
 
     ! Poisson RHS
 
-#ifdef SINGLEPHASE
     do blk=1,blockCount
        solnData(2:Nxb+1,2:Nyb+1,PRHS_VAR,blk) = &
        -((1/(gr_dy*dr_dt))*(faceyData(2:Nxb+1,2:Nyb+1,USTR_VAR,blk)-faceyData(2:Nxb+1,1:Nyb,USTR_VAR,blk)))&
        -((1/(gr_dx*dr_dt))*(facexData(2:Nxb+1,2:Nyb+1,USTR_VAR,blk)-facexData(1:Nxb,2:Nyb+1,USTR_VAR,blk)))
     end do
 
-#else
-    do blk=1,blockCount
-       solnData(2:Nxb+1,2:Nyb+1,PRHS_VAR,blk) = &
-       -((1/(gr_dy*dr_dt))*(faceyData(2:Nxb+1,2:Nyb+1,USTR_VAR,blk)-faceyData(2:Nxb+1,1:Nyb,USTR_VAR,blk)))&
-       -((1/(gr_dx*dr_dt))*(facexData(2:Nxb+1,2:Nyb+1,USTR_VAR,blk)-facexData(1:Nxb,2:Nyb+1,USTR_VAR,blk)))&
-       -solnData(2:Nxb+1,2:Nyb+1,SIGP_VAR,blk)
-    end do
-
-#endif
+    !do blk=1,blockCount
+    !   solnData(2:Nxb+1,2:Nyb+1,PRHS_VAR,blk) = &
+    !   -((1/(gr_dy*dr_dt))*(faceyData(2:Nxb+1,2:Nyb+1,USTR_VAR,blk)-faceyData(2:Nxb+1,1:Nyb,USTR_VAR,blk)))&
+    !   -((1/(gr_dx*dr_dt))*(facexData(2:Nxb+1,2:Nyb+1,USTR_VAR,blk)-facexData(1:Nxb,2:Nyb+1,USTR_VAR,blk)))&
+    !   -solnData(2:Nxb+1,2:Nyb+1,SIGP_VAR,blk)
+    !end do
 
     nullify(solnData,facexData,faceyData)
 
    ! Poisson Solve
 
-#ifdef SINGLEPHASE
     call Poisson_solver(PRHS_VAR,PRES_VAR,p_counter)
-#else
-    call Poisson_solver_VC(PRHS_VAR,PRES_VAR,p_counter,RH1F_VAR,RH2F_VAR)
-#endif
+    !call Poisson_solver_VC(PRHS_VAR,PRES_VAR,p_counter,RH1F_VAR,RH2F_VAR)
 
     solnData  => localCENTER
     facexData => localFACEX
@@ -127,7 +116,6 @@ subroutine IncompNS_solver(tstep,p_counter)
 
    ! Corrector Step
 
-#ifdef SINGLEPHASE
     do blk=1,blockCount
     facexData(2:Nxb+1,2:Nyb+1,VELC_VAR,blk) = &
     facexData(2:Nxb+1,2:Nyb+1,USTR_VAR,blk) - (dr_dt/gr_dx)*(solnData(3:Nxb+2,2:Nyb+1,PRES_VAR,blk)-&
@@ -138,29 +126,27 @@ subroutine IncompNS_solver(tstep,p_counter)
     faceyData(2:Nxb+1,2:Nyb+1,USTR_VAR,blk) - (dr_dt/gr_dy)*(solnData(2:Nxb+1,3:Nyb+2,PRES_VAR,blk)-&
                                                              solnData(2:Nxb+1,2:Nyb+1,PRES_VAR,blk))
     end do
-#else
 
-    do blk=1,blockCount
-    facexData(2:Nxb+1,2:Nyb+1,VELC_VAR,blk) = &
-    facexData(2:Nxb+1,2:Nyb+1,USTR_VAR,blk) - (dr_dt/gr_dx)*&
-                                              (facexData(2:Nxb+1,2:Nyb+1,RH1F_VAR,blk)+&
-                                               facexData(2:Nxb+1,2:Nyb+1,RH2F_VAR,blk))*&
-                                              (solnData(3:Nxb+2,2:Nyb+1,PRES_VAR,blk)-&
-                                               solnData(2:Nxb+1,2:Nyb+1,PRES_VAR,blk))&
-                                               +dr_dt*&
-                                               facexData(2:Nxb+1,2:Nyb+1,SIGM_VAR,blk)
+    !do blk=1,blockCount
+    !facexData(2:Nxb+1,2:Nyb+1,VELC_VAR,blk) = &
+    !facexData(2:Nxb+1,2:Nyb+1,USTR_VAR,blk) - (dr_dt/gr_dx)*&
+    !                                          (facexData(2:Nxb+1,2:Nyb+1,RH1F_VAR,blk)+&
+    !                                           facexData(2:Nxb+1,2:Nyb+1,RH2F_VAR,blk))*&
+    !                                          (solnData(3:Nxb+2,2:Nyb+1,PRES_VAR,blk)-&
+    !                                           solnData(2:Nxb+1,2:Nyb+1,PRES_VAR,blk))&
+    !                                           +dr_dt*&
+    !                                           facexData(2:Nxb+1,2:Nyb+1,SIGM_VAR,blk)
 
 
-    faceyData(2:Nxb+1,2:Nyb+1,VELC_VAR,blk) = &
-    faceyData(2:Nxb+1,2:Nyb+1,USTR_VAR,blk) - (dr_dt/gr_dy)*&
-                                              (faceyData(2:Nxb+1,2:Nyb+1,RH1F_VAR,blk)+&
-                                               faceyData(2:Nxb+1,2:Nyb+1,RH2F_VAR,blk))*&                                               
-                                              (solnData(2:Nxb+1,3:Nyb+2,PRES_VAR,blk)-&
-                                               solnData(2:Nxb+1,2:Nyb+1,PRES_VAR,blk))&
-                                               +dr_dt*&
-                                                faceyData(2:Nxb+1,2:Nyb+1,SIGM_VAR,blk)
-    end do
-#endif
+    !faceyData(2:Nxb+1,2:Nyb+1,VELC_VAR,blk) = &
+    !faceyData(2:Nxb+1,2:Nyb+1,USTR_VAR,blk) - (dr_dt/gr_dy)*&
+    !                                          (faceyData(2:Nxb+1,2:Nyb+1,RH1F_VAR,blk)+&
+    !                                           faceyData(2:Nxb+1,2:Nyb+1,RH2F_VAR,blk))*&                                               
+    !                                          (solnData(2:Nxb+1,3:Nyb+2,PRES_VAR,blk)-&
+    !                                           solnData(2:Nxb+1,2:Nyb+1,PRES_VAR,blk))&
+    !                                           +dr_dt*&
+    !                                            faceyData(2:Nxb+1,2:Nyb+1,SIGM_VAR,blk)
+    !end do
 
     ! MPI and Domain Corrector BCs
 

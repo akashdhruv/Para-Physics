@@ -6,7 +6,7 @@ subroutine IO_write(x,y,uu,vv,pp,tt,ww,rr,blk,blockOffset)
        real, dimension(Nxb+1, Nyb+1), intent(in) :: x,y,uu,vv,pp,tt,ww,rr
        integer, intent(in) :: blk,blockOffset
        character(len=10) :: f1,f2,f3,f4,f7,f8,f9,f0
-       integer :: id
+       integer :: id,dataIndexI,dataIndexJ
 
        id = blk+blockOffset-1
      
@@ -28,14 +28,18 @@ subroutine IO_write(x,y,uu,vv,pp,tt,ww,rr,blk,blockOffset)
        open(unit = 9, file = f9)
        open(unit = 0, file = f0)
 
-       write(1,*),x
-       write(2,*),y
-       write(3,*),uu
-       write(4,*),vv
-       write(7,*),pp
-       write(8,*),tt
-       write(9,*),ww
-       write(0,*),rr
+       do dataIndexJ=1,Nyb+1
+         do dataIndexI=1,Nxb+1
+                write(1,*),x(dataIndexI,dataIndexJ)
+                write(2,*),y(dataIndexI,dataIndexJ)
+                write(3,*),uu(dataIndexI,dataIndexJ)
+                write(4,*),vv(dataIndexI,dataIndexJ)
+                write(7,*),pp(dataIndexI,dataIndexJ)
+                write(8,*),tt(dataIndexI,dataIndexJ)
+                write(9,*),ww(dataIndexI,dataIndexJ)
+                write(0,*),rr(dataIndexI,dataIndexJ)
+        end do
+       end do
 
        close(1)
        close(2)
