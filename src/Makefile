@@ -8,8 +8,8 @@
 
 #MPIFF = $(MPI_PATH)/bin/mpif90
 #MPIFF = mpiifort
-#MPIFF = mpif90
-MPIFF = mpifort
+MPIFF = mpif90
+#MPIFF = mpifort
 #FF = ifort
 #MPIFF = $(PGI_PATH)/bin/pgf90
 
